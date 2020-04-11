@@ -16,19 +16,19 @@ namespace AI_Research_1.Tests
 
         private readonly IEnumerable<State> noObstaclesStates =
             Enumerable.Range(0, StatesCount)
-                .Select(x => States.Generate(new Random(), FieldSize, 10, 1, 0));
+                .Select(x => StateGenerator.Generate(new Random(), FieldSize, 10, 1, 0));
 
         private readonly IEnumerable<State> littleCountObstaclesStates =
             Enumerable.Range(0, StatesCount)
-                .Select(x => States.Generate(new Random(), FieldSize, 10, 1, 2));
+                .Select(x => StateGenerator.Generate(new Random(), FieldSize, 10, 1, 2));
 
         private readonly IEnumerable<State> mediumCountObstaclesStates =
             Enumerable.Range(0, StatesCount)
-                .Select(x => States.Generate(new Random(), FieldSize, 10, 1, 5));
+                .Select(x => StateGenerator.Generate(new Random(), FieldSize, 10, 1, 5));
 
         private readonly IEnumerable<State> highCountObstaclesStates =
             Enumerable.Range(0, StatesCount)
-                .Select(x => States.Generate(new Random(), FieldSize, 10, 1, 10));
+                .Select(x => StateGenerator.Generate(new Random(), FieldSize, 10, 1, 10));
 
         [Test]
         public void Play()
