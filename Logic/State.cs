@@ -9,22 +9,23 @@ namespace AI_Research_1.Logic
         [JsonIgnore] public Track Track { get; }
         public Car FirstCar { get; }
         public Car SecondCar { get; }
+        public ExchangeMod ExchangeMod { get; }
         public int FlagsTaken { get; private set; }
         [JsonIgnore] public int Time { get; private set; }
 
-        public State(Track track, Car firstCar, Car secondCar, int flagsTaken=0, int time=0)
+        public State(Track track, Car firstCar, Car secondCar, ExchangeMod exchangeMod, int flagsTaken=0, int time=0)
         {
             Track = track;
             FirstCar = firstCar;
             SecondCar = secondCar;
+            ExchangeMod = exchangeMod;
             FlagsTaken = flagsTaken;
             Time = time;
         }
         
-        public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), FlagsTaken, Time);
+        public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), ExchangeMod.Copy(), FlagsTaken, Time);
         
         public V GetNextFlag() => Track.Flags[FlagsTaken % Track.Flags.Count];
-
 
         public bool IsFinished => 
                 Time >= Track.Time
@@ -35,10 +36,16 @@ namespace AI_Research_1.Logic
         public void Tick(Solution solution)
         {
             if (IsFinished) return;
-            
-            MoveCar(FirstCar, solution.FirstCarMoves[0]);
-            MoveCar(SecondCar, solution.SecondCarMoves[0]);
 
+            var firstExchange = solution.FirstCarCommands[0] is Exchange;
+            var secondExchange = solution.SecondCarCommands[0] is Exchange;
+            if (firstExchange && secondExchange && ExchangeMod.Cooldown == 0)
+                ExchangeMod.Apply(FirstCar, SecondCar);
+            else {
+                ExchangeMod.Tick();
+                MoveCar(FirstCar, firstExchange ? V.Zero : (V)solution.FirstCarCommands[0]); 
+                MoveCar(SecondCar, secondExchange ? V.Zero : (V)solution.SecondCarCommands[0]);
+            }
             Time++;
         }
 

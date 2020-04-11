@@ -19,6 +19,13 @@ namespace AI_Research_1.Logic
             Pos += V;
         }
 
+        public void ExchangeWith(Car other)
+        {
+            var temp = V;
+            V = other.V;
+            other.V = temp;
+        } 
+
         public Car Copy() => new Car(Pos, V, Radius, IsAlive);
     }
 }

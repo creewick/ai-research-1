@@ -4,13 +4,13 @@ namespace AI_Research_1.Interfaces
 {
     public class Solution
     {
-        public V[] FirstCarMoves { get; }
-        public V[] SecondCarMoves { get; }
+        public ICommand[] FirstCarCommands { get; }
+        public ICommand[] SecondCarCommands { get; }
         
-        public Solution(V[] firstCarMoves, V[] secondCarMoves)
+        public Solution(ICommand[] firstCarCommands, ICommand[] secondCarCommands)
         {
-            FirstCarMoves = firstCarMoves;
-            SecondCarMoves = secondCarMoves;
+            FirstCarCommands = firstCarCommands;
+            SecondCarCommands = secondCarCommands;
         }
     }
 }

@@ -1,8 +1,9 @@
 using System;
+using AI_Research_1.Interfaces;
 
 namespace AI_Research_1.Helpers
  {
-     public struct V : IEquatable<V>
+     public struct V : IEquatable<V>, ICommand
      {
          public static V Zero = new V(0, 0);
          

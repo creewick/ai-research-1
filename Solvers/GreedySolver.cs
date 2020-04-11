@@ -77,7 +77,7 @@ namespace AI_Research_1.Solvers
             - state.GetNextFlag().Dist2To(state.FirstCar.Pos)
             - state.GetNextFlag().Dist2To(state.SecondCar.Pos);
 
-        private static List<V> PossibleMoves => new List<V>
+        private static List<ICommand> PossibleMoves => new List<ICommand>
         {
             new V(-1, 1), new V(0, 1), new V(1, 1),
             new V(-1, 0), new V(0, 0), new V(1, 0),
