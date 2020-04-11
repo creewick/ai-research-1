@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 using AI_Research_1.Solvers;
@@ -11,76 +9,50 @@ namespace AI_Research_1.Tests
     [TestFixture]
     public class Tests
     {
-        private static readonly int StatesCount = 10;
-        private static readonly int FieldSize = 100;
-
-        private readonly IEnumerable<State> noObstaclesStates =
-            Enumerable.Range(0, StatesCount)
-                .Select(x => StateGenerator.Generate(new Random(), FieldSize, 10, 1, 0));
-
-        private readonly IEnumerable<State> littleCountObstaclesStates =
-            Enumerable.Range(0, StatesCount)
-                .Select(x => StateGenerator.Generate(new Random(), FieldSize, 10, 1, 2));
-
-        private readonly IEnumerable<State> mediumCountObstaclesStates =
-            Enumerable.Range(0, StatesCount)
-                .Select(x => StateGenerator.Generate(new Random(), FieldSize, 10, 1, 5));
-
-        private readonly IEnumerable<State> highCountObstaclesStates =
-            Enumerable.Range(0, StatesCount)
-                .Select(x => StateGenerator.Generate(new Random(), FieldSize, 10, 1, 10));
-
+        /* Чтобы визуализировать тест:
+         *
+         * 1. Укажи параметр saveFile в Controller.PlayToEnd
+         * 2. Найти файл с этим именем в ai-research-1/Visualization
+         * 3. Переименуй в race.js
+         * 4. Открой index.html
+         * 
+         */
+        
         [Test]
         public void Play()
         {
-            Play(new GreedySolver(), false);
+            Play(new GreedySolver(), StateGenerator.Generate(new Random()));
         }
 
         [Test]
         public void PlayAndSave()
         {
-            Play(new GreedySolver(), true);
+            Play(new GreedySolver(), StateGenerator.Generate(new Random()), "race");
         }
 
-        [Test]
-        public void PlayMediumCountObstacles()
+        [TestCase(10, 100, 10, 1, 0, TestName = "Без препятствий")]
+        [TestCase(10, 100, 10, 2, 0, TestName = "Мало препятствий")]
+        [TestCase(10, 100, 10, 5, 0, TestName = "Больше препятствий")]
+        [TestCase(10, 100, 10, 10, 0, TestName = "Много препятствий")]
+        public void PlayTestGroup(int testsCount, int fieldSize, int flagsCount, int repeats, int obstaclesCount)
         {
-            mediumCountObstaclesStates.ToList().ForEach(x => Play(new GreedySolver(), x, true));
+            var random = new Random();
+            
+            for (var i = 0; i < testsCount; i++)
+            {
+                var state = StateGenerator.Generate(random, fieldSize, flagsCount, repeats, obstaclesCount);
+                var solver = new GreedySolver();
+                var saveFile = TestContext.CurrentContext.Test.Name + i;
+                
+                Play(solver, state, saveFile);
+            }
         }
 
-        [Test]
-        public void PlayLittleCountObstacles()
+        private void Play(ISolver solver, State state, string saveFile=null)
         {
-            littleCountObstaclesStates.ToList().ForEach(x => Play(new GreedySolver(), x, true));
-        }
+            var result = Controller.PlayToEnd(state, solver, saveFile);
 
-        [Test]
-        public void PlayHighCountObstacles()
-        {
-            highCountObstaclesStates.ToList().ForEach(x => Play(new GreedySolver(), x, true));
-        }
-
-        [Test]
-        public void PlayNoObstacles()
-        {
-            noObstaclesStates.ToList().ForEach(x => Play(new GreedySolver(), x, true));
-        }
-
-
-        private void Play(ISolver solver, bool saveRace)
-        {
-            var state = StateGenerator.Generate(new Random());
-
-            var result = Controller.PlayToEnd(state, solver, saveRace);
-
-            Console.WriteLine($"Time:{result.Time} - Flags:{result.FlagsTaken}");
-        }
-
-        private void Play(ISolver solver, State state, bool saveRace)
-        {
-            var result = Controller.PlayToEnd(state, solver, saveRace);
-
-            Console.WriteLine($"Time:{result.Time} - Flags:{result.FlagsTaken}");
+            Console.WriteLine($"VisualizationName:{saveFile} - Time:{result.Time} - Flags:{result.FlagsTaken}");
         }
     }
 }

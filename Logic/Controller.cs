@@ -12,7 +12,7 @@ namespace AI_Research_1.Logic
     {
         public const int Timeout = 100;
 
-        public static State PlayToEnd(State state, ISolver solver, bool saveRace)
+        public static State PlayToEnd(State state, ISolver solver, string saveFile=null)
         {
             var states = new List<State> {state};
             var solutions = new List<IEnumerable<Solution>>();
@@ -29,7 +29,7 @@ namespace AI_Research_1.Logic
                 states.Add(state);
             }
 
-            if (saveRace) SaveRace(states, solutions);
+            if (saveFile != null) SaveRace(states, solutions, saveFile);
 
             return state;
         }
@@ -46,9 +46,9 @@ namespace AI_Research_1.Logic
             return task.Result;
         }
 
-        private static void SaveRace(List<State> states, List<IEnumerable<Solution>> solutions)
+        private static void SaveRace(List<State> states, List<IEnumerable<Solution>> solutions, string saveFile)
         {
-            var file = Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "Visualization", "race.js");
+            var file = Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "Visualization", saveFile + ".js");
             
             var visualisation = new Visualization(states, solutions, states[0].Track);
             
