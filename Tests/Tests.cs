@@ -17,9 +17,9 @@ namespace AI_Research_1.Tests
 
             var state = States.Generate(new Random());
 
-            var result = new Controller().PlayToEnd(state, solver, false);
+            var result = Controller.PlayToEnd(state, solver, false);
             
-            Console.WriteLine($"{result.Time} - {result.FlagsTaken}");
+            Console.WriteLine($"Time:{result.Time} - Flags:{result.FlagsTaken}");
         }
     }
 }

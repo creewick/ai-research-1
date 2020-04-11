@@ -9,17 +9,18 @@ namespace AI_Research_1.Logic
     {
         public readonly Track Track;
         public readonly List<Car> Cars;
-        public readonly int FlagsTaken;
+        public int FlagsTaken;
         public int Time;
 
-        public State(Track track, List<Car> cars, int flagsTaken=0)
+        public State(Track track, List<Car> cars, int flagsTaken=0, int time=0)
         {
             Track = track;
             Cars = cars;
             FlagsTaken = flagsTaken;
+            Time = time;
         }
         
-        public State Copy() => new State(Track, CopyCars(), FlagsTaken);
+        public State Copy() => new State(Track, CopyCars(), FlagsTaken, Time);
         
         public V GetNextFlag() => Track.Flags[FlagsTaken % Track.Flags.Count];
 
@@ -46,7 +47,9 @@ namespace AI_Research_1.Logic
                 if (CrashToObstacle(from, to, Cars[i].Radius))
                     car.IsAlive = false;
 
-                // TODO Count Flags
+                // TODO Flags Count
+                while (GetNextFlag().SegmentCrossPoint(from, to, car.Radius))
+                    FlagsTaken++;
             }
 
             Time++;
