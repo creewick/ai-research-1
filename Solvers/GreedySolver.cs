@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
@@ -18,33 +19,37 @@ namespace AI_Research_1.Solvers
         private readonly int steps;
         private readonly SimulateBy simulate;
         private readonly AggregateBy aggregate;
-        
+
         public UniversalGreedySolver(int steps, SimulateBy simulate, AggregateBy aggregate)
         {
             this.steps = steps;
             this.simulate = simulate;
             this.aggregate = aggregate;
         }
-        
+
         public IEnumerable<Solution> GetSolutions(State state, Countdown time)
         {
-            V? bestMove = null;
+            V[] bestMoves = null;
             double bestScore = double.MinValue;
 
             foreach (var move in PossibleMoves)
             {
-                var score = Emulate(state, move);
-                if (score > bestScore)
+                foreach (var anotherMove in PossibleMoves)
                 {
-                    bestMove = move;
-                    bestScore = score;
+                    var moves = new[] {move, anotherMove};
+                    var score = Emulate(state, moves);
+                    if (score > bestScore)
+                    {
+                        bestMoves = moves;
+                        bestScore = score;
+                    }
                 }
             }
 
-            yield return new Solution(new[] {bestMove.Value});
+            yield return new Solution(bestMoves);
         }
-        
-        private double Emulate(State state, V move)
+
+        private double Emulate(State state, V[] moves)
         {
             var copy = state.Copy();
             var stepsLeft = steps;
@@ -53,15 +58,15 @@ namespace AI_Research_1.Solvers
             while (stepsLeft > 0)
             {
                 if (steps == stepsLeft || simulate == SimulateBy.Repeat)
-                    copy.Tick(new Solution(new[]{move}));
+                    copy.Tick(new Solution(moves));
 
                 var newScore = GetScore(copy);
-                
+
                 if (aggregate == AggregateBy.Last)
                     score = newScore;
                 else if (aggregate == AggregateBy.Max && newScore > score)
                     score = newScore;
-                
+
                 stepsLeft--;
             }
 
@@ -69,8 +74,9 @@ namespace AI_Research_1.Solvers
         }
 
         private static double GetScore(State state) =>
-            + 1000000 * state.FlagsTaken
-            - state.GetNextFlag().Dist2To(state.Cars[0].Pos);
+            +1000000 * state.FlagsTaken
+            - state.GetNextFlag().Dist2To(state.Cars[0].Pos)
+            - state.GetNextFlag().Dist2To(state.Cars[1].Pos);
 
         private static List<V> PossibleMoves => new List<V>
         {
@@ -79,7 +85,7 @@ namespace AI_Research_1.Solvers
             new V(-1, -1), new V(0, -1), new V(1, -1)
         };
     }
-    
+
     public enum SimulateBy
     {
         DoNothing,
