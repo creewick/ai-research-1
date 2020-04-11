@@ -29,27 +29,27 @@ namespace AI_Research_1.Solvers
 
         public IEnumerable<Solution> GetSolutions(State state, Countdown time)
         {
-            V[] bestMoves = null;
+            Solution bestSolution = null;
             double bestScore = double.MinValue;
 
             foreach (var move in PossibleMoves)
             {
                 foreach (var anotherMove in PossibleMoves)
                 {
-                    var moves = new[] {move, anotherMove};
-                    var score = Emulate(state, moves);
+                    var solution = new Solution(new[]{move}, new[]{anotherMove});
+                    var score = Emulate(state, solution);
                     if (score > bestScore)
                     {
-                        bestMoves = moves;
+                        bestSolution = solution;
                         bestScore = score;
                     }
                 }
             }
 
-            yield return new Solution(bestMoves);
+            yield return bestSolution;
         }
 
-        private double Emulate(State state, V[] moves)
+        private double Emulate(State state, Solution solution)
         {
             var copy = state.Copy();
             var stepsLeft = steps;
@@ -58,7 +58,7 @@ namespace AI_Research_1.Solvers
             while (stepsLeft > 0)
             {
                 if (steps == stepsLeft || simulate == SimulateBy.Repeat)
-                    copy.Tick(new Solution(moves));
+                    copy.Tick(solution);
 
                 var newScore = GetScore(copy);
 
@@ -75,8 +75,8 @@ namespace AI_Research_1.Solvers
 
         private static double GetScore(State state) =>
             +1000000 * state.FlagsTaken
-            - state.GetNextFlag().Dist2To(state.Cars[0].Pos)
-            - state.GetNextFlag().Dist2To(state.Cars[1].Pos);
+            - state.GetNextFlag().Dist2To(state.FirstCar.Pos)
+            - state.GetNextFlag().Dist2To(state.SecondCar.Pos);
 
         private static List<V> PossibleMoves => new List<V>
         {
