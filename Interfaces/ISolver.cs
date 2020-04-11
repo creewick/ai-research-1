@@ -6,6 +6,6 @@ namespace AI_Research_1.Interfaces
 {
     public interface ISolver
     {
-        Solution GetSolution(State state, Countdown time);
+        IEnumerable<Solution> GetSolutions(State state, Countdown time);
     }
 }

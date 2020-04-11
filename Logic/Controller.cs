@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AI_Research_1.Interfaces;
@@ -19,7 +20,7 @@ namespace AI_Research_1.Logic
             {
                 state = state.Copy();
                 
-                var task = Task.Run(() => solver.GetSolution(state.Copy(), Timeout));
+                var task = Task.Run(() => solver.GetSolutions(state.Copy(), Timeout).Last());
                 task.Wait(Timeout);
                 
                 if (!task.IsCompleted)

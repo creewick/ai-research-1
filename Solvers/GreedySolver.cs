@@ -10,7 +10,7 @@ namespace AI_Research_1.Solvers
         private static readonly ISolver Solver =
             new UniversalGreedySolver(17, SimulateBy.Repeat, AggregateBy.Max);
 
-        public Solution GetSolution(State state, Countdown time) => Solver.GetSolution(state, time);
+        public IEnumerable<Solution> GetSolutions(State state, Countdown time) => Solver.GetSolutions(state, time);
     }
 
     public class UniversalGreedySolver : ISolver
@@ -26,7 +26,7 @@ namespace AI_Research_1.Solvers
             this.aggregate = aggregate;
         }
         
-        public Solution GetSolution(State state, Countdown time)
+        public IEnumerable<Solution> GetSolutions(State state, Countdown time)
         {
             V? bestMove = null;
             double bestScore = double.MinValue;
@@ -41,7 +41,7 @@ namespace AI_Research_1.Solvers
                 }
             }
 
-            return new Solution(new[] {bestMove.Value});
+            yield return new Solution(new[] {bestMove.Value});
         }
         
         private double Emulate(State state, V move)
