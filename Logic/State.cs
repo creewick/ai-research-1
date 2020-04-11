@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
 
@@ -7,10 +8,10 @@ namespace AI_Research_1.Logic
 {
     public class State
     {
-        public readonly Track Track;
-        public readonly List<Car> Cars;
-        public int FlagsTaken;
-        public int Time;
+        [JsonIgnore] public Track Track { get; }
+        public List<Car> Cars { get; }
+        public int FlagsTaken { get; private set; }
+        [JsonIgnore] public int Time { get; private set; }
 
         public State(Track track, List<Car> cars, int flagsTaken=0, int time=0)
         {
@@ -26,6 +27,7 @@ namespace AI_Research_1.Logic
 
         private List<Car> CopyCars() => Cars.Select(car => car.Copy()).ToList();
 
+        
         public bool IsFinished => 
                 Time >= Track.Time
              || FlagsTaken >= Track.FlagsGoal

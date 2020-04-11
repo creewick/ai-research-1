@@ -4,8 +4,8 @@ namespace AI_Research_1.Logic
 {
     public class Disk
     {
-        public int Radius;
-        public V Pos;
+        public int Radius { get; }
+        public V Pos { get; set; }
         
         public Disk(V pos, int radius)
         {
@@ -16,9 +16,9 @@ namespace AI_Research_1.Logic
         public bool Intersect(Disk disk)
         {
             var minDist = disk.Radius + Radius;
-            return minDist * minDist >= (Pos - disk.Pos).Len2;
+            return minDist * minDist >= (Pos - disk.Pos).Len2();
         }
 
-        public bool Contains(V point) => (point - Pos).Len2 <= Radius * Radius;
+        public bool Contains(V point) => (point - Pos).Len2() <= Radius * Radius;
     }
 }

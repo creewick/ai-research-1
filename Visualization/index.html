@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Визуализация гонки</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <p>Home, ← (or A), → (or D), End</p>
+    <canvas id="field"></canvas>
+    <pre id="console"></pre>
+
+    <script src="race.js" type="application/javascript"></script>
+    <script src="scripts.js" type="application/javascript"></script>
+    <script>
+      function resizeCanvas(){
+        const field = document.getElementById("field");
+        field.width = window.innerWidth-64;
+        field.height = window.innerHeight-200;
+      }
+      window.onresize = ev => {
+        resizeCanvas();
+        update();
+      };
+
+      resizeCanvas();
+    </script>
+</body>
+</html>

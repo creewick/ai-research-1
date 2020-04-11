@@ -5,10 +5,10 @@ namespace AI_Research_1.Logic
 {
     public class Track
     {
-        public readonly int Time;
-        public readonly int FlagsGoal;
-        public readonly IReadOnlyList<V> Flags;
-        public readonly IReadOnlyList<Disk> Obstacles;
+        public int Time { get; }
+        public int FlagsGoal { get; }
+        public IReadOnlyList<V> Flags { get; }
+        public IReadOnlyList<Disk> Obstacles { get; }
 
         public Track(int time, int flagsGoal, IReadOnlyList<V> flags, IReadOnlyList<Disk> obstacles)
         {

@@ -6,8 +6,8 @@ namespace AI_Research_1.Helpers
      {
          public static V Zero = new V(0, 0);
          
-         public readonly int X;
-         public readonly int Y;
+         public readonly int X { get; }
+         public readonly int Y { get; }
 
          public V(int x, int y)
          {
@@ -20,7 +20,7 @@ namespace AI_Research_1.Helpers
          public static bool operator ==(V left, V right) => Equals(left, right);
          public static bool operator !=(V left, V right) => !Equals(left, right);
 
-         public long Len2 => (long) X * X + (long) Y * Y;
+         public long Len2() => (long) X * X + (long) Y * Y;
 
          public static V operator +(V a, V b) => new V(a.X + b.X, a.Y + b.Y);
          public static V operator -(V a, V b) => new V(a.X - b.X, a.Y - b.Y);
@@ -31,7 +31,7 @@ namespace AI_Research_1.Helpers
          public static long operator *(V a, V b) => a.X * b.X + a.Y * b.Y;
          public static long operator ^(V a, V b) => a.X * b.Y - a.Y * b.X;
 
-         public long Dist2To(V point) => (this - point).Len2;
+         public long Dist2To(V point) => (this - point).Len2();
 
          public double DistTo(V b) => Math.Sqrt(Dist2To(b));
          
