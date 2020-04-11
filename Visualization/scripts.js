@@ -48,8 +48,38 @@ function drawEvent(index){
   consoleOut = index + "\n";
   drawCar(state.FirstCar);
   drawCar(state.SecondCar);
+  drawLines(race.Solutions[index], state);
   con.innerText = consoleOut;
 }
+
+function drawLines(solutions, state){
+  if (!solutions) return;
+  consoleOut += JSON.stringify(solutions[solutions.length - 1]);
+
+  if (!showTrajectories) return;
+  drawLinesCar(solutions, state.FirstCar, x => x.FirstCarMoves);
+  drawLinesCar(solutions, state.SecondCar, x => x.SecondCarMoves);
+}
+
+function drawLinesCar(solutions, car, getMoves){
+  for (let i = 0; i < solutions.length; i++){
+    ctx.strokeStyle = (i < solutions.length - 1) ? 'yellow' : 'red';
+    let pos = car.Pos;
+    let v = car.V;
+    const moves = getMoves(solutions[i]);
+    const points = [pos];
+
+    for (let j = 0; j < moves.length; j++){
+      v = {X: v.X + moves[i].X, Y: v.Y + moves[i].Y}
+      pos = {X: pos.X + v.X, Y: pos.Y + v.Y}
+
+      points.push(pos);
+    }
+
+    ctx.stroke(createLine(points));
+  }
+}
+
 
 function drawFlags(flags, taken){
   ctx.strokeStyle = 'rgba(50,50,50,1)';
@@ -80,20 +110,7 @@ function drawFlag(flag, index, isNext) {
 function drawCar(car) {
   ctx.fillStyle = car.IsAlive ? 'green' : 'red';
   ctx.fill(createDisk(car.Pos.X, car.Pos.Y, car.Radius));
-  // consoleOut += serializeCar(car) + "\n" + car.debugOutput;
-  // if (showTrajectories) {
-  //   for (let line of car.debugLines) {
-  //     const r = Math.round(255 * 1 - line.intensity);
-  //     const g = Math.round(255 * line.intensity);
-  //     ctx.strokeStyle = `rgba(${r},${g},0)`;
-  //     console.log((r, g));
-  //     ctx.stroke(createLine(line.points));
-  //   }
-  // }
-}
-
-function serializeCar(car){
-  return `${car.pos[0]},${car.pos[1]} ${car.v[0]},${car.v[1]} ${car.radius}`;
+  consoleOut += JSON.stringify(car) + "\n";
 }
 
 function createLine(points){

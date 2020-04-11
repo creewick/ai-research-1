@@ -15,32 +15,42 @@ namespace AI_Research_1.Logic
         public static State PlayToEnd(State state, ISolver solver, bool saveRace)
         {
             var states = new List<State> {state};
+            var solutions = new List<IEnumerable<Solution>>();
 
             while (!state.IsFinished)
             {
                 state = state.Copy();
+
+                var newSolutions = GetSolutions(solver, state.Copy());
                 
-                var task = Task.Run(() => solver.GetSolutions(state.Copy(), Timeout).Last());
-                task.Wait(Timeout);
+                state.Tick(newSolutions.Last());
                 
-                if (!task.IsCompleted)
-                    throw new TimeoutException();
-                
-                state.Tick(task.Result);
-                
+                solutions.Add(newSolutions);
                 states.Add(state);
             }
 
-            if (saveRace) SaveRace(states);
+            if (saveRace) SaveRace(states, solutions);
 
             return state;
         }
 
-        private static void SaveRace(List<State> states)
+        private static IEnumerable<Solution> GetSolutions(ISolver solver, State state)
+        {
+            var task = Task.Run(() => solver
+                .GetSolutions(state, Timeout));
+            
+            task.Wait(Timeout);
+            
+            if (!task.IsCompleted) throw new TimeoutException();
+
+            return task.Result;
+        }
+
+        private static void SaveRace(List<State> states, List<IEnumerable<Solution>> solutions)
         {
             var file = Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "Visualization", "race.js");
             
-            var visualisation = new Visualization(states, states[0].Track);
+            var visualisation = new Visualization(states, solutions, states[0].Track);
             
             var text = "const race = " + JsonSerializer.Serialize(visualisation);
             
