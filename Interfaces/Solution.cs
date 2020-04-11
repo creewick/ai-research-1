@@ -4,11 +4,13 @@ namespace AI_Research_1.Interfaces
 {
     public class Solution
     {
-        public readonly V[] Moves;
-
-        public Solution(V[] moves)
+        public readonly V[] FirstCarMoves;
+        public readonly V[] SecondCarMoves;
+        
+        public Solution(V[] firstCarMoves, V[] secondCarMoves)
         {
-            Moves = moves;
+            FirstCarMoves = firstCarMoves;
+            SecondCarMoves = secondCarMoves;
         }
     }
 }

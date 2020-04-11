@@ -6,14 +6,13 @@ using AI_Research_1.Logic;
 
 namespace AI_Research_1.Tests
 {
-    public class States
+    public class StateGenerator
     {
         public static State Generate(Random random, int fieldSize = 100, int flagsCount = 5, int repeats = 2, int obstaclesCount = 0)
         {
             var carRadius = 2;
             var car1 = new Car(V.Zero, V.Zero, carRadius);
-            var car2 = new Car(V.Zero, V.Zero, carRadius);
-            var cars = new List<Car>(){car1,car2};
+            var car2 = new Car(new V(100, 100), V.Zero, carRadius);
             var flags = new List<V>();
             
             while(flags.Count < flagsCount)
@@ -30,7 +29,7 @@ namespace AI_Research_1.Tests
                 select new Disk(pos, radius);
 
             var track = new Track(fieldSize * 2 * repeats, flagsCount * repeats, flags, obstacles.Take(obstaclesCount).ToList());
-            return new State(track, cars);
+            return new State(track, car1, car2);
         }
 
     }

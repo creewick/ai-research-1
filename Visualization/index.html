@@ -15,7 +15,7 @@
     <script>
       function resizeCanvas(){
         const field = document.getElementById("field");
-        field.width = window.innerWidth-64;
+        field.width = window.innerWidth-16;
         field.height = window.innerHeight-200;
       }
       window.onresize = ev => {
@@ -24,6 +24,7 @@
       };
 
       resizeCanvas();
+      update();
     </script>
 </body>
 </html>

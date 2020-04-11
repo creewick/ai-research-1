@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
@@ -9,52 +7,55 @@ namespace AI_Research_1.Logic
     public class State
     {
         [JsonIgnore] public Track Track { get; }
-        public List<Car> Cars { get; }
+        public Car FirstCar { get; }
+        public Car SecondCar { get; }
         public int FlagsTaken { get; private set; }
         [JsonIgnore] public int Time { get; private set; }
 
-        public State(Track track, List<Car> cars, int flagsTaken=0, int time=0)
+        public State(Track track, Car firstCar, Car secondCar, int flagsTaken=0, int time=0)
         {
             Track = track;
-            Cars = cars;
+            FirstCar = firstCar;
+            SecondCar = secondCar;
             FlagsTaken = flagsTaken;
             Time = time;
         }
         
-        public State Copy() => new State(Track, CopyCars(), FlagsTaken, Time);
+        public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), FlagsTaken, Time);
         
         public V GetNextFlag() => Track.Flags[FlagsTaken % Track.Flags.Count];
 
-        private List<Car> CopyCars() => Cars.Select(car => car.Copy()).ToList();
 
-        
         public bool IsFinished => 
                 Time >= Track.Time
              || FlagsTaken >= Track.FlagsGoal
-             || Cars.Any(car => !car.IsAlive);
+             || !FirstCar.IsAlive
+             || !SecondCar.IsAlive;
 
         public void Tick(Solution solution)
         {
             if (IsFinished) return;
             
-            for (var i = 0; i < Cars.Count; i++)
-            {
-                var car = Cars[i];
-                if (!car.IsAlive) continue;
-
-                var from = car.Pos;
-                car.Tick(solution.Moves[i]);
-                var to = car.Pos;
-
-                if (CrashToObstacle(from, to, Cars[i].Radius))
-                    car.IsAlive = false;
-
-                // TODO Flags Count
-                while (GetNextFlag().SegmentCrossPoint(from, to, car.Radius))
-                    FlagsTaken++;
-            }
+            MoveCar(FirstCar, solution.FirstCarMoves[0]);
+            MoveCar(SecondCar, solution.SecondCarMoves[0]);
 
             Time++;
+        }
+
+        private void MoveCar(Car car, V move)
+        {
+            if (!car.IsAlive) return;
+
+            var from = car.Pos;
+            car.Tick(move);
+            var to = car.Pos;
+
+            if (CrashToObstacle(from, to, car.Radius))
+                car.IsAlive = false;
+            
+            // TODO Flags Count
+            while (GetNextFlag().SegmentCrossPoint(from, to, car.Radius))
+                FlagsTaken++;
         }
 
         private bool CrashToObstacle(V a, V b, int carRadius)

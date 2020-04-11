@@ -69,7 +69,7 @@ namespace AI_Research_1.Tests
 
         private void Play(ISolver solver, bool saveRace)
         {
-            var state = States.Generate(new Random());
+            var state = StateGenerator.Generate(new Random());
 
             var result = Controller.PlayToEnd(state, solver, saveRace);
 

@@ -46,7 +46,8 @@ function drawEvent(index){
   drawFlags(race.Track.Flags, state.FlagsTaken);
   drawObstacles(race.Track.Obstacles);
   consoleOut = index + "\n";
-  drawCars(state.Cars);
+  drawCar(state.FirstCar);
+  drawCar(state.SecondCar);
   con.innerText = consoleOut;
 }
 
@@ -76,26 +77,19 @@ function drawFlag(flag, index, isNext) {
   ctx.fill(createDisk(flag.X, flag.Y));
 }
 
-function drawCars(cars){
-  for (let i = 0; i < cars.length; i++){
-    drawCar(cars[i]);
-  }
-}
-
 function drawCar(car) {
-  const pos = car.pos;
-  ctx.fillStyle = car.isAlive ? 'green' : 'red';
-  ctx.fill(createDisk(pos[0], pos[1], car.radius));
-  consoleOut += serializeCar(car) + "\n" + car.debugOutput;
-  if (showTrajectories) {
-    for (let line of car.debugLines) {
-      const r = Math.round(255 * 1 - line.intensity);
-      const g = Math.round(255 * line.intensity);
-      ctx.strokeStyle = `rgba(${r},${g},0)`;
-      console.log((r, g));
-      ctx.stroke(createLine(line.points));
-    }
-  }
+  ctx.fillStyle = car.IsAlive ? 'green' : 'red';
+  ctx.fill(createDisk(car.Pos.X, car.Pos.Y, car.Radius));
+  // consoleOut += serializeCar(car) + "\n" + car.debugOutput;
+  // if (showTrajectories) {
+  //   for (let line of car.debugLines) {
+  //     const r = Math.round(255 * 1 - line.intensity);
+  //     const g = Math.round(255 * line.intensity);
+  //     ctx.strokeStyle = `rgba(${r},${g},0)`;
+  //     console.log((r, g));
+  //     ctx.stroke(createLine(line.points));
+  //   }
+  // }
 }
 
 function serializeCar(car){
@@ -163,9 +157,10 @@ function adjustScale(state) {
   let objects = [
       ...race.Track.Flags,
       ...race.Track.Obstacles.map(o => o.Pos),
-      ...state.Cars.map(car => car.Pos)
+         state.FirstCar.Pos,
+         state.SecondCar.Pos
   ];
-  //cellSize = 8;
+  cellSize = 8;
   while (cellSize > 0.2 && objects.some(p => !fitInScreen(p)))
     cellSize/=1.2;
 }
