@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text.Json.Serialization;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
@@ -24,6 +25,7 @@ namespace AI_Research_1.Logic
         public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), FlagsTaken, Time);
         
         public V GetNextFlag() => Track.Flags[FlagsTaken % Track.Flags.Count];
+        public V GetNextNextFlag() => Track.Flags[(FlagsTaken + 1) % Track.Flags.Count];
 
 
         public bool IsFinished => 
@@ -36,8 +38,8 @@ namespace AI_Research_1.Logic
         {
             if (IsFinished) return;
             
-            MoveCar(FirstCar, solution.FirstCarMoves[0]);
-            MoveCar(SecondCar, solution.SecondCarMoves[0]);
+            MoveCar(FirstCar, solution.FirstCarMoves.First());
+            MoveCar(SecondCar, solution.SecondCarMoves.First());
 
             Time++;
         }
