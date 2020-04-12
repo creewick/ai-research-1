@@ -15,20 +15,13 @@ namespace AI_Research_1.Tests
          * 2. Найти файл с этим именем в ai-research-1/Visualization
          * 3. Переименуй в race.js
          * 4. Открой index.html
-         * 
          */
         
         [Test]
-        public void Play()
-        {
-            Play(new GreedySolver(), StateGenerator.Generate(new Random()));
-        }
+        public void Play() => Play(new GreedySolver(), StateGenerator.Generate(new Random()));
 
         [Test]
-        public void PlayAndSave()
-        {
-            Play(new GreedySolver(), StateGenerator.Generate(new Random()), "race");
-        }
+        public void PlayAndSave() => Play(new GreedySolver(), StateGenerator.Generate(new Random()), "race");
 
         [TestCase(10, 100, 10, 1, 0, TestName = "Без препятствий")]
         [TestCase(10, 100, 10, 2, 0, TestName = "Мало препятствий")]
