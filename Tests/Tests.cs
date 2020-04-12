@@ -52,7 +52,9 @@ namespace AI_Research_1.Tests
         {
             var result = Controller.PlayToEnd(state, solver, saveFile);
 
-            Console.WriteLine($"VisualizationName:{saveFile} - Time:{result.Time} - Flags:{result.FlagsTaken}");
+            if (saveFile != null)
+                Console.Write($"VisualizationName: {saveFile} - ");
+            Console.WriteLine($"Time:{result.Time} - Flags:{result.FlagsTaken}");
         }
     }
 }

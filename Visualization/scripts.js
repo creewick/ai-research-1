@@ -46,37 +46,47 @@ function drawEvent(index){
   drawFlags(race.Track.Flags, state.FlagsTaken);
   drawObstacles(race.Track.Obstacles);
   consoleOut = index + "\n";
-  drawCar(state.FirstCar);
-  drawCar(state.SecondCar);
+  drawCar(state, "FirstCar");
+  drawCar(state, "SecondCar");
   drawLines(race.Solutions[index], state);
   con.innerText = consoleOut;
 }
 
 function drawLines(solutions, state){
   if (!solutions) return;
-  consoleOut += JSON.stringify(solutions[solutions.length - 1]);
+  const lastSolution = solutions[solutions.length - 1];
+  logMoves("FirstCarMoves", lastSolution);
+  logMoves("SecondCarMoves", lastSolution);
 
   if (!showTrajectories) return;
   drawLinesCar(solutions, state.FirstCar, x => x.FirstCarMoves);
   drawLinesCar(solutions, state.SecondCar, x => x.SecondCarMoves);
 }
 
+function logMoves(prefix, solution){
+  consoleOut += `${prefix}: `;
+  const moves = solution[prefix];
+  for (let i = 0; i < moves.length; i++){
+    consoleOut += `(${moves[i].X},${moves[i].Y})`
+  }
+  consoleOut += '\n';
+}
+
 function drawLinesCar(solutions, car, getMoves){
   for (let i = 0; i < solutions.length; i++){
-    ctx.strokeStyle = (i < solutions.length - 1) ? 'yellow' : 'red';
+    ctx.strokeStyle = (i < solutions.length - 1) ? 'rgba(255,0,0,.1)' : 'rgb(255,255,0)';
     let pos = car.Pos;
     let v = car.V;
     const moves = getMoves(solutions[i]);
     const points = [pos];
 
     for (let j = 0; j < moves.length; j++){
-      v = {X: v.X + moves[i].X, Y: v.Y + moves[i].Y}
+      v = {X: v.X + moves[j].X, Y: v.Y + moves[j].Y}
       pos = {X: pos.X + v.X, Y: pos.Y + v.Y}
 
       points.push(pos);
     }
-
-    ctx.stroke(createLine(points));
+    ctx.stroke(createLine(points, 0.5));
   }
 }
 
@@ -107,10 +117,11 @@ function drawFlag(flag, index, isNext) {
   ctx.fill(createDisk(flag.X, flag.Y));
 }
 
-function drawCar(car) {
+function drawCar(state, prefix) {
+  const car = state[prefix];
   ctx.fillStyle = car.IsAlive ? 'green' : 'red';
   ctx.fill(createDisk(car.Pos.X, car.Pos.Y, car.Radius));
-  consoleOut += JSON.stringify(car) + "\n";
+  consoleOut += `${prefix}: ${JSON.stringify(car)}\n`;
 }
 
 function createLine(points){
