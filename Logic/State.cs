@@ -8,9 +8,9 @@ namespace AI_Research_1.Logic
     public class State
     {
         [JsonIgnore] public Track Track { get; }
-        public Car FirstCar { get; }
-        public Car SecondCar { get; }
-        public int FlagsTaken { get; private set; }
+        [JsonPropertyName("Car1")] public Car FirstCar { get; }
+        [JsonPropertyName("Car2")] public Car SecondCar { get; }
+        [JsonPropertyName("FlagId")] public int FlagsTaken { get; private set; }
         [JsonIgnore] public int Time { get; private set; }
 
         public State(Track track, Car firstCar, Car secondCar, int flagsTaken=0, int time=0)
@@ -28,7 +28,7 @@ namespace AI_Research_1.Logic
         public V GetNextNextFlag() => Track.Flags[(FlagsTaken + 1) % Track.Flags.Count];
 
 
-        public bool IsFinished => 
+        public bool IsFinished() => 
                 Time >= Track.Time
              || FlagsTaken >= Track.FlagsGoal
              || !FirstCar.IsAlive
@@ -36,7 +36,7 @@ namespace AI_Research_1.Logic
 
         public void Tick(Solution solution)
         {
-            if (IsFinished) return;
+            if (IsFinished()) return;
             
             MoveCar(FirstCar, solution.FirstCarMoves.First());
             MoveCar(SecondCar, solution.SecondCarMoves.First());

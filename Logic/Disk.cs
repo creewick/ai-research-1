@@ -1,10 +1,11 @@
+using System.Text.Json.Serialization;
 using AI_Research_1.Helpers;
 
 namespace AI_Research_1.Logic
 {
     public class Disk
     {
-        public int Radius { get; }
+        [JsonPropertyName("R")] public int Radius { get; }
         public V Pos { get; set; }
         
         public Disk(V pos, int radius)
