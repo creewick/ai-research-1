@@ -29,19 +29,17 @@ namespace AI_Research_1.Solvers
         public IEnumerable<Solution> GetSolutions(State state, Countdown time)
         {
             Solution bestSolution = null;
-            double bestScore = double.MinValue;
+            var bestScore = double.MinValue;
 
-            foreach (var move in PossibleMoves)
+            foreach (var move in Command.All)
+            foreach (var anotherMove in Command.All)
             {
-                foreach (var anotherMove in PossibleMoves)
+                var solution = new Solution(new[] {move}, new[] {anotherMove});
+                var score = Emulate(state, solution);
+                if (score > bestScore)
                 {
-                    var solution = new Solution(new[]{move}, new[]{anotherMove});
-                    var score = Emulate(state, solution);
-                    if (score > bestScore)
-                    {
-                        bestSolution = solution;
-                        bestScore = score;
-                    }
+                    bestSolution = solution;
+                    bestScore = score;
                 }
             }
 
@@ -76,13 +74,6 @@ namespace AI_Research_1.Solvers
             +1000000 * state.FlagsTaken
             - state.GetNextFlag().Dist2To(state.FirstCar.Pos)
             - state.GetNextFlag().Dist2To(state.SecondCar.Pos);
-
-        private static List<V> PossibleMoves => new List<V>
-        {
-            new V(-1, 1), new V(0, 1), new V(1, 1),
-            new V(-1, 0), new V(0, 0), new V(1, 0),
-            new V(-1, -1), new V(0, -1), new V(1, -1)
-        };
     }
 
     public enum SimulateBy

@@ -11,9 +11,14 @@ namespace AI_Research_1.Logic
         public Car SecondCar { get; }
         public int FlagsTaken { get; private set; }
         [JsonIgnore] public int Time { get; private set; }
+        public int MaxCooldown { get; }
+        
+        public int Cooldown { get; set; }
 
-        public State(Track track, Car firstCar, Car secondCar, int flagsTaken=0, int time=0)
+        public State(Track track, Car firstCar, Car secondCar, int flagsTaken=0, int time=0, int maxCooldown=20, int cooldown=20)
         {
+            MaxCooldown = maxCooldown;
+            Cooldown = cooldown;
             Track = track;
             FirstCar = firstCar;
             SecondCar = secondCar;
@@ -21,10 +26,9 @@ namespace AI_Research_1.Logic
             Time = time;
         }
         
-        public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), FlagsTaken, Time);
+        public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), FlagsTaken, Time, MaxCooldown, Cooldown);
         
         public V GetNextFlag() => Track.Flags[FlagsTaken % Track.Flags.Count];
-
 
         public bool IsFinished => 
                 Time >= Track.Time
@@ -36,18 +40,22 @@ namespace AI_Research_1.Logic
         {
             if (IsFinished) return;
             
-            MoveCar(FirstCar, solution.FirstCarMoves[0]);
-            MoveCar(SecondCar, solution.SecondCarMoves[0]);
+            solution.FirstCarCommand.Apply(this, solution, FirstCar);
+            solution.SecondCarCommand.Apply(this, solution, SecondCar);
 
+            MoveCar(FirstCar);
+            MoveCar(SecondCar);
+
+            if (Cooldown > 0) Cooldown--;
             Time++;
         }
 
-        private void MoveCar(Car car, V move)
+        private void MoveCar(Car car)
         {
             if (!car.IsAlive) return;
 
             var from = car.Pos;
-            car.Tick(move);
+            car.Tick();
             var to = car.Pos;
 
             if (CrashToObstacle(from, to, car.Radius))
