@@ -67,4 +67,7 @@ node_modules/
 obj/
 bin/
 .idea/
-/Visualization/race.js
+/Visualization/*
+!Visualization/index.html
+!Visualization/scripts.js
+!Visualization/styles.css
