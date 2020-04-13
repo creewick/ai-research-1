@@ -24,9 +24,10 @@ namespace AI_Research_1.Logic
             Time = time;
         }
         
-        public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), FlagsTaken, Time, Cooldown);
+        public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), FlagsTaken, Time);
         
         public V GetNextFlag() => Track.Flags[FlagsTaken % Track.Flags.Count];
+        public V GetNextNextFlag() => Track.Flags[(FlagsTaken + 1) % Track.Flags.Count];
 
         public bool IsFinished => 
                 Time >= Track.Time
