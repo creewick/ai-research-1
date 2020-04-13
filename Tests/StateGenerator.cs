@@ -11,7 +11,7 @@ namespace AI_Research_1.Tests
     {
         public static State Generate(
             Random random, int fieldSize = 100, int flagsCount = 5,
-            int repeats = 2, int obstaclesCount = 0, int exchangeCooldown = 20
+            int repeats = 2, int obstaclesCount = 0, int cooldown = 20
             )
         {
             var carRadius = 2;
@@ -33,7 +33,7 @@ namespace AI_Research_1.Tests
                 select new Disk(pos, radius);
 
             var track = new Track(fieldSize * 2 * repeats, flagsCount * repeats, flags, obstacles.Take(obstaclesCount).ToList());
-            return new State(track, car1, car2, 0, 0, exchangeCooldown);
+            return new State(track, car1, car2, 0, 0, cooldown, cooldown);
         }
 
     }
