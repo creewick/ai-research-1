@@ -17,7 +17,7 @@ namespace AI_Research_1.Logic
             var states = new List<State> {state};
             var solutions = new List<IEnumerable<Solution>>();
 
-            while (!state.IsFinished())
+            while (!state.IsFinished)
             {
                 state = state.Copy();
 
