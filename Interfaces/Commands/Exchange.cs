@@ -11,7 +11,7 @@ namespace AI_Research_1.Interfaces.Commands
                 solution.FirstCarCommand is Exchange && 
                 solution.SecondCarCommand is Exchange)
             {
-                state.Cooldown = state.MaxCooldown;
+                state.Cooldown = state.Track.MaxCooldown;
                 (state.FirstCar.V, state.SecondCar.V) = (state.SecondCar.V, state.FirstCar.V);
             }
         }

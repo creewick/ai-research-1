@@ -32,8 +32,8 @@ namespace AI_Research_1.Tests
                 where !flags.Append(car1.Pos).Append(car2.Pos).Any(f => f.Dist2To(pos) < Math.Pow(radius*1.2+carRadius, 2))
                 select new Disk(pos, radius);
 
-            var track = new Track(fieldSize * 2 * repeats, flagsCount * repeats, flags, obstacles.Take(obstaclesCount).ToList());
-            return new State(track, car1, car2, 0, 0, cooldown, cooldown);
+            var track = new Track(fieldSize * 2 * repeats, flagsCount * repeats, flags, obstacles.Take(obstaclesCount).ToList(), cooldown);
+            return new State(track, car1, car2, 0, 0, cooldown);
         }
 
     }

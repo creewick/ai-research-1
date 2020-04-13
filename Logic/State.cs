@@ -11,13 +11,11 @@ namespace AI_Research_1.Logic
         public Car SecondCar { get; }
         public int FlagsTaken { get; private set; }
         [JsonIgnore] public int Time { get; private set; }
-        public int MaxCooldown { get; }
         
         public int Cooldown { get; set; }
 
-        public State(Track track, Car firstCar, Car secondCar, int flagsTaken=0, int time=0, int maxCooldown=20, int cooldown=20)
+        public State(Track track, Car firstCar, Car secondCar, int flagsTaken=0, int time=0, int cooldown=20)
         {
-            MaxCooldown = maxCooldown;
             Cooldown = cooldown;
             Track = track;
             FirstCar = firstCar;
@@ -26,7 +24,7 @@ namespace AI_Research_1.Logic
             Time = time;
         }
         
-        public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), FlagsTaken, Time, MaxCooldown, Cooldown);
+        public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), FlagsTaken, Time, Cooldown);
         
         public V GetNextFlag() => Track.Flags[FlagsTaken % Track.Flags.Count];
 
