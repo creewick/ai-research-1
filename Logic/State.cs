@@ -9,21 +9,22 @@ namespace AI_Research_1.Logic
         [JsonIgnore] public Track Track { get; }
         public Car FirstCar { get; }
         public Car SecondCar { get; }
-        public ExchangeMod ExchangeMod { get; }
         public int FlagsTaken { get; private set; }
         [JsonIgnore] public int Time { get; private set; }
+        
+        public int ExchangeCooldown { get; private set; }
 
-        public State(Track track, Car firstCar, Car secondCar, ExchangeMod exchangeMod, int flagsTaken=0, int time=0)
+        public State(Track track, Car firstCar, Car secondCar, int flagsTaken=0, int time=0, int exchangeCooldown=20)
         {
+            ExchangeCooldown = exchangeCooldown;
             Track = track;
             FirstCar = firstCar;
             SecondCar = secondCar;
-            ExchangeMod = exchangeMod;
             FlagsTaken = flagsTaken;
             Time = time;
         }
         
-        public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), ExchangeMod.Copy(), FlagsTaken, Time);
+        public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), FlagsTaken, Time, ExchangeCooldown);
         
         public V GetNextFlag() => Track.Flags[FlagsTaken % Track.Flags.Count];
 
@@ -36,25 +37,23 @@ namespace AI_Research_1.Logic
         public void Tick(Solution solution)
         {
             if (IsFinished) return;
+            
+            solution.FirstCarCommand.Apply(this, solution, FirstCar);
+            solution.SecondCarCommand.Apply(this, solution, SecondCar);
 
-            var firstExchange = solution.FirstCarCommands[0] is Exchange;
-            var secondExchange = solution.SecondCarCommands[0] is Exchange;
-            if (firstExchange && secondExchange && ExchangeMod.Cooldown == 0)
-                ExchangeMod.Apply(FirstCar, SecondCar);
-            else {
-                ExchangeMod.Tick();
-                MoveCar(FirstCar, firstExchange ? V.Zero : (V)solution.FirstCarCommands[0]); 
-                MoveCar(SecondCar, secondExchange ? V.Zero : (V)solution.SecondCarCommands[0]);
-            }
+            MoveCar(FirstCar);
+            MoveCar(SecondCar);
+
+            if (ExchangeCooldown > 0) ExchangeCooldown--;
             Time++;
         }
 
-        private void MoveCar(Car car, V move)
+        private void MoveCar(Car car)
         {
             if (!car.IsAlive) return;
 
             var from = car.Pos;
-            car.Tick(move);
+            car.Tick();
             var to = car.Pos;
 
             if (CrashToObstacle(from, to, car.Radius))

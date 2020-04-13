@@ -7,7 +7,7 @@ using AI_Research_1.Logic;
 
 namespace AI_Research_1.Tests
 {
-    public class StateGenerator
+    public static class StateGenerator
     {
         public static State Generate(
             Random random, int fieldSize = 100, int flagsCount = 5,
@@ -33,7 +33,7 @@ namespace AI_Research_1.Tests
                 select new Disk(pos, radius);
 
             var track = new Track(fieldSize * 2 * repeats, flagsCount * repeats, flags, obstacles.Take(obstaclesCount).ToList());
-            return new State(track, car1, car2, new ExchangeMod());
+            return new State(track, car1, car2, 0, 0, exchangeCooldown);
         }
 
     }
