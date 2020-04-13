@@ -1,8 +1,8 @@
 using System;
 using AI_Research_1.Helpers;
-using AI_Research_1.Interfaces;
+using AI_Research_1.Logic;
 
-namespace AI_Research_1.Logic
+namespace AI_Research_1.Interfaces.Commands
 {
     public class Move : Command
     {
