@@ -11,7 +11,7 @@ namespace AI_Research_1.Solvers
     public class GreedySolver : ISolver
     {
         private static readonly ISolver Solver =
-            new UniversalGreedySolver(17, SimulateBy.Repeat, AggregateBy.Max, Evaluator.GetScore_3);
+            new UniversalGreedySolver(17, SimulateBy.Repeat, AggregateBy.Max, Emulator.GetScore_3);
 
         public IEnumerable<Solution> GetSolutions(State state, Countdown time) => Solver.GetSolutions(state, time);
     }
@@ -49,40 +49,13 @@ namespace AI_Research_1.Solvers
                         Enumerable.Repeat(new Move(0,0), steps-1).Prepend(secondCarMove)
                     );
                 
-                var score = Emulate(state, solution);
+                var score = Emulator.Emulate(state, solution, steps, aggregate, getScore);
                 solutions.Add((solution, score));
             }
 
             return solutions.OrderBy(x => x.Item2).Select(x => x.Item1);
         }
-
-        private long Emulate(State state, Solution solution)
-        {
-            var copy = state.Copy();
-            var stepsLeft = steps;
-            var score = long.MinValue;
-            var curSolution = solution;
-
-            while (stepsLeft > 0)
-            {
-                copy.Tick(curSolution);
-                curSolution = solution.GetNextTick();
-                
-                var newScore = getScore(copy);
-
-                if (aggregate == AggregateBy.Last)
-                    score = newScore;
-                else if (aggregate == AggregateBy.Max && newScore > score)
-                    score = newScore;
-
-                stepsLeft--;
-            }
-
-            return score;
-        }
     }
 
     public enum SimulateBy { DoNothing, Repeat }
-
-    public enum AggregateBy { Max, Last, Sum }
 }

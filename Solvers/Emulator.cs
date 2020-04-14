@@ -1,15 +1,44 @@
+using System;
 using System.Linq;
+using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 
 namespace AI_Research_1.Solvers
 {
-    public static class Evaluator
+    public enum AggregateBy { Max, Last, Sum }
+
+    public static class Emulator
     {
-        private const long FlagCoef = 100000;
-        
-        private static long IsAlive(State state) => state.FirstCar.IsAlive && state.SecondCar.IsAlive ? FlagCoef * 1000 : 0;
-        private static long FlagsTaken(State state) => FlagCoef * state.FlagsTaken;
-        
+        private const long FlagCost = 100000;
+        private static long IsAlive(State state) => state.FirstCar.IsAlive && state.SecondCar.IsAlive ? FlagCost * 1000 : 0;
+        private static long FlagsTaken(State state) => FlagCost * state.FlagsTaken;
+
+        private static readonly Func<State, long> DefaultGetScore = GetScore_3;
+
+        public static long Emulate(State state,
+            Solution solution,
+            int steps,
+            AggregateBy aggregate = AggregateBy.Max,
+            Func<State, long> getScore = null)
+        {
+            var copy = state.Copy();
+            var score = long.MinValue;
+            var currentSolution = solution;
+
+            for (var i = 0; i < steps; i++)
+            {
+                copy.Tick(currentSolution);
+                currentSolution = solution.GetNextTick();
+                
+                var newScore = getScore?.Invoke(copy) ?? DefaultGetScore(copy);
+
+                if (aggregate == AggregateBy.Last || aggregate == AggregateBy.Max && newScore > score)
+                    score = newScore;
+            }
+
+            return score;
+        }
+
         public static long GetScore_1(State state) => 
             + IsAlive(state)
             + FlagsTaken(state)

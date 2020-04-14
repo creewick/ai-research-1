@@ -10,13 +10,13 @@ namespace AI_Research_1.Solvers
     public class HillClimbingSolver : ISolver
     {
         private readonly ISolver baseSolver =
-            new UniversalGreedySolver(17, SimulateBy.Repeat, AggregateBy.Max, Evaluator.GetScore_1);
+            new UniversalGreedySolver(17, SimulateBy.Repeat, AggregateBy.Max, Emulator.GetScore_1);
         private readonly IMutator mutator = new RandomSegmentMutator(10, 1);
         private readonly ISolver solver;
 
         public HillClimbingSolver()
         {
-            solver = new UniversalHillClimbingSolver(baseSolver, mutator, AggregateBy.Max, Evaluator.GetScore_1);
+            solver = new UniversalHillClimbingSolver(baseSolver, mutator, AggregateBy.Max, Emulator.GetScore_1);
         }
 
 
