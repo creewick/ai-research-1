@@ -10,7 +10,7 @@ namespace AI_Research_1.Solvers
     public class HillClimbingSolver : ISolver
     {
         private readonly ISolver baseSolver = new GreedySolver();
-        private readonly IMutator mutator = new RandomSegmentMutator();
+        private readonly IMutator mutator = new FlipRandomSegmentMutator(10, 5);
         private readonly ISolver solver;
 
         private static double GetScore_3(State state)
@@ -84,14 +84,19 @@ namespace AI_Research_1.Solvers
                 }
 
                 if (!ShouldContinue) break;
+                if (mutationsCount == 10)
+                    break;
             }
+
+            Console.WriteLine($"mutations: {mutationsCount}, improvements: {improvementsCount}");
 
             return steps;
         }
 
         protected IEnumerable<Solution> Improve(State state, Solution bestSolution)
         {
-            var improved = false;
+            //var improved = false;
+
             var mutation = mutator.Mutate(state, bestSolution);
             if (firstMutation == null)
                 firstMutation = mutation;
@@ -106,7 +111,7 @@ namespace AI_Research_1.Solvers
                 //improved = true;
             }
 
-            ShouldContinue = improved;
+            //ShouldContinue = improved;
         }
 
         private double Emulate(State state, Solution solution)
