@@ -13,7 +13,7 @@ namespace AI_Research_1.Tests
     public class Tests
     {
         private ISolver solver = new HillClimbingSolver();
-        private List<ISolver> solvers = new List<ISolver>() {new HillClimbingSolver(), new GreedySolver()};
+        private List<ISolver> solvers = new List<ISolver>() {new GreedySolver()};
 
         /* Чтобы визуализировать тест:
          *
@@ -54,13 +54,15 @@ namespace AI_Research_1.Tests
                     statTicks.Add(result.Time);
                 }
 
-                statistics[solver].FlagsCountStat = statFlags;
-                statistics[solver].TicksCountStat = statTicks;
+                statistics[testingSolver].FlagsCountStat = statFlags;
+                statistics[testingSolver].TicksCountStat = statTicks;
             }
 
             foreach (var solver in solvers)
             {
+                var testName = TestContext.CurrentContext.Test.Name;
                 Console.WriteLine(solver.GetType());
+                Console.WriteLine(testName);
                 Console.WriteLine($"flags count mean {statistics[solver].FlagsCountStat.Mean}");
                 Console.WriteLine(
                     $"flags count conf. Interval size {statistics[solver].FlagsCountStat.ConfIntervalSize}");
