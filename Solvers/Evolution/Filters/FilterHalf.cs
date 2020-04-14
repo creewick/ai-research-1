@@ -1,0 +1,18 @@
+using System.Collections.Generic;
+using System.Linq;
+using AI_Research_1.Interfaces;
+using AI_Research_1.Logic;
+
+namespace AI_Research_1.Solvers.Evolution.Filters
+{
+    public class FilterHalf : IGeneticFilter
+    {
+        public IEnumerable<Solution> GetParents(State state, List<Solution> solutions)
+        {
+            return solutions
+                .OrderByDescending(s => 
+                    Emulator.Emulate(state, s, s.FirstCarCommandsList.Count()))
+                .Take(solutions.Count / 2);
+        }
+    }
+}
