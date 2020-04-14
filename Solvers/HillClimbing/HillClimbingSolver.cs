@@ -163,30 +163,7 @@ namespace AI_Research_1.Solvers
             }
         }
 
-        private long Emulate(State state, Solution solution)
-        {
-            var copy = state.Copy();
-            var stepsLeft = solution.FirstCarCommandsList.Count();
-            var score = long.MinValue;
-            var curSolution = solution;
-
-            while (stepsLeft > 0)
-            {
-                copy.Tick(curSolution);
-                curSolution = solution.GetNextTick();
-                var newScore = getScore(copy);
-
-                if (aggregate == AggregateBy.Last)
-                    score = newScore;
-                else if (aggregate == AggregateBy.Max && newScore > score)
-                    score = newScore;
-                else if (aggregate == AggregateBy.Sum)
-                    score += newScore;
-
-                stepsLeft--;
-            }
-
-            return score;
-        }
+        private long Emulate(State state, Solution solution) =>
+            Emulator.Emulate(state, solution, solution.FirstCarCommandsList.Count(), aggregate, getScore);
     }
 }

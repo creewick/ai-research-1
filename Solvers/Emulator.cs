@@ -13,7 +13,7 @@ namespace AI_Research_1.Solvers
         private static long IsAlive(State state) => state.FirstCar.IsAlive && state.SecondCar.IsAlive ? FlagCost * 1000 : 0;
         private static long FlagsTaken(State state) => FlagCost * state.FlagsTaken;
 
-        private static readonly Func<State, long> DefaultGetScore = GetScore_3;
+        public static readonly Func<State, long> DefaultGetScore = GetScore_3;
 
         public static long Emulate(State state,
             Solution solution,
@@ -32,8 +32,16 @@ namespace AI_Research_1.Solvers
                 
                 var newScore = getScore?.Invoke(copy) ?? DefaultGetScore(copy);
 
-                if (aggregate == AggregateBy.Last || aggregate == AggregateBy.Max && newScore > score)
-                    score = newScore;
+                switch (aggregate)
+                {
+                    case AggregateBy.Last:
+                    case AggregateBy.Max when newScore > score:
+                        score = newScore;
+                        break;
+                    case AggregateBy.Sum:
+                        score += newScore;
+                        break;
+                }
             }
 
             return score;
