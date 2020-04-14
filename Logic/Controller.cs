@@ -55,6 +55,8 @@ namespace AI_Research_1.Logic
                 saveFile + ".js");
 
             var text = "let data=" + Serializer.Serialize(new object[]{states[0].Track, states, solutions});
+            
+            Console.WriteLine($"{Math.Round(text.Length / 1024.0 / 1024.0, 2)} MB");
              
             File.WriteAllText(file, text);
         }

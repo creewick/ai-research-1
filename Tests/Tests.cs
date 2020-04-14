@@ -29,6 +29,7 @@ namespace AI_Research_1.Tests
         [TestCase(10, 100, 10, 10, 0, TestName = "Много препятствий")]
         public void PlayTestGroup(int testsCount, int fieldSize, int flagsCount, int repeats, int obstaclesCount)
         {
+        
             var random = new Random();
             
             for (var i = 0; i < testsCount; i++)
@@ -43,11 +44,12 @@ namespace AI_Research_1.Tests
 
         private void Play(ISolver solver, State state, string saveFile=null)
         {
-            var result = Controller.PlayToEnd(state, solver, saveFile);
-
             if (saveFile != null)
-                Console.Write($"VisualizationName: {saveFile} - ");
-            Console.WriteLine($"Time:{result.Time} - Flags:{result.FlagsTaken}");
+                Console.Write($"FileName: {saveFile}.js - ");
+            
+            var result = Controller.PlayToEnd(state, solver, saveFile);
+            
+            Console.WriteLine($"Time: {result.Time} - Flags: {result.FlagsTaken}");
         }
     }
 }
