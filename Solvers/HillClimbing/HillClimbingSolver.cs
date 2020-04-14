@@ -9,11 +9,12 @@ namespace AI_Research_1.Solvers
 {
     public class HillClimbingSolver : ISolver
     {
-        private readonly ISolver baseSolver = new GreedySolver();
-        private readonly IMutator mutator = new FlipRandomSegmentMutator(10, 5);
+        private readonly ISolver baseSolver =
+            new UniversalGreedySolver(17, SimulateBy.Repeat, AggregateBy.Max, GetScore_1);
+        private readonly IMutator mutator = new RandomSegmentMutator(10, 1);
         private readonly ISolver solver;
 
-        private static double GetScore_3(State state)
+        private static long GetScore_3(State state)
         {
             var flags = new[]
                 {
@@ -26,10 +27,15 @@ namespace AI_Research_1.Solvers
                    - flags.First().Dist2To(state.FirstCar.Pos)
                    - flags.Last().Dist2To(state.SecondCar.Pos);
         }
+        
+        private static long GetScore_1(State state) => 
+            + 1000000 * state.FlagsTaken
+            - state.GetNextFlag().Dist2To(state.FirstCar.Pos)
+            - state.GetNextFlag().Dist2To(state.SecondCar.Pos);
 
         public HillClimbingSolver()
         {
-            solver = new UniversalHillClimbingSolver(baseSolver, mutator, AggregateBy.Last, GetScore_3);
+            solver = new UniversalHillClimbingSolver(baseSolver, mutator, AggregateBy.Max, GetScore_1);
         }
 
 
@@ -47,10 +53,10 @@ namespace AI_Research_1.Solvers
         private int improvementsCount;
         private IMutator mutator;
         private AggregateBy aggregate;
-        private readonly Func<State, double> getScore;
+        private readonly Func<State, long> getScore;
 
         public UniversalHillClimbingSolver(ISolver baseSolver, IMutator mutator, AggregateBy aggregate,
-            Func<State, double> getScore,
+            Func<State, long> getScore,
             bool stopOnRepeatedMutation = false)
         {
             this.baseSolver = baseSolver;
@@ -74,18 +80,16 @@ namespace AI_Research_1.Solvers
                 foreach (var solution in improvements)
                 {
                     improvementsCount++;
-//                    if (solution is IHaveTime withTime) withTime.Time = time.TimeElapsed;
-//                    if (solution is IHaveIndex withIndex)
-//                    {
-//                        withIndex.MutationIndex = mutationsCount;
-//                        withIndex.ImprovementIndex = improvementsCount;
-//                    }
+
                     steps.Add(solution);
                 }
 
                 if (!ShouldContinue) break;
-                if (mutationsCount == 10)
-                    break;
+            }
+
+            foreach (var step in steps)
+            {
+                Console.Write($"{Emulate(state, step)} ");
             }
 
             Console.WriteLine($"mutations: {mutationsCount}, improvements: {improvementsCount}");
@@ -95,30 +99,19 @@ namespace AI_Research_1.Solvers
 
         protected IEnumerable<Solution> Improve(State state, Solution bestSolution)
         {
-            //var improved = false;
-
             var mutation = mutator.Mutate(state, bestSolution);
-            if (firstMutation == null)
-                firstMutation = mutation;
-            else if (stopOnRepeatedMutation && mutation.Equals(firstMutation))
-                ShouldContinue = false;
-            //if (mutation.Score > bestSolution.Score)
+
             if (Emulate(state, mutation.GetResult()) > Emulate(state, bestSolution))
             {
-                bestSolution = mutation.GetResult();
-                firstMutation = null;
-                yield return bestSolution;
-                //improved = true;
+                yield return mutation.GetResult();
             }
-
-            //ShouldContinue = improved;
         }
 
-        private double Emulate(State state, Solution solution)
+        private long Emulate(State state, Solution solution)
         {
             var copy = state.Copy();
             var stepsLeft = solution.FirstCarCommandsList.Count();
-            var score = double.MinValue;
+            var score = long.MinValue;
             var curSolution = solution;
 
             while (stepsLeft > 0)
@@ -131,6 +124,8 @@ namespace AI_Research_1.Solvers
                     score = newScore;
                 else if (aggregate == AggregateBy.Max && newScore > score)
                     score = newScore;
+                else if (aggregate == AggregateBy.Sum)
+                    score += newScore;
 
                 stepsLeft--;
             }

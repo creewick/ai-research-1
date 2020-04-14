@@ -10,12 +10,12 @@ namespace AI_Research_1.Solvers
 {
     public class GreedySolver : ISolver
     {
-        private static double GetScore_1(State state) => 
+        private static long GetScore_1(State state) => 
             + 1000000 * state.FlagsTaken
             - state.GetNextFlag().Dist2To(state.FirstCar.Pos)
             - state.GetNextFlag().Dist2To(state.SecondCar.Pos);
 
-        private static double GetScore_2(State state)
+        private static long GetScore_2(State state)
         {
             var taken = state.FlagsTaken;
             var all = state.Track.Flags.Count;
@@ -27,7 +27,7 @@ namespace AI_Research_1.Solvers
                - secondCarFlag.Dist2To(state.SecondCar.Pos);
         }
 
-        private static double GetScore_3(State state)
+        private static long GetScore_3(State state)
         {
             var flags = new[]
                 {
@@ -52,9 +52,9 @@ namespace AI_Research_1.Solvers
         private readonly int steps;
         private readonly SimulateBy simulate;
         private readonly AggregateBy aggregate;
-        private readonly Func<State, double> getScore;
+        private readonly Func<State, long> getScore;
 
-        public UniversalGreedySolver(int steps, SimulateBy simulate, AggregateBy aggregate, Func<State, double> getScore)
+        public UniversalGreedySolver(int steps, SimulateBy simulate, AggregateBy aggregate, Func<State, long> getScore)
         {
             this.steps = steps;
             this.simulate = simulate;
@@ -87,11 +87,11 @@ namespace AI_Research_1.Solvers
             return solutions.OrderBy(x => x.Item2).Select(x => x.Item1);
         }
 
-        private double Emulate(State state, Solution solution)
+        private long Emulate(State state, Solution solution)
         {
             var copy = state.Copy();
             var stepsLeft = steps;
-            var score = double.MinValue;
+            var score = long.MinValue;
             var curSolution = solution;
 
             while (stepsLeft > 0)
@@ -115,5 +115,5 @@ namespace AI_Research_1.Solvers
 
     public enum SimulateBy { DoNothing, Repeat }
 
-    public enum AggregateBy { Max, Last }
+    public enum AggregateBy { Max, Last, Sum }
 }

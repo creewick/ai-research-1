@@ -18,10 +18,10 @@ namespace AI_Research_1.Tests
          */
         
         [Test]
-        public void Play() => Play(new GreedySolver(), StateGenerator.Generate(new Random()));
+        public void Play() => Play(new HillClimbingSolver(), StateGenerator.Generate(new Random()));
 
         [Test]
-        public void PlayAndSave() => Play(new GreedySolver(), StateGenerator.Generate(new Random()), "race");
+        public void PlayAndSave() => Play(new HillClimbingSolver(), StateGenerator.Generate(new Random()), "race");
 
         [TestCase(10, 100, 10, 1, 0, TestName = "0-blocks")]
         [TestCase(10, 100, 10, 1, 5, TestName = "5-blocks")]
