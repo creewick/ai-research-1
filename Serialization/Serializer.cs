@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,13 @@ namespace AI_Research_1.Serialization
             if (o is IEnumerable enumerable)
                 return SerializeList(enumerable.Cast<object>());
 
-            return o.ToString();
+            if (o is bool b)
+                return b ? "1" : "0";
+
+            if (o is int i)
+                return $"{i}";
+
+            return $"\"{o}\"";
         }
 
         private static string SerializeList(IEnumerable<object> list) => 

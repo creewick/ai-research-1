@@ -55,9 +55,7 @@ namespace AI_Research_1.Logic
                 saveFile + ".js");
 
             var text = "let data=" + Serializer.Serialize(new object[]{states[0].Track, states, solutions});
-
-            Console.WriteLine(text.Substring(0, 1000));
-            
+             
             File.WriteAllText(file, text);
         }
     }

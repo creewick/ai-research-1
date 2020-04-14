@@ -21,6 +21,6 @@ namespace AI_Research_1.Logic
 
         public Car Copy() => new Car(Pos, V, Radius, IsAlive);
 
-        public new object[] GetValuesList() => new object[] {V.X, V.Y, IsAlive};
+        public new object[] GetValuesList() => new object[] {Pos.X, Pos.Y, V.X, V.Y, IsAlive};
     }
 }

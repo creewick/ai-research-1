@@ -25,14 +25,14 @@ function keydown(ev){
   else if (code === "Home" || code === "KeyQ")
     index = 0;
   else if (code === "End" || code === "KeyE")
-    index = race.States.length-1;
+    index = data[1].length-1;
   else return;
   ev.preventDefault();
   update();
 }
 
 function rewind(dir){
-  index = Math.min(race.States.length-1, Math.max(0, index+dir));
+  index = Math.min(data[1].length-1, Math.max(0, index+dir));
 }
 
 function update() {
@@ -40,34 +40,32 @@ function update() {
 }
 
 function drawEvent(index){
-  const state = race.States[index]
+  const state = data[1][index]
   adjustScale(state);
   clearSpace();
-  drawFlags(race.Track.Flags, state.FlagsTaken);
-  drawObstacles(race.Track.Obstacles);
+  drawFlags(data[0][3], state[0]);
+  drawObstacles(data[0][4]);
   consoleOut = index + "\n";
-  drawCar(state, "FirstCar");
-  drawCar(state, "SecondCar");
-  drawLines(race.Solutions[index], state);
+  drawCar(state[2]);
+  drawCar(state[3]);
+  drawLines(data[2][index], state);
   con.innerText = consoleOut;
 }
 
 function drawLines(solutions, state){
   if (!solutions) return;
   const lastSolution = solutions[solutions.length - 1];
-  logMoves("FirstCarMoves", lastSolution);
-  logMoves("SecondCarMoves", lastSolution);
+  logMoves(lastSolution[0]);
+  logMoves(lastSolution[1]);
 
   if (!showTrajectories) return;
-  drawLinesCar(solutions, state.FirstCar, x => x.FirstCarMoves);
-  drawLinesCar(solutions, state.SecondCar, x => x.SecondCarMoves);
+  drawLinesCar(solutions, state[2], x => x[0]);
+  drawLinesCar(solutions, state[3], x => x[1]);
 }
 
-function logMoves(prefix, solution){
-  consoleOut += `${prefix}: `;
-  const moves = solution[prefix];
+function logMoves(moves){
   for (let i = 0; i < moves.length; i++){
-    consoleOut += `(${moves[i].X},${moves[i].Y})`
+    consoleOut += `(${moves[i].join(',')})`
   }
   consoleOut += '\n';
 }
@@ -75,15 +73,14 @@ function logMoves(prefix, solution){
 function drawLinesCar(solutions, car, getMoves){
   for (let i = 0; i < solutions.length; i++){
     ctx.strokeStyle = (i < solutions.length - 1) ? 'rgba(255,0,0,.1)' : 'rgb(255,255,0)';
-    let pos = car.Pos;
-    let v = car.V;
+    let pos = [car[0], car[1]];
+    let v = [car[2], car[3]];
     const moves = getMoves(solutions[i]);
     const points = [pos];
 
     for (let j = 0; j < moves.length; j++){
-      v = {X: v.X + moves[j].X, Y: v.Y + moves[j].Y}
-      pos = {X: pos.X + v.X, Y: pos.Y + v.Y}
-
+      v = [v[0] + moves[j][0], v[1] + moves[j][1]]
+      pos = [pos[0] + v[0], pos[1] + v[1]]
       points.push(pos);
     }
     ctx.stroke(createLine(points, 0.5));
@@ -109,28 +106,27 @@ function drawObstacles(obstacles){
 
 function drawObstacle(o) {
   ctx.fillStyle = 'grey';
-  ctx.fill(createDisk(o.Pos.X, o.Pos.Y, o.Radius));
+  ctx.fill(createDisk(...o));
 }
 
 function drawFlag(flag, index, isNext) {
   ctx.fillStyle = isNext ? 'cyan' : 'blue';
-  ctx.fill(createDisk(flag.X, flag.Y));
+  ctx.fill(createDisk(flag[0], flag[1]));
 }
 
-function drawCar(state, prefix) {
-  const car = state[prefix];
-  ctx.fillStyle = car.IsAlive ? 'green' : 'red';
-  ctx.fill(createDisk(car.Pos.X, car.Pos.Y, car.Radius));
-  consoleOut += `${prefix}: ${JSON.stringify(car)}\n`;
+function drawCar(car) {
+  ctx.fillStyle = car[4] ? 'green' : 'red';
+  ctx.fill(createDisk(car[0], car[1], 2));
+  consoleOut += `Pos: (${car[0]},${car[1]}) V: (${car[2]},${car[3]}) Alive:${car[4]}\n`;
 }
 
 function createLine(points){
   const res = new Path2D();
   if (points.length > 0) {
     const start = points[0];
-    res.moveTo(toScreenX(start.X), toScreenY(start.Y));
+    res.moveTo(toScreenX(start[0]), toScreenY(start[1]));
     for (let p of points)
-      res.lineTo(toScreenX(p.X), toScreenY(p.Y));
+      res.lineTo(toScreenX(p[0]), toScreenY(p[1]));
   }
   return res;
 }
@@ -176,17 +172,17 @@ function createRect(gameX, gameY, radius = 0) {
 }
 
 function fitInScreen(pos){
-  const screenX = toScreenX(pos.X);
-  const screenY = toScreenY(pos.Y);
+  const screenX = toScreenX(pos[0]);
+  const screenY = toScreenY(pos[1]);
   return screenX > 0 && screenX < canvas.width && screenY > 0 && screenY < canvas.height;
 }
 
 function adjustScale(state) {
   let objects = [
-      ...race.Track.Flags,
-      ...race.Track.Obstacles.map(o => o.Pos),
-         state.FirstCar.Pos,
-         state.SecondCar.Pos
+      ...data[0][3],
+      ...data[0][4],
+         state[2],
+         state[3]
   ];
   cellSize = 8;
   while (cellSize > 0.2 && objects.some(p => !fitInScreen(p)))
