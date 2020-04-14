@@ -10,32 +10,13 @@ namespace AI_Research_1.Solvers
     public class HillClimbingSolver : ISolver
     {
         private readonly ISolver baseSolver =
-            new UniversalGreedySolver(17, SimulateBy.Repeat, AggregateBy.Max, GetScore_1);
+            new UniversalGreedySolver(17, SimulateBy.Repeat, AggregateBy.Max, Evaluator.GetScore_1);
         private readonly IMutator mutator = new RandomSegmentMutator(10, 1);
         private readonly ISolver solver;
 
-        private static long GetScore_3(State state)
-        {
-            var flags = new[]
-                {
-                    state.GetNextFlag(),
-                    state.GetNextNextFlag()
-                }
-                .OrderBy(v => state.FirstCar.Pos.Dist2To(v));
-
-            return 1000000 * state.FlagsTaken
-                   - flags.First().Dist2To(state.FirstCar.Pos)
-                   - flags.Last().Dist2To(state.SecondCar.Pos);
-        }
-        
-        private static long GetScore_1(State state) => 
-            + 1000000 * state.FlagsTaken
-            - state.GetNextFlag().Dist2To(state.FirstCar.Pos)
-            - state.GetNextFlag().Dist2To(state.SecondCar.Pos);
-
         public HillClimbingSolver()
         {
-            solver = new UniversalHillClimbingSolver(baseSolver, mutator, AggregateBy.Max, GetScore_1);
+            solver = new UniversalHillClimbingSolver(baseSolver, mutator, AggregateBy.Max, Evaluator.GetScore_1);
         }
 
 

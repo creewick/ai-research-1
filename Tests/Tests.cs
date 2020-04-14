@@ -35,7 +35,7 @@ namespace AI_Research_1.Tests
             for (var i = 0; i < testsCount; i++)
             {
                 var state = StateGenerator.Generate(random, fieldSize, flagsCount, repeats, obstaclesCount);
-                var solver = new GreedySolver();
+                var solver = new HillClimbingSolver();
                 var testName = TestContext.CurrentContext.Test.Name;
                 var saveFile = $"{DateTime.Now:dd.HH;mm;ss}_{testName}_{i}";
                 
