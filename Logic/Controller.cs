@@ -25,7 +25,7 @@ namespace AI_Research_1.Logic
                 
                 state.Tick(newSolutions.Last());
                 
-                solutions.Add(newSolutions);
+                solutions.Add(newSolutions.TakeLast(20));
                 states.Add(state);
             }
 

@@ -72,7 +72,7 @@ function logMoves(moves){
 
 function drawLinesCar(solutions, car, getMoves){
   for (let i = 0; i < solutions.length; i++){
-    ctx.strokeStyle = (i < solutions.length - 1) ? 'rgba(255,0,0,.1)' : 'rgb(255,255,0)';
+    ctx.strokeStyle = (i < solutions.length - 1) ? 'rgba(255,0,0,.5)' : 'rgb(255,255,0)';
     let pos = [car[0], car[1]];
     let v = [car[2], car[3]];
     const moves = getMoves(solutions[i]);

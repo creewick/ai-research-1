@@ -9,6 +9,8 @@ namespace AI_Research_1.Tests
     [TestFixture]
     public class Tests
     {
+        private ISolver solver = new HillClimbingSolver();
+
         /* Чтобы визуализировать тест:
          *
          * 1. Укажи параметр saveFile в Controller.PlayToEnd
@@ -18,10 +20,10 @@ namespace AI_Research_1.Tests
          */
         
         [Test]
-        public void Play() => Play(new GreedySolver(), StateGenerator.Generate(new Random()));
+        public void Play() => Play(solver, StateGenerator.Generate(new Random()));
 
         [Test]
-        public void PlayAndSave() => Play(new GreedySolver(), StateGenerator.Generate(new Random()), "race");
+        public void PlayAndSave() => Play(solver, StateGenerator.Generate(new Random()), "race");
 
         [TestCase(10, 100, 10, 1, 0, TestName = "0-blocks")]
         [TestCase(10, 100, 10, 1, 5, TestName = "5-blocks")]
@@ -35,7 +37,7 @@ namespace AI_Research_1.Tests
             for (var i = 0; i < testsCount; i++)
             {
                 var state = StateGenerator.Generate(random, fieldSize, flagsCount, repeats, obstaclesCount);
-                var solver = new GreedySolver();
+                var solver = this.solver;
                 var testName = TestContext.CurrentContext.Test.Name;
                 var saveFile = $"{DateTime.Now:dd.HH;mm;ss}_{testName}_{i}";
                 
