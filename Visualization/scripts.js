@@ -45,7 +45,7 @@ function drawEvent(index){
   clearSpace();
   drawFlags(data[0][3], state[0]);
   drawObstacles(data[0][4]);
-  consoleOut = index + "\n";
+  consoleOut = `Time: ${index} FlagsTaken: ${state[0]} Countdown: ${state[1]}\n`;
   drawCar(state[2]);
   drawCar(state[3]);
   drawLines(data[2][index], state);

@@ -41,7 +41,7 @@ namespace AI_Research_1.Logic
             
             task.Wait(Timeout);
             
-            if (!task.IsCompleted) throw new TimeoutException();
+            // if (!task.IsCompleted) throw new TimeoutException();
 
             return task.Result;
         }
