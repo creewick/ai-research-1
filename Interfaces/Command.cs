@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using AI_Research_1.Interfaces.Commands;
 using AI_Research_1.Logic;
+using AI_Research_1.Serialization;
 
 namespace AI_Research_1.Interfaces
 {
-    public abstract class Command
+    public abstract class Command : IValuesList
     {
         public abstract void Apply(State state, Solution solution, Car car);
         
+        public abstract object[] GetValuesList();
+
         public static IEnumerable<Command> All => new List<Command>
         {
             new Move(-1, 1), new Move(0, 1), new Move(1, 1),

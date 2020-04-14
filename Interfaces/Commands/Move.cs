@@ -15,10 +15,12 @@ namespace AI_Research_1.Interfaces.Commands
             
             v = new V(x, y); 
         }
-        
+
         public override void Apply(State state, Solution solution, Car car)
         {
             car.V += v;
         }
+
+        public override object[] GetValuesList() => v.GetValuesList();
     }
 }

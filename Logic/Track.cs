@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using AI_Research_1.Helpers;
+using AI_Research_1.Serialization;
 
 namespace AI_Research_1.Logic
 {
-    public class Track
+    public class Track : IValuesList
     {
         public int Time { get; }
         public int FlagsGoal { get; }
@@ -19,5 +20,7 @@ namespace AI_Research_1.Logic
             MaxCooldown = maxCooldown;
             FlagsGoal = flagsGoal;
         }
+
+        public object[] GetValuesList() => new object[] {Time, FlagsGoal, MaxCooldown, Flags, Obstacles};
     }
 }

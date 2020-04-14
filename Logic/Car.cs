@@ -1,8 +1,9 @@
 using AI_Research_1.Helpers;
+using AI_Research_1.Serialization;
 
 namespace AI_Research_1.Logic
 {
-    public class Car : Disk
+    public class Car : Disk, IValuesList
     {
         public V V { get; set; }
         public bool IsAlive { get; set; }
@@ -19,5 +20,7 @@ namespace AI_Research_1.Logic
         }
 
         public Car Copy() => new Car(Pos, V, Radius, IsAlive);
+
+        public new object[] GetValuesList() => new object[] {Pos.X, Pos.Y, V.X, V.Y, IsAlive};
     }
 }

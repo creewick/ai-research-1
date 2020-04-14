@@ -1,14 +1,14 @@
 using System;
-using AI_Research_1.Interfaces;
+using AI_Research_1.Serialization;
 
 namespace AI_Research_1.Helpers
  {
-     public struct V : IEquatable<V>
+     public struct V : IEquatable<V>, IValuesList
      {
          public static V Zero = new V(0, 0);
          
-         public readonly int X { get; }
-         public readonly int Y { get; }
+         public int X { get; }
+         public int Y { get; }
 
          public V(int x, int y)
          {
@@ -54,5 +54,7 @@ namespace AI_Research_1.Helpers
              double vp = bax * pay - bay * pax;
              return vp * vp / a.Dist2To(b);
          }
+
+         public object[] GetValuesList() => new object[] {X, Y};
      }
  }

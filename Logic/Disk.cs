@@ -1,9 +1,10 @@
 using System.Text.Json.Serialization;
 using AI_Research_1.Helpers;
+using AI_Research_1.Serialization;
 
 namespace AI_Research_1.Logic
 {
-    public class Disk
+    public class Disk : IValuesList
     {
         [JsonPropertyName("R")] public int Radius { get; }
         public V Pos { get; set; }
@@ -21,5 +22,7 @@ namespace AI_Research_1.Logic
         }
 
         public bool Contains(V point) => (point - Pos).Len2() <= Radius * Radius;
+
+        public object[] GetValuesList() => new object[] {Pos.X, Pos.Y, Radius};
     }
 }

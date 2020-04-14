@@ -23,19 +23,21 @@ namespace AI_Research_1.Tests
         [Test]
         public void PlayAndSave() => Play(new GreedySolver(), StateGenerator.Generate(new Random()), "race");
 
-        [TestCase(10, 100, 10, 1, 0, TestName = "Без препятствий")]
-        [TestCase(10, 100, 10, 2, 0, TestName = "Мало препятствий")]
-        [TestCase(10, 100, 10, 5, 0, TestName = "Больше препятствий")]
-        [TestCase(10, 100, 10, 10, 0, TestName = "Много препятствий")]
+        [TestCase(10, 100, 10, 1, 0, TestName = "0-blocks")]
+        [TestCase(10, 100, 10, 1, 5, TestName = "5-blocks")]
+        [TestCase(10, 100, 10, 1, 10, TestName = "10-blocks")]
+        [TestCase(10, 100, 10, 1, 20, TestName = "20-blocks")]
         public void PlayTestGroup(int testsCount, int fieldSize, int flagsCount, int repeats, int obstaclesCount)
         {
+        
             var random = new Random();
             
             for (var i = 0; i < testsCount; i++)
             {
                 var state = StateGenerator.Generate(random, fieldSize, flagsCount, repeats, obstaclesCount);
                 var solver = new GreedySolver();
-                var saveFile = TestContext.CurrentContext.Test.Name + i;
+                var testName = TestContext.CurrentContext.Test.Name;
+                var saveFile = $"{DateTime.Now:dd.HH;mm;ss}_{testName}_{i}";
                 
                 Play(solver, state, saveFile);
             }
@@ -43,11 +45,12 @@ namespace AI_Research_1.Tests
 
         private void Play(ISolver solver, State state, string saveFile=null)
         {
-            var result = Controller.PlayToEnd(state, solver, saveFile);
-
             if (saveFile != null)
-                Console.Write($"VisualizationName: {saveFile} - ");
-            Console.WriteLine($"Time:{result.Time} - Flags:{result.FlagsTaken}");
+                Console.WriteLine($"FileName: {saveFile}.js");
+            
+            var result = Controller.PlayToEnd(state, solver, saveFile);
+            
+            Console.WriteLine($"Time: {result.Time} - Flags: {result.FlagsTaken}");
         }
     }
 }

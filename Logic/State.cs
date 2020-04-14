@@ -1,16 +1,16 @@
-using System.Text.Json.Serialization;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
+using AI_Research_1.Serialization;
 
 namespace AI_Research_1.Logic
 {
-    public class State
+    public class State : IValuesList
     {
-        [JsonIgnore] public Track Track { get; }
+        public Track Track { get; }
         public Car FirstCar { get; }
         public Car SecondCar { get; }
         public int FlagsTaken { get; private set; }
-        [JsonIgnore] public int Time { get; private set; }
+        public int Time { get; private set; }
         
         public int Cooldown { get; set; }
 
@@ -24,7 +24,7 @@ namespace AI_Research_1.Logic
             Time = time;
         }
         
-        public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), FlagsTaken, Time);
+        public State Copy() => new State(Track, FirstCar.Copy(), SecondCar.Copy(), FlagsTaken, Time, Cooldown);
         
         public V GetNextFlag() => Track.Flags[FlagsTaken % Track.Flags.Count];
         public V GetNextNextFlag() => Track.Flags[(FlagsTaken + 1) % Track.Flags.Count];
@@ -74,5 +74,7 @@ namespace AI_Research_1.Logic
                 if (o.Pos.SegmentCrossPoint(a, b, o.Radius + carRadius)) return true;
             return false;
         }
+        
+        public object[] GetValuesList() => new object[] {FlagsTaken, Cooldown, FirstCar, SecondCar};
     }
 }
