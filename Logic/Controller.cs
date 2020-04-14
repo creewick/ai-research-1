@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 using AI_Research_1.Interfaces;
+using AI_Research_1.Serialization;
 
 namespace AI_Research_1.Logic
 {
@@ -48,11 +48,15 @@ namespace AI_Research_1.Logic
 
         private static void SaveRace(List<State> states, List<IEnumerable<Solution>> solutions, string saveFile)
         {
-            var file = Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "Visualization", saveFile + ".js");
-            
-            var visualisation = new Visualization(states, solutions, states[0].Track);
-            
-            var text = "const race = " + JsonSerializer.Serialize(visualisation);
+            var file = Path.Combine(
+                Environment.CurrentDirectory, 
+                "..", "..", "..", 
+                "Visualization", 
+                saveFile + ".js");
+
+            var text = "let data=" + Serializer.Serialize(new object[]{states[0].Track, states, solutions});
+
+            Console.WriteLine(text.Substring(0, 1000));
             
             File.WriteAllText(file, text);
         }

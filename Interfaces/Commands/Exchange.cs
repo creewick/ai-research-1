@@ -15,5 +15,7 @@ namespace AI_Research_1.Interfaces.Commands
                 (state.FirstCar.V, state.SecondCar.V) = (state.SecondCar.V, state.FirstCar.V);
             }
         }
+
+        public override object[] GetValuesList() => new[] {"E"};
     }
 }
