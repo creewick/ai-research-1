@@ -45,7 +45,7 @@ namespace AI_Research_1.Tests
         private void Play(ISolver solver, State state, string saveFile=null)
         {
             if (saveFile != null)
-                Console.Write($"FileName: {saveFile}.js - ");
+                Console.Write($"FileName: {saveFile}.js");
             
             var result = Controller.PlayToEnd(state, solver, saveFile);
             
