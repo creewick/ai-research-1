@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
@@ -14,6 +16,13 @@ namespace AI_Research_1.Solvers
         private static long FlagsTaken(State state) => FlagCost * state.FlagsTaken;
 
         private static readonly Func<State, long> DefaultGetScore = GetScore_3;
+
+        public static IEnumerable<Solution> SortByScore(IEnumerable<Solution> solutions, State state)
+        {
+            return solutions
+                .OrderByDescending(s => 
+                    Emulate(state, s, s.FirstCarCommandsList.Count()));
+        }
 
         public static long Emulate(State state,
             Solution solution,

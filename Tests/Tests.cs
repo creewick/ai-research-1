@@ -2,6 +2,7 @@ using System;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 using AI_Research_1.Solvers;
+using AI_Research_1.Solvers.Evolution;
 using NUnit.Framework;
 
 namespace AI_Research_1.Tests
@@ -9,7 +10,7 @@ namespace AI_Research_1.Tests
     [TestFixture]
     public class Tests
     {
-        private ISolver solver = new HillClimbingSolver();
+        private ISolver solver = new EvolutionSolver();
 
         /* Чтобы визуализировать тест:
          *

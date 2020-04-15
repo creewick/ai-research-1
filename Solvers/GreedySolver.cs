@@ -10,10 +10,14 @@ namespace AI_Research_1.Solvers
 {
     public class GreedySolver : ISolver
     {
-        private static readonly ISolver Solver =
-            new UniversalGreedySolver(17, SimulateBy.Repeat, AggregateBy.Max, Emulator.GetScore_3);
+        private readonly ISolver solver;
 
-        public IEnumerable<Solution> GetSolutions(State state, Countdown time) => Solver.GetSolutions(state, time);
+        public GreedySolver(int solutionDepth)
+        {
+            solver = new UniversalGreedySolver(solutionDepth, SimulateBy.Repeat, AggregateBy.Max, Emulator.GetScore_3);
+        }
+
+        public IEnumerable<Solution> GetSolutions(State state, Countdown time) => solver.GetSolutions(state, time);
     }
 
     public class UniversalGreedySolver : ISolver

@@ -11,8 +11,9 @@ namespace AI_Research_1.Solvers.Evolution.Appliers
         
         public IEnumerable<Solution> GetChildren(List<Solution> solutions)
         {
-            for (var i = 1; i < solutions.Count; i += 2)
-                yield return GetChild(solutions[i - 1], solutions[i]);
+            for (var i = 0; i < solutions.Count; i++)
+            for (var j = i + 1; j < solutions.Count; j++)
+                yield return GetChild(solutions[i], solutions[j]);
         }
 
         private static Solution GetChild(Solution firstParent, Solution secondParent)
