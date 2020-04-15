@@ -13,7 +13,7 @@ namespace AI_Research_1.Tests
     public class Tests
     {
         private ISolver solver = new HillClimbingSolver();
-        private List<ISolver> solvers = new List<ISolver>() {new GreedySolver()};
+        private List<ISolver> solvers = new List<ISolver>() {new GreedySolver(), new HillClimbingSolver()};
 
         /* Чтобы визуализировать тест:
          *
@@ -40,10 +40,11 @@ namespace AI_Research_1.Tests
             solvers.ForEach(x => statistics[x] = new Stat());
             var states = Enumerable.Range(0, testsCount).Select(x =>
                 StateGenerator.Generate(random, fieldSize, flagsCount, repeats, obstaclesCount)).ToList();
-            var statFlags = new StatValue();
-            var statTicks = new StatValue();
             foreach (var testingSolver in solvers)
             {
+                var statFlags = new StatValue();
+                var statTicks = new StatValue();
+                
                 for (var i = 0; i < testsCount; i++)
                 {
                     var state = states[i];
