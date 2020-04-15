@@ -2,7 +2,7 @@
 {
     public class Stat
     {
-        public StatValue FlagsCountStat = new StatValue();
-        public StatValue TicksCountStat = new StatValue();
+        public StatValue FlagsStat = new StatValue();
+        public StatValue TimeStat = new StatValue();
     }
 }

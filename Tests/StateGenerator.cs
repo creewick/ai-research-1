@@ -9,7 +9,7 @@ namespace AI_Research_1.Tests
 {
     public static class StateGenerator
     {
-        public static State Generate(
+        public static State Get(
             Random random, int fieldSize = 100, int flagsCount = 5,
             int repeats = 2, int obstaclesCount = 0, int cooldown = 20
             )

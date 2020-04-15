@@ -70,7 +70,7 @@ namespace AI_Research_1.Helpers
             return x.ToString();
         }
 
-        public override string ToString() => $"{FormatCompact(Mean)} sigma={FormatCompact(StdDeviation)}";
+        public override string ToString() => $"{FormatCompact(Mean)} ± {FormatCompact(StdDeviation)}";
 
         public string ToDetailedString(bool humanReadable = true)
         {
