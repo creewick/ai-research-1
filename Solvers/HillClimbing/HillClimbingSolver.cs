@@ -15,6 +15,7 @@ namespace AI_Research_1.Solvers
         private readonly List<IMutator> mutators = new List<IMutator>()
         {
             new RandomSegmentMutator(3, 1),
+            // TODO SameCommandSegmentMutator
             new FlipRandomSegmentMutator(3,3),
             new SwapTwoRandomSegmentsMutator(3)
         };

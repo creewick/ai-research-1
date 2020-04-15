@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AI_Research_1.Helpers;
-using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 
 namespace AI_Research_1.Tests

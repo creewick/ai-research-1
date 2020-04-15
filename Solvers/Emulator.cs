@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AI_Research_1.Interfaces;
@@ -89,5 +88,8 @@ namespace AI_Research_1.Solvers
                    - flags.First().Dist2To(state.FirstCar.Pos)
                    - flags.Last().Dist2To(state.SecondCar.Pos);
         }
+        
+        //TODO функция оценки, не присваивать машинкам флаги
+        //TODO одна функция оценки для всех алгоритмов
     }
 }

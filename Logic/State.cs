@@ -11,7 +11,6 @@ namespace AI_Research_1.Logic
         public Car SecondCar { get; }
         public int FlagsTaken { get; private set; }
         public int Time { get; private set; }
-        
         public int Cooldown { get; set; }
 
         public State(Track track, Car firstCar, Car secondCar, int flagsTaken=0, int time=0, int cooldown=20)
