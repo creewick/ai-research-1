@@ -12,7 +12,7 @@ namespace AI_Research_1.Solvers.Evolution
     public class EvolutionSolver : ISolver
     {
         private readonly ISolver solver = new UniversalEvolutionSolver(
-            new RandomSearch(50, 10),
+            new GreedySolver(10), 
             new FilterHalf(), 
             new SegmentCrossingOver(), 
             new SelectTopScore()

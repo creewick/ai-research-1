@@ -9,9 +9,8 @@ namespace AI_Research_1.Solvers.Evolution.Filters
     {
         public IEnumerable<Solution> GetParents(State state, List<Solution> solutions)
         {
-            return solutions
-                .OrderByDescending(s => 
-                    Emulator.Emulate(state, s, s.FirstCarCommandsList.Count()))
+            return Emulator
+                .SortByScore(solutions, state)
                 .Take(solutions.Count / 2);
         }
     }
