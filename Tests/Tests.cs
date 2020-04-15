@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 using AI_Research_1.Solvers;
 using AI_Research_1.Solvers.Evolution;
-using AI_Research_1.Solvers.Evolution.BaseSolvers;
 using NUnit.Framework;
 
 namespace AI_Research_1.Tests
@@ -25,14 +25,16 @@ namespace AI_Research_1.Tests
 
         private List<State> states;
 
+        private Random random;
+
         [OneTimeSetUp]
         public void SetUp()
         {
-            var random = new Random();
+            random = new Random();
             
             solvers = new List<ISolver>
             {
-                new GreedySolver(),
+                new GreedySolver(20),
                 new RandomSolver(),
                 new HillClimbingSolver(),
                 new EvolutionSolver()
@@ -53,7 +55,6 @@ namespace AI_Research_1.Tests
         [Test]
         public void PlayAll()
         {
-            Console.SetOut(TestContext.Progress);
             var stats = new Dictionary<ISolver, Stat>();
             solvers.ForEach(x => stats[x] = new Stat());
             
@@ -64,6 +65,7 @@ namespace AI_Research_1.Tests
                 
                 for (var i = 0; i < states.Count; i++)
                 {
+                    Debug.WriteLine($"{solver.GetType()}-{i}");
                     var result = Play(solver, states[i]);
                     statFlags.Add(result.FlagsTaken);
                     statTicks.Add(result.Time);
@@ -77,6 +79,7 @@ namespace AI_Research_1.Tests
             solvers.ForEach(s => Console.WriteLine(
                 $"Solver: {s.GetType()} Flags: {stats[s].FlagsStat} Time: {stats[s].TimeStat}"));
         }
+        
         private static State Play(ISolver solver, State state, string saveFile = null)
         {
             if (saveFile != null)
