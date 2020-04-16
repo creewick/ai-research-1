@@ -19,7 +19,7 @@ namespace AI_Research_1.Tests
      * 4. Открой index.html
      */
     [TestFixture]
-    public partial class Tests
+    public class Tests
     {
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
