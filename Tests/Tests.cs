@@ -1,8 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using AI_Research_1.Helpers;
+using System.Reflection;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 using AI_Research_1.Solvers;
@@ -19,75 +19,50 @@ namespace AI_Research_1.Tests
      * 4. Открой index.html
      */
     [TestFixture]
-    public class Tests
+    public partial class Tests
     {
-        private List<ISolver> solvers;
-
-        private List<State> states;
-
-        private Random random;
-
-        [OneTimeSetUp]
-        public void SetUp()
+        private static readonly List<ISolver> Solvers = new List<ISolver>
         {
-            random = new Random();
-            
-            solvers = new List<ISolver>
-            {
-                new GreedySolver(20),
-                new RandomSolver(),
-                new HillClimbingSolver(),
-                new EvolutionSolver()
-            };
-            states = Enumerable
-                .Range(0, 5)
-                .Select(i => StateGenerator.Get(random, 100, 10, 1, 0))
-                .ToList();
+            new GreedySolver(20),
+            new RandomSolver(),
+            new HillClimbingSolver(),
+            new EvolutionSolver()
+        };
+
+        private const bool SaveReplay = false;
+
+        [TestCaseSource(nameof(TestCases))]
+        public void Play(State state, ISolver solver)
+        {   
+            PlayToEnd(solver, state, SaveReplay);
         }
 
-
-        [Test]
-        public void PlayOne() => Play(solvers[0], states[0]);
-
-        [Test]
-        public void PlayOneAndSave() => Play(solvers[0], states[0], "race");
-
-        [Test]
-        public void PlayAll()
+        private static IEnumerable TestCases()
         {
-            var stats = new Dictionary<ISolver, Stat>();
-            solvers.ForEach(x => stats[x] = new Stat());
-            
-            foreach (var solver in solvers)
-            {
-                var statFlags = new StatValue();
-                var statTicks = new StatValue();
-                
-                for (var i = 0; i < states.Count; i++)
-                {
-                    Debug.WriteLine($"{solver.GetType()}-{i}");
-                    var result = Play(solver, states[i]);
-                    statFlags.Add(result.FlagsTaken);
-                    statTicks.Add(result.Time);
-                }
+            var states = typeof(TestStates)
+                .GetProperties(BindingFlags.Static | BindingFlags.Public)
+                .Where(x => x.PropertyType == typeof(State))
+                .Select(x => new {State = (State) x.GetValue(null), Name = x.Name});
 
-                stats[solver].FlagsStat = statFlags;
-                stats[solver].TimeStat = statTicks;
-            }
-            
-            Console.WriteLine($"Results of{states.Count} tests:\n");
-            solvers.ForEach(s => Console.WriteLine(
-                $"Solver: {s.GetType()} Flags: {stats[s].FlagsStat} Time: {stats[s].TimeStat}"));
+            foreach (var stateObj in states)
+            foreach (var solver in Solvers)
+                yield return new TestCaseData(stateObj.State, solver)
+                    .SetName($"{stateObj.Name}_{solver.GetType().Name}");
         }
         
-        private static State Play(ISolver solver, State state, string saveFile = null)
+        private static State PlayToEnd(ISolver solver, State state, bool saveReplay)
         {
-            if (saveFile != null)
-                Console.WriteLine($"FileName: {saveFile}.js");
+            var replayFile = !saveReplay
+                ? null
+                : $"{solver.GetType().Name}_{DateTime.Now:dd.HH.mm.ss}";
+            
+            var result = Controller.PlayToEnd(state, solver, replayFile);
 
-            var result = Controller.PlayToEnd(state, solver, saveFile);
+            Console.WriteLine($"Time: {result.Time} Flags: {result.FlagsTaken}");
 
-            Console.WriteLine($"Solver: {solver.GetType()} Time: {result.Time} Flags: {result.FlagsTaken}");
+            if (saveReplay)
+                Console.WriteLine($"Saved to: {replayFile}.js");
+            
             return result;
         }
     }

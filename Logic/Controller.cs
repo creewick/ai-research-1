@@ -10,9 +10,9 @@ namespace AI_Research_1.Logic
 {
     public static class Controller
     {
-        public const int Timeout = 100;
+        private const int Timeout = 100;
 
-        public static State PlayToEnd(State state, ISolver solver, string saveFile=null)
+        public static State PlayToEnd(State state, ISolver solver, string replayFile=null)
         {
             var states = new List<State> {state};
             var solutions = new List<IEnumerable<Solution>>();
@@ -21,7 +21,7 @@ namespace AI_Research_1.Logic
             {
                 state = state.Copy();
 
-                var newSolutions = GetSolutions(solver, state.Copy());
+                var newSolutions = GetSolutions(solver, state.Copy()).ToList();
                 
                 state.Tick(newSolutions.Last());
                 
@@ -29,7 +29,7 @@ namespace AI_Research_1.Logic
                 states.Add(state);
             }
 
-            if (saveFile != null) SaveRace(states, solutions, saveFile);
+            if (replayFile != null) SaveReplay(states, solutions, replayFile);
 
             return state;
         }
@@ -40,19 +40,17 @@ namespace AI_Research_1.Logic
                 .GetSolutions(state, Timeout));
             
             task.Wait(Timeout);
-            
-            // if (!task.IsCompleted) throw new TimeoutException();
 
             return task.Result;
         }
 
-        private static void SaveRace(List<State> states, List<IEnumerable<Solution>> solutions, string saveFile)
+        private static void SaveReplay(List<State> states, List<IEnumerable<Solution>> solutions, string replayFile)
         {
             var file = Path.Combine(
                 Environment.CurrentDirectory, 
                 "..", "..", "..", 
                 "Visualization", 
-                saveFile + ".js");
+                replayFile + ".js");
 
             var text = "let data=" + Serializer.Serialize(new object[]{states[0].Track, states, solutions});
             

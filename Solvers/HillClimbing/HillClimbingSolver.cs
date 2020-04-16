@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
@@ -99,16 +100,16 @@ namespace AI_Research_1.Solvers
                 {
                     steps.Add(bestSolution);
                     BestSolutionsWinsCount++;
-                    Console.WriteLine("best");
+                    Debug.WriteLine("best");
                 }
             }
 
             foreach (var step in steps)
             {
-                Console.Write($"{Emulate(state, step)} ");
+                Debug.Write($"{Emulate(state, step)} ");
             }
 
-            Console.WriteLine($"mutations: {MutationsCount}, improvements: {ImprovementsCount}");
+            Debug.WriteLine($"mutations: {MutationsCount}, improvements: {ImprovementsCount}");
             return steps;
         }
 
@@ -160,7 +161,7 @@ namespace AI_Research_1.Solvers
             if (bestScore > Emulate(state, improvingSolution))
             {
                 yield return bestMutation.GetResult();
-                Console.WriteLine(bestMutation.GetType());
+                Debug.WriteLine(bestMutation.GetType());
             }
         }
 
