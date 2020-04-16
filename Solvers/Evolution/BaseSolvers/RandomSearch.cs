@@ -19,7 +19,9 @@ namespace AI_Research_1.Solvers.Evolution.BaseSolvers
             this.solutionDepth = solutionDepth;
             this.random = new Random();
         }
-        
+
+        public string GetNameWithArgs() => $"Random.{populationCount}.{solutionDepth}";
+
         public IEnumerable<Solution> GetSolutions(State state, Countdown time)
         {
             for (var i = 0; i < populationCount; i++)

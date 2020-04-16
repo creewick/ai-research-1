@@ -20,8 +20,10 @@ namespace AI_Research_1.Solvers.Evolution.BaseSolvers
             this.randomSearch = new RandomSearch(populationCount, solutionDepth);
             this.greedySolver = new GreedySolver(solutionDepth);
         }
-        
-        public IEnumerable<Solution> GetSolutions(State state, Countdown time)
+
+        public string GetNameWithArgs() => $"GreedyRandom.{populationCount}.{solutionDepth}";
+
+            public IEnumerable<Solution> GetSolutions(State state, Countdown time)
         {
             return greedySolver
                 .GetSolutions(state, time / 2)

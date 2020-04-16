@@ -15,6 +15,7 @@ namespace AI_Research_1.Solvers
         public RandomSolver(bool withHeuristic = true) =>
             solver = new UniversalRandomSolver(10, 8, AggregateBy.Max, Emulator.DefaultGetScore, withHeuristic);
         public IEnumerable<Solution> GetSolutions(State state, Countdown time) => solver.GetSolutions(state, time);
+        public string GetNameWithArgs() => solver.GetNameWithArgs();
     }
 
     public class UniversalRandomSolver : ISolver
@@ -62,6 +63,8 @@ namespace AI_Research_1.Solvers
 
             return orderingSolutions.Select(x => x.Item1);
         }
+
+        public string GetNameWithArgs() => $"Random.{steps}.{rndSegMaxLen}.{aggregate}.{getScore.Method.Name}.{useLastBastSolution}";
 
         private static IEnumerable<List<Command>> UpdateLastSolution(IEnumerable<Command> lastSolution)
         {

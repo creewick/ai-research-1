@@ -52,5 +52,8 @@ namespace AI_Research_1.Solvers.Evolution
 
             return population;
         }
+
+        public string GetNameWithArgs() =>
+            $"Evolution.{baseSolver.GetNameWithArgs()};{filter.GetType().Name}.{applier.GetType().Name}.{selector.GetType().Name}";
     }
 }

@@ -7,5 +7,6 @@ namespace AI_Research_1.Interfaces
     public interface ISolver
     {
         IEnumerable<Solution> GetSolutions(State state, Countdown time);
+        string GetNameWithArgs();
     }
 }

@@ -48,7 +48,7 @@ namespace AI_Research_1.Logic
 
         private static void SaveReplay(List<State> states, List<IEnumerable<Solution>> solutions, string replayFile)
         {
-            var file = Path.Combine(ProjectDirectory, "Visualization", replayFile + ".js");
+            var file = Path.Combine(ProjectDirectory, "Visualization", replayFile);
 
             var text = "let data=" + Serializer.Serialize(new object[]{states[0].Track, states, solutions});
             
@@ -57,7 +57,7 @@ namespace AI_Research_1.Logic
 
         private static void SaveStats(State result, string statsFile)
         {
-            var file = Path.Combine(ProjectDirectory, "Statistics", statsFile + ".js");
+            var file = Path.Combine(ProjectDirectory, "Statistics", statsFile);
             var track = result.Track;
             var text = $"{track.FlagsGoal},{track.Time},{result.FlagsTaken},{result.Time}\n";
             

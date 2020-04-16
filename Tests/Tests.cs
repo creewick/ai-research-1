@@ -27,7 +27,7 @@ namespace AI_Research_1.Tests
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
             new GreedySolver(20),
-            new UniversalRandomSolver(10, 8, AggregateBy.Max, Emulator.DefaultGetScore, true),
+            new RandomSolver(),
             new HillClimbingSolver(),
             new EvolutionSolver()
         };
@@ -40,25 +40,22 @@ namespace AI_Research_1.Tests
         
         private static State PlayToEnd(ISolver solver, State state, bool saveReplay, bool saveStats)
         {
-            var solverArgs = GetSolverArgs(solver);
             var replayFile = !saveReplay ? null
-                : $"{solver.GetType().Name}_{DateTime.Now:dd.HH.mm.ss}";
+                : $"{solver.GetType().Name}_{DateTime.Now:dd.HH.mm.ss}.js";
             var statsFile = !saveStats ? null
-                : FormatArgsFileName(solver, solverArgs);
+                : $"{solver.GetNameWithArgs()}.txt";
             
             var result = Controller.PlayToEnd(state, solver, replayFile, statsFile);
             
-            Console.WriteLine($"{FormatArgsLine(solver, solverArgs)}\n");
             Console.WriteLine($"Time: {result.Time} Flags: {result.FlagsTaken}\n");
 
             if (saveReplay)
-                Console.WriteLine($"Replay saved to: {replayFile}.js");
+                Console.WriteLine($"Replay saved to: {replayFile}");
             if (saveStats)
-                Console.WriteLine($"Stats saved to: {statsFile}.js");
+                Console.WriteLine($"Stats saved to: {statsFile}");
 
             return result;
         }
-
 
         private static IEnumerable TestCases()
         {
@@ -71,26 +68,6 @@ namespace AI_Research_1.Tests
             foreach (var solver in Solvers)
                 yield return new TestCaseData(stateObj.State, solver)
                     .SetName($"{stateObj.Name}_{solver.GetType().Name}");
-        }
-
-        private static FieldInfo[] GetSolverArgs(ISolver solver) => solver
-            .GetType()
-            .GetFields(BindingFlags.Instance | BindingFlags.NonPublic);
-
-        private static string FormatArgsLine(ISolver solver, FieldInfo[] args) => 
-            string.Join(" ", args.Select(a => $"{a.Name}: {GetValue(a, solver)}"));
-
-        private static string FormatArgsFileName(ISolver solver, FieldInfo[] args) =>
-            $"{solver.GetType().Name}.{string.Join(".", args.Select(a => GetValue(a, solver)))}";
-        
-        private static string GetValue(FieldInfo field, ISolver solver)
-        {
-            var value = field.GetValue(solver);
-            
-            if (value is Func<State, long> func)
-                return func.Method.Name;
-            
-            return value?.ToString();
         }
     }
 }

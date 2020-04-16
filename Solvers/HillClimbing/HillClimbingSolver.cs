@@ -5,6 +5,7 @@ using System.Linq;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
+using AiAlgorithms.Algorithms;
 
 namespace AI_Research_1.Solvers
 {
@@ -28,6 +29,8 @@ namespace AI_Research_1.Solvers
         {
             solver = new UniversalHillClimbingSolver(baseSolver, mutators, AggregateBy.Max, Emulator.GetScore_3);
         }
+
+        public string GetNameWithArgs() => solver.GetNameWithArgs();
 
         public IEnumerable<Solution> GetSolutions(State state, Countdown time) => solver.GetSolutions(state, time);
     }
@@ -112,6 +115,9 @@ namespace AI_Research_1.Solvers
             Debug.WriteLine($"mutations: {MutationsCount}, improvements: {ImprovementsCount}");
             return steps;
         }
+
+        public string GetNameWithArgs() => 
+            $"HillClimbing.{baseSolver.GetNameWithArgs()};{mutators.Select(m => m.GetType().Name).StrJoin(".")};{aggregate}.{getScore.Method.Name}.{useBestSolution}";
 
         private void UpdateBestSolution(State state)
         {

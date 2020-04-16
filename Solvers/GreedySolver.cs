@@ -17,6 +17,8 @@ namespace AI_Research_1.Solvers
             solver = new UniversalGreedySolver(solutionDepth, SimulateBy.Repeat, AggregateBy.Max, Emulator.GetScore_3);
         }
 
+        public string GetNameWithArgs() => solver.GetNameWithArgs();
+
         public IEnumerable<Solution> GetSolutions(State state, Countdown time) => solver.GetSolutions(state, time);
     }
 
@@ -59,6 +61,8 @@ namespace AI_Research_1.Solvers
 
             return solutions.OrderBy(x => x.Item2).Select(x => x.Item1);
         }
+
+        public string GetNameWithArgs() => $"Greedy.{steps}.{simulate}.{aggregate}.{getScore.Method.Name}";
     }
 
     public enum SimulateBy { DoNothing, Repeat }
