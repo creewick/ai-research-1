@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Serialization;
@@ -13,9 +14,9 @@ namespace AI_Research_1.Logic
         public int Time { get; private set; }
         public int Cooldown { get; set; }
 
-        public State(Track track, Car firstCar, Car secondCar, int flagsTaken=0, int time=0, int cooldown=20)
+        public State(Track track, Car firstCar, Car secondCar, int flagsTaken=0, int time=0, int? cooldown=null)
         {
-            Cooldown = cooldown;
+            Cooldown = cooldown ?? track.MaxCooldown;
             Track = track;
             FirstCar = firstCar;
             SecondCar = secondCar;
@@ -27,6 +28,11 @@ namespace AI_Research_1.Logic
         
         public V GetNextFlag() => Track.Flags[FlagsTaken % Track.Flags.Count];
         public V GetNextNextFlag() => Track.Flags[(FlagsTaken + 1) % Track.Flags.Count];
+        public IEnumerable<V> GetNextNFlags(int N)
+        {
+            for (var i = 0; i < N; i++)
+                yield return Track.Flags[(FlagsTaken + i) % Track.Flags.Count];
+        }
 
         public bool IsFinished => 
                 Time >= Track.Time

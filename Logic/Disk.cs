@@ -8,6 +8,12 @@ namespace AI_Research_1.Logic
     {
         [JsonPropertyName("R")] public int Radius { get; }
         public V Pos { get; set; }
+
+        public Disk(int x, int y, int radius)
+        {
+            Pos = new V(x, y);
+            Radius = radius;
+        }
         
         public Disk(V pos, int radius)
         {

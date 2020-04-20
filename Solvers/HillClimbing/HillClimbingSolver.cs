@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
-using AI_Research_1.Interfaces.Commands;
 using AI_Research_1.Logic;
-using AI_Research_1.Solvers.Evolution.BaseSolvers;
 using AI_Research_1.Solvers.HillClimbing.Mutators;
 using AiAlgorithms.Algorithms;
 
@@ -14,8 +11,7 @@ namespace AI_Research_1.Solvers.HillClimbing
 {
     public class HillClimbingSolver : ISolver
     {
-        private readonly ISolver baseSolver =
-        new UniversalGreedySolver(17, SimulateBy.Repeat, AggregateBy.Max, Emulator.GetScore_1);
+        private readonly ISolver baseSolver = new RandomSolver();
 
         private readonly List<IMutator> mutators = new List<IMutator>()
         {
@@ -29,10 +25,9 @@ namespace AI_Research_1.Solvers.HillClimbing
 
         private readonly ISolver solver;
 
-
         public HillClimbingSolver()
         {
-            solver = new UniversalHillClimbingSolver(baseSolver, mutators, AggregateBy.Max, Emulator.GetScore_3);
+            solver = new UniversalHillClimbingSolver(baseSolver, mutators, AggregateBy.Max);
         }
 
         public string GetNameWithArgs() => solver.GetNameWithArgs();
@@ -45,19 +40,16 @@ namespace AI_Research_1.Solvers.HillClimbing
         private readonly ISolver baseSolver;
         private readonly bool useBestSolution;
         private readonly AggregateBy aggregate;
-        private readonly Func<State, long> getScore;
         private Solution bestSolution;
         private readonly List<IMutator> mutators;
         public readonly UniversalHillClimbingSolverTelemetry Telemetry = new UniversalHillClimbingSolverTelemetry();
 
         public UniversalHillClimbingSolver(ISolver baseSolver, List<IMutator> mutators, AggregateBy aggregate,
-            Func<State, long> getScore,
             bool useBestSolution = true)
         {
             this.baseSolver = baseSolver;
             this.mutators = mutators;
             this.aggregate = aggregate;
-            this.getScore = getScore;
             this.useBestSolution = useBestSolution;
         }
 
@@ -116,7 +108,7 @@ namespace AI_Research_1.Solvers.HillClimbing
         }
 
         public string GetNameWithArgs() =>
-            $"HillClimbing.{baseSolver.GetNameWithArgs()};{mutators.Select(m => m.GetType().Name).StrJoin(".")};{aggregate}.{getScore.Method.Name}.{useBestSolution}";
+            $"HillClimbing.{baseSolver.GetNameWithArgs()};{mutators.Select(m => m.GetType().Name).StrJoin(".")};{aggregate}.H={useBestSolution}";
 
         private void UpdateBestSolution(State state)
         {
@@ -172,6 +164,6 @@ namespace AI_Research_1.Solvers.HillClimbing
         }
 
         private long Emulate(State state, Solution solution) =>
-            Emulator.Emulate(state, solution, solution.FirstCarCommandsList.Count(), aggregate, getScore);
+            Emulator.Emulate(state, solution, solution.FirstCarCommandsList.Count(), aggregate);
     }
 }

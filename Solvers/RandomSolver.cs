@@ -12,8 +12,8 @@ namespace AI_Research_1.Solvers
     public class RandomSolver : ISolver
     {
         private readonly ISolver solver;
-        public RandomSolver(bool withHeuristic = true) =>
-            solver = new UniversalRandomSolver(10, 8, AggregateBy.Max, Emulator.DefaultGetScore, withHeuristic);
+        public RandomSolver(int steps = 10, int segmentMaxLength = 8, bool withHeuristic = false) =>
+            solver = new UniversalRandomSolver(steps, segmentMaxLength, AggregateBy.Max, withHeuristic);
         public IEnumerable<Solution> GetSolutions(State state, Countdown time) => solver.GetSolutions(state, time);
         public string GetNameWithArgs() => solver.GetNameWithArgs();
     }
@@ -23,17 +23,15 @@ namespace AI_Research_1.Solvers
         private readonly int steps;
         private readonly int rndSegMaxLen;
         private readonly AggregateBy aggregate;
-        private readonly Func<State, long> getScore;
 
         private static Solution LastBestSolution;
         private readonly bool useLastBastSolution;
 
-        public UniversalRandomSolver(int steps, int rndSegMaxLen, AggregateBy aggregate, Func<State, long> getScore, bool useLastBastSolution)
+        public UniversalRandomSolver(int steps, int rndSegMaxLen, AggregateBy aggregate, bool useLastBastSolution)
         {
             this.steps = steps;
             this.rndSegMaxLen = rndSegMaxLen;
             this.aggregate = aggregate;
-            this.getScore = getScore;
             this.useLastBastSolution = useLastBastSolution;
         }
 
@@ -47,14 +45,14 @@ namespace AI_Research_1.Solvers
                 foreach (var second in UpdateLastSolution(LastBestSolution.SecondCarCommandsList))
                 {
                     var s = new Solution(first, second);
-                    solutions.Add((s, Emulator.Emulate(state, s, steps, aggregate, getScore)));
+                    solutions.Add((s, Emulator.Emulate(state, s, steps, aggregate)));
                 }
             }
 
             while (!time.IsFinished())
             {
                 var solution = new Solution(RandomCarSolution(random), RandomCarSolution(random));
-                var score = Emulator.Emulate(state, solution, steps, aggregate, getScore);
+                var score = Emulator.Emulate(state, solution, steps, aggregate);
                 solutions.Add((solution, score));
             }
 
@@ -64,7 +62,7 @@ namespace AI_Research_1.Solvers
             return orderingSolutions.Select(x => x.Item1);
         }
 
-        public string GetNameWithArgs() => $"Random.{steps}.{rndSegMaxLen}.{aggregate}.{getScore.Method.Name}.{useLastBastSolution}";
+        public string GetNameWithArgs() => $"Random.{steps}.{rndSegMaxLen}.{aggregate}.H={useLastBastSolution}";
 
         private static IEnumerable<List<Command>> UpdateLastSolution(IEnumerable<Command> lastSolution)
         {
