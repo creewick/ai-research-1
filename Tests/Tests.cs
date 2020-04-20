@@ -28,7 +28,7 @@ namespace AI_Research_1.Tests
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
             new GreedySolver(20),
-            new RandomSolver(),
+            new RandomSolver(10, 8),
             new HillClimbingSolver(),
             new EvolutionSolver()
         };
