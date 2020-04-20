@@ -98,5 +98,31 @@ namespace AI_Research_1.Tests
                     radius: 2
                 )
             );
+
+        public static State BottleNeck =>
+            new State(
+                track: new Track(
+                    time: 400,
+                    flagsGoal: 2,
+                    flags: new[]{new V(0,0), new V(0, 0)},
+                    obstacles:new[]
+                    {
+                        new Disk(0, 70, 60),
+                        new Disk(-70, -20, 60),
+                        new Disk(70, -20, 60)
+                    },
+                    maxCooldown:20
+                ),
+                firstCar: new Car(
+                    pos: new V(150, -20),
+                    v: V.Zero,
+                    radius: 2
+                ),
+                secondCar: new Car(
+                    pos: new V(-150, -20),
+                    v: V.Zero,
+                    radius: 2
+                )
+            );
     }
 }
