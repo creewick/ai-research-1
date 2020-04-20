@@ -14,7 +14,7 @@ namespace AI_Research_1.Solvers
         private readonly ISolver solver;
 
         public EntSolver() =>
-            solver = new UniversalRandomMegaBrainSolver(40, 8, AggregateBy.Max, Emulator.DefaultGetScore, 4, 8);
+            solver = new UniversalRandomMegaBrainSolver(40, 8, AggregateBy.Max, 4, 8);
 
         public IEnumerable<Solution> GetSolutions(State state, Countdown time) => solver.GetSolutions(state, time);
         public string GetNameWithArgs() => solver.GetNameWithArgs();
@@ -34,12 +34,11 @@ namespace AI_Research_1.Solvers
         public bool IsMoving = false;
 
         public UniversalRandomMegaBrainSolver(int steps, int rndSegMaxLen, AggregateBy aggregate,
-            Func<State, long> getScore, int thinkTicksCount, int movesCount)
+            int thinkTicksCount, int movesCount)
         {
             this.steps = steps;
             this.rndSegMaxLen = rndSegMaxLen;
             this.aggregate = aggregate;
-            this.getScore = getScore;
             this.thinkTicksCount = thinkTicksCount;
             this.movesCount = movesCount;
         }
@@ -66,7 +65,7 @@ namespace AI_Research_1.Solvers
             while (!time.IsFinished())
             {
                 var solution = new Solution(RandomCarSolution(random), RandomCarSolution(random));
-                var score = Emulator.Emulate(state, solution, steps, aggregate, getScore);
+                var score = Emulator.Emulate(state, solution, steps, aggregate);
                 solutions.Add((solution, score));
             }
 
