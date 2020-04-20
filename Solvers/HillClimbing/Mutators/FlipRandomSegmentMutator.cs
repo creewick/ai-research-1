@@ -4,22 +4,13 @@ using System.Linq;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 
-namespace AI_Research_1.Solvers
+namespace AI_Research_1.Solvers.HillClimbing.Mutators
 {
     public class FlipRandomSegmentMutator : IMutator
     {
-        private readonly int segmentsCountToMutate;
-        private readonly int segmentsCount;
-
-        public FlipRandomSegmentMutator(int segmentsCount = 10, int segmentsCountToMutate = 1)
-        {
-            this.segmentsCount = segmentsCount;
-            this.segmentsCountToMutate = segmentsCountToMutate;
-        }
-
         public IMutation Mutate(State state, Solution parentSolution)
         {
-            return new FlipRandomSegmentMutation(parentSolution, segmentsCount, segmentsCountToMutate);
+            return new FlipRandomSegmentMutation(parentSolution);
         }
     }
 
@@ -27,11 +18,13 @@ namespace AI_Research_1.Solvers
     {
         private readonly Solution result;
 
-        public FlipRandomSegmentMutation(Solution parentSolution,  int segmentsCount,  int segmentsCountToMutate)
+        public FlipRandomSegmentMutation(Solution parentSolution)
         {
             var firstCarCommands = new List<Command>(parentSolution.FirstCarCommandsList);
             var secondCarCommands = new List<Command>(parentSolution.SecondCarCommandsList);
             var random = new Random();
+            var segmentsCount = random.Next(1, firstCarCommands.Count);
+            var segmentsCountToMutate = random.Next(1, segmentsCount);
             var movesCount = parentSolution.FirstCarCommandsList.Count();
             var segmentSize = movesCount / segmentsCount;
 

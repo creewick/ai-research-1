@@ -4,22 +4,27 @@ using System.Diagnostics;
 using System.Linq;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
+using AI_Research_1.Interfaces.Commands;
 using AI_Research_1.Logic;
+using AI_Research_1.Solvers.Evolution.BaseSolvers;
+using AI_Research_1.Solvers.HillClimbing.Mutators;
 using AiAlgorithms.Algorithms;
 
-namespace AI_Research_1.Solvers
+namespace AI_Research_1.Solvers.HillClimbing
 {
     public class HillClimbingSolver : ISolver
     {
         private readonly ISolver baseSolver =
-            new UniversalGreedySolver(17, SimulateBy.Repeat, AggregateBy.Max, Emulator.GetScore_1);
+        new UniversalGreedySolver(17, SimulateBy.Repeat, AggregateBy.Max, Emulator.GetScore_1);
 
         private readonly List<IMutator> mutators = new List<IMutator>()
         {
-            new RandomSegmentMutator(3, 1),
-            // TODO SameCommandSegmentMutator
-            new FlipRandomSegmentMutator(3,3),
-            new SwapTwoRandomSegmentsMutator(3)
+            new RandomNoiseSegmentMutator(),
+            new RandomRepeatSegmentMutator(),
+            new RandomAndDoNothingSegmentMutator(),
+            new FlipRandomSegmentMutator(),
+            new SwapTwoRandomSegmentsMutator(),
+            new ExchangeAndSwapMutator()
         };
 
         private readonly ISolver solver;
@@ -37,20 +42,13 @@ namespace AI_Research_1.Solvers
 
     public class UniversalHillClimbingSolver : ISolver
     {
-        protected bool ShouldContinue { get; set; }
         private readonly ISolver baseSolver;
-
         private readonly bool useBestSolution;
-        private IMutation firstMutation;
-        public int MutationsCount;
-
-        public int ImprovementsCount;
-        private AggregateBy aggregate;
+        private readonly AggregateBy aggregate;
         private readonly Func<State, long> getScore;
         private Solution bestSolution;
-        public int BestSolutionsWinsCount = 0;
-        private List<IMutator> mutators;
-
+        private readonly List<IMutator> mutators;
+        public readonly UniversalHillClimbingSolverTelemetry Telemetry = new UniversalHillClimbingSolverTelemetry();
 
         public UniversalHillClimbingSolver(ISolver baseSolver, List<IMutator> mutators, AggregateBy aggregate,
             Func<State, long> getScore,
@@ -65,9 +63,9 @@ namespace AI_Research_1.Solvers
 
         public IEnumerable<Solution> GetSolutions(State state, Countdown time)
         {
-            MutationsCount = 0;
-            ImprovementsCount = 0;
-            ShouldContinue = true;
+            Telemetry.ImprovementsCount = 0;
+            Telemetry.MutationsCount = 0;
+            Telemetry.BestSolutionsWinsCount = 0;
             var steps = new List<Solution>();
 
             var baseSolverSolution = baseSolver.GetSolutions(state, time / 10).Last();
@@ -80,14 +78,12 @@ namespace AI_Research_1.Solvers
             while (!time.IsFinished())
             {
                 var improvements = Improve(state, steps.Last());
-                MutationsCount += mutators.Count;
+                Telemetry.MutationsCount += mutators.Count;
                 foreach (var solution in improvements)
                 {
-                    ImprovementsCount++;
+                    Telemetry.ImprovementsCount++;
                     steps.Add(solution);
                 }
-
-                if (!ShouldContinue) break;
             }
 
             if (useBestSolution)
@@ -102,8 +98,7 @@ namespace AI_Research_1.Solvers
                 else
                 {
                     steps.Add(bestSolution);
-                    BestSolutionsWinsCount++;
-                    Debug.WriteLine("best");
+                    Telemetry.BestSolutionsWinsCount++;
                 }
             }
 
@@ -112,11 +107,15 @@ namespace AI_Research_1.Solvers
                 Debug.Write($"{Emulate(state, step)} ");
             }
 
-            Debug.WriteLine($"mutations: {MutationsCount}, improvements: {ImprovementsCount}");
+            Telemetry.TotalImprovementsCount += Telemetry.ImprovementsCount;
+            Telemetry.TotalMutationsCount += Telemetry.MutationsCount;
+            Telemetry.BestSolutionsWinsCount += Telemetry.BestSolutionsWinsCount;
+            Debug.WriteLine(
+                $"mutations: {Telemetry.MutationsCount}, improvements: {Telemetry.ImprovementsCount},use best: {Telemetry.BestSolutionsWinsCount}");
             return steps;
         }
 
-        public string GetNameWithArgs() => 
+        public string GetNameWithArgs() =>
             $"HillClimbing.{baseSolver.GetNameWithArgs()};{mutators.Select(m => m.GetType().Name).StrJoin(".")};{aggregate}.{getScore.Method.Name}.{useBestSolution}";
 
         private void UpdateBestSolution(State state)
@@ -148,7 +147,7 @@ namespace AI_Research_1.Solvers
             bestSolution = newBestSolution;
         }
 
-        protected IEnumerable<Solution> Improve(State state, Solution improvingSolution)
+        private IEnumerable<Solution> Improve(State state, Solution improvingSolution)
         {
             var bestScore = long.MinValue;
             IMutation bestMutation = null;
@@ -167,6 +166,7 @@ namespace AI_Research_1.Solvers
             if (bestScore > Emulate(state, improvingSolution))
             {
                 yield return bestMutation.GetResult();
+                Telemetry.AddMutationWin(bestMutation);
                 Debug.WriteLine(bestMutation.GetType());
             }
         }

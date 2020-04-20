@@ -4,20 +4,13 @@ using System.Linq;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 
-namespace AI_Research_1.Solvers
+namespace AI_Research_1.Solvers.HillClimbing.Mutators
 {
     public class SwapTwoRandomSegmentsMutator : IMutator
     {
-        private int segmentsCount;
-
-        public SwapTwoRandomSegmentsMutator(int segmentsCount = 10)
-        {
-            this.segmentsCount = segmentsCount;
-        }
-
         public IMutation Mutate(State state, Solution parentSolution)
         {
-            return new SwapTwoRandomSegmentsMutation(parentSolution, segmentsCount);
+            return new SwapTwoRandomSegmentsMutation(parentSolution);
         }
     }
 
@@ -25,12 +18,13 @@ namespace AI_Research_1.Solvers
     {
         private Solution result;
 
-        public SwapTwoRandomSegmentsMutation(Solution parentSolution, int segmentsCount)
+        public SwapTwoRandomSegmentsMutation(Solution parentSolution)
         {
             var firstCarCommands = new List<Command>(parentSolution.FirstCarCommandsList);
             var secondCarCommands = new List<Command>(parentSolution.SecondCarCommandsList);
             var random = new Random();
             var movesCount = parentSolution.FirstCarCommandsList.Count();
+            var segmentsCount = random.Next(2, firstCarCommands.Count);
             var segmentSize = movesCount / segmentsCount;
             var segmentIndex = random.Next(0, segmentsCount - 1);
             var startIndex = segmentIndex * segmentSize;
