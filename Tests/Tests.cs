@@ -7,6 +7,7 @@ using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 using AI_Research_1.Solvers;
 using AI_Research_1.Solvers.Evolution;
+using AI_Research_1.Solvers.HillClimbing;
 using NUnit.Framework;
 
 namespace AI_Research_1.Tests
