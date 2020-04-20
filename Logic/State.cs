@@ -13,9 +13,9 @@ namespace AI_Research_1.Logic
         public int Time { get; private set; }
         public int Cooldown { get; set; }
 
-        public State(Track track, Car firstCar, Car secondCar, int flagsTaken=0, int time=0, int cooldown=20)
+        public State(Track track, Car firstCar, Car secondCar, int flagsTaken=0, int time=0, int? cooldown=null)
         {
-            Cooldown = cooldown;
+            Cooldown = cooldown ?? track.MaxCooldown;
             Track = track;
             FirstCar = firstCar;
             SecondCar = secondCar;

@@ -7,6 +7,7 @@ using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 using AI_Research_1.Solvers;
 using AI_Research_1.Solvers.Evolution;
+using AI_Research_1.Solvers.HillClimbing;
 using NUnit.Framework;
 
 namespace AI_Research_1.Tests
@@ -41,7 +42,7 @@ namespace AI_Research_1.Tests
         private static State PlayToEnd(ISolver solver, State state, bool saveReplay, bool saveStats)
         {
             var replayFile = !saveReplay ? null
-                : $"{solver.GetType().Name}_{DateTime.Now:dd.HH.mm.ss}.js";
+                : $"{solver.GetNameWithArgs()}_{DateTime.Now:dd.HH.mm.ss}.js";
             var statsFile = !saveStats ? null
                 : $"{solver.GetNameWithArgs()}.txt";
             
