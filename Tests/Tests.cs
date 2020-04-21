@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 using AI_Research_1.Solvers;
@@ -39,6 +41,34 @@ namespace AI_Research_1.Tests
         {
             PlayToEnd(solver, state, SaveReplay, SaveStats);
         }   
+        private long getScore(int flagsGoal, int trackTime, int flagsTaken, int time)
+        {
+            const int flagCoef = 100;
+            return (trackTime - time) + (flagsTaken - flagsGoal) * flagCoef;
+        }
+
+        [Test]
+        public void CollectStats()
+        {
+            var stat = new Dictionary<string, StatValue>();
+            var projectDirectory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "Statistics");
+            var files = Directory.GetFiles(projectDirectory);
+            foreach (var file in files)
+            {
+                stat[file] = new StatValue();
+                using (TextReader stream = File.OpenText(file))
+                {
+                    var lines = stream.ReadToEnd()
+                        .Split(new char[]{'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => x.Split(','));
+                    var scores = lines
+                        .Select(x =>
+                            getScore(int.Parse(x[0]), int.Parse(x[1]), int.Parse(x[2]), int.Parse(x[3])))
+                        .ToList();
+                    scores.ForEach(x => stat[file].Add(x));
+                }
+            }
+        }
         
         private static State PlayToEnd(ISolver solver, State state, bool saveReplay, bool saveStats)
         {
