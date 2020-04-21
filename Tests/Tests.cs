@@ -43,9 +43,9 @@ namespace AI_Research_1.Tests
         private static State PlayToEnd(ISolver solver, State state, bool saveReplay, bool saveStats)
         {
             var replayFile = !saveReplay ? null
-                : $"{solver.GetNameWithArgs()}_{DateTime.Now:dd.HH.mm.ss}.js";
+                : $"{solver.GetNameWithArgs()}.{Emulator.GetScore.Method.Name}_{DateTime.Now:dd.HH.mm.ss}.js";
             var statsFile = !saveStats ? null
-                : $"{solver.GetNameWithArgs()}.txt";
+                : $"{solver.GetNameWithArgs()}.{Emulator.GetScore.Method.Name}.txt";
             
             var result = Controller.PlayToEnd(state, solver, replayFile, statsFile);
             

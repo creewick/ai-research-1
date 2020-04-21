@@ -22,12 +22,12 @@ namespace AI_Research_1.Tests
                 ),
                 firstCar: new Car(
                     pos: new V(0, 0),
-                    v: new V(0, 0),
+                    v: V.Zero,
                     radius: 2
                 ),
                 secondCar: new Car(
                     pos: new V(0, 0),
-                    v: new V(0, 0),
+                    v: V.Zero,
                     radius: 2
                 )
             );
@@ -47,12 +47,12 @@ namespace AI_Research_1.Tests
                 ),
                 firstCar: new Car(
                     pos: new V(0, 0),
-                    v: new V(0, 0),
+                    v: V.Zero,
                     radius: 2
                 ),
                 secondCar: new Car(
                     pos: new V(0, 0),
-                    v: new V(0, 0),
+                    v: V.Zero,
                     radius: 2
                 )
             );
