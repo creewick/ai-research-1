@@ -14,7 +14,7 @@ namespace AI_Research_1.Solvers
 
         public GreedySolver(int solutionDepth)
         {
-            solver = new UniversalGreedySolver(solutionDepth, SimulateBy.Repeat, AggregateBy.Max, Emulator.GetScore_3);
+            solver = new UniversalGreedySolver(solutionDepth, SimulateBy.Repeat, AggregateBy.Max);
         }
 
         public string GetNameWithArgs() => solver.GetNameWithArgs();
@@ -27,14 +27,12 @@ namespace AI_Research_1.Solvers
         private readonly int steps;
         private readonly SimulateBy simulate;
         private readonly AggregateBy aggregate;
-        private readonly Func<State, long> getScore;
 
-        public UniversalGreedySolver(int steps, SimulateBy simulate, AggregateBy aggregate, Func<State, long> getScore)
+        public UniversalGreedySolver(int steps, SimulateBy simulate, AggregateBy aggregate)
         {
             this.steps = steps;
             this.simulate = simulate;
             this.aggregate = aggregate;
-            this.getScore = getScore;
         }
 
         public IEnumerable<Solution> GetSolutions(State state, Countdown time)
@@ -55,14 +53,14 @@ namespace AI_Research_1.Solvers
                         Enumerable.Repeat(new Move(0,0), steps-1).Prepend(secondCarMove)
                     );
                 
-                var score = Emulator.Emulate(state, solution, steps, aggregate, getScore);
+                var score = Emulator.Emulate(state, solution, steps, aggregate);
                 solutions.Add((solution, score));
             }
 
             return solutions.OrderBy(x => x.Item2).Select(x => x.Item1);
         }
 
-        public string GetNameWithArgs() => $"Greedy.{steps}.{simulate}.{aggregate}.{getScore.Method.Name}";
+        public string GetNameWithArgs() => $"Greedy.{steps}.{simulate}.{aggregate}";
     }
 
     public enum SimulateBy { DoNothing, Repeat }

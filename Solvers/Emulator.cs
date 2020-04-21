@@ -14,7 +14,7 @@ namespace AI_Research_1.Solvers
         private static long IsAlive(State state) => state.FirstCar.IsAlive && state.SecondCar.IsAlive ? FlagCost * 1000 : 0;
         private static long FlagsTaken(State state) => FlagCost * state.FlagsTaken;
 
-        public static readonly Func<State, long> DefaultGetScore = GetScore_3;
+        private static readonly Func<State, long> GetScore = GetScore_3;
 
         public static IEnumerable<Solution> SortByScore(IEnumerable<Solution> solutions, State state)
         {
@@ -23,11 +23,7 @@ namespace AI_Research_1.Solvers
                     Emulate(state, s, s.FirstCarCommandsList.Count()));
         }
 
-        public static long Emulate(State state,
-            Solution solution,
-            int steps,
-            AggregateBy aggregate = AggregateBy.Max,
-            Func<State, long> getScore = null)
+        public static long Emulate(State state, Solution solution, int steps, AggregateBy aggregate = AggregateBy.Max)
         {
             var copy = state.Copy();
             var score = long.MinValue;
@@ -38,11 +34,13 @@ namespace AI_Research_1.Solvers
                 copy.Tick(currentSolution);
                 currentSolution = solution.GetNextTick();
                 
-                var newScore = getScore?.Invoke(copy) ?? DefaultGetScore(copy);
+                var newScore = GetScore(copy);
 
                 switch (aggregate)
                 {
                     case AggregateBy.Last:
+                        score = newScore;
+                        break;
                     case AggregateBy.Max when newScore > score:
                         score = newScore;
                         break;
@@ -55,13 +53,13 @@ namespace AI_Research_1.Solvers
             return score;
         }
 
-        public static long GetScore_1(State state) => 
+        private static long GetScore_1(State state) => 
             + IsAlive(state)
             + FlagsTaken(state)
             - state.GetNextFlag().Dist2To(state.FirstCar.Pos)
             - state.GetNextFlag().Dist2To(state.SecondCar.Pos);
 
-        public static long GetScore_2(State state)
+        private static long GetScore_2(State state)
         {
             var taken = state.FlagsTaken;
             var all = state.Track.Flags.Count;
@@ -74,7 +72,7 @@ namespace AI_Research_1.Solvers
                    - secondCarFlag.Dist2To(state.SecondCar.Pos);
         }
 
-        public static long GetScore_3(State state)
+        private static long GetScore_3(State state)
         {
             var flags = new[]
                 {
@@ -88,8 +86,37 @@ namespace AI_Research_1.Solvers
                    - flags.First().Dist2To(state.FirstCar.Pos)
                    - flags.Last().Dist2To(state.SecondCar.Pos);
         }
-        
-        //TODO функция оценки, не присваивать машинкам флаги
-        //TODO одна функция оценки для всех алгоритмов
+        private static long GetScore_4(State state, int flagsCount = 3)
+        {
+            var cars = new List<Car> {state.FirstCar, state.SecondCar};
+            var distancesCost =
+                state.GetNextNFlags(flagsCount)
+                    .Select(flag => cars
+                        .Select(car => car.Pos.Dist2To(flag))
+                        .Min()
+                    )
+                    .Sum();
+
+            return FlagsTaken(state) + IsAlive(state) - distancesCost;
+        }
+
+        private static long GetScore_5(State state, int flagsCount)
+        {
+            var coefficient = (int)Math.Pow(2, flagsCount + 1);
+            var cars = new List<Car> {state.FirstCar, state.SecondCar};
+            var distancesCost =
+                state.GetNextNFlags(flagsCount)
+                    .Select(flag => cars
+                        .Select(car =>
+                        {
+                            coefficient /= 2;
+                            return car.Pos.Dist2To(flag) * coefficient;
+                        })
+                        .Sum()
+                    )
+                    .Sum();
+            
+            return FlagsTaken(state) + IsAlive(state) - distancesCost;
+        }
     }
 }

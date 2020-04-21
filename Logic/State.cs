@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Serialization;
@@ -27,6 +28,11 @@ namespace AI_Research_1.Logic
         
         public V GetNextFlag() => Track.Flags[FlagsTaken % Track.Flags.Count];
         public V GetNextNextFlag() => Track.Flags[(FlagsTaken + 1) % Track.Flags.Count];
+        public IEnumerable<V> GetNextNFlags(int N)
+        {
+            for (var i = 0; i < N; i++)
+                yield return Track.Flags[(FlagsTaken + i) % Track.Flags.Count];
+        }
 
         public bool IsFinished => 
                 Time >= Track.Time
