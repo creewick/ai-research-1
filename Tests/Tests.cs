@@ -24,6 +24,7 @@ namespace AI_Research_1.Tests
     {
         private const bool SaveReplay = true;
         private const bool SaveStats = true;
+        private const int RepeatCount = 10;
         
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
@@ -65,10 +66,11 @@ namespace AI_Research_1.Tests
                 .Where(x => x.PropertyType == typeof(State))
                 .Select(x => new {State = (State) x.GetValue(null), Name = x.Name});
 
+            for (var i = 0; i < RepeatCount; i++)
             foreach (var stateObj in states)
             foreach (var solver in Solvers)
                 yield return new TestCaseData(stateObj.State, solver)
-                    .SetName($"{stateObj.Name}_{solver.GetType().Name}");
+                    .SetName($"{stateObj.Name}_{solver.GetType().Name}_{i}");
         }
     }
 }
