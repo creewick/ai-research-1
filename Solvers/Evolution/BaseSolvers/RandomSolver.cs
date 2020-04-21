@@ -7,24 +7,22 @@ using AI_Research_1.Logic;
 
 namespace AI_Research_1.Solvers.Evolution.BaseSolvers
 {
-    public class RandomSearch : ISolver
+    public class RandomSolver : ISolver
     {
-        private readonly int populationCount;
         private readonly int solutionDepth;
         private readonly Random random;
 
-        public RandomSearch(int populationCount, int solutionDepth)
+        public RandomSolver(int solutionDepth)
         {
-            this.populationCount = populationCount;
             this.solutionDepth = solutionDepth;
-            this.random = new Random();
+            random = new Random();
         }
 
-        public string GetNameWithArgs() => $"Random.{populationCount}.{solutionDepth}";
+        public string GetNameWithArgs() => $"Random.{solutionDepth}";
 
         public IEnumerable<Solution> GetSolutions(State state, Countdown time)
         {
-            for (var i = 0; i < populationCount; i++)
+            while (!time.IsFinished())
             {
                 var firstCarMoves = new List<Command>();
                 var secondCarMoves = new List<Command>();
