@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using AI_Research_1.Helpers;
@@ -13,17 +14,18 @@ namespace AI_Research_1.Solvers.HillClimbing
     {
         private readonly ISolver baseSolver = new RandomSolver();
 
-        private readonly List<IMutator> mutators = new List<IMutator>()
+        private readonly List<(IMutator, int)> mutators = new List<(IMutator, int)>()
         {
-            new RandomNoiseSegmentMutator(),
-            new RandomRepeatSegmentMutator(),
-            new RandomAndDoNothingSegmentMutator(),
-            new FlipRandomSegmentMutator(),
-            new SwapTwoRandomSegmentsMutator(),
-            new ExchangeAndSwapMutator()
+            (new RandomNoiseSegmentMutator(), 32),
+            (new RandomRepeatSegmentMutator(), 29),
+            (new RandomAndDoNothingSegmentMutator(), 28),
+            (new FlipRandomSegmentMutator(), 5),
+            (new SwapTwoRandomSegmentsMutator(), 4),
+            (new ExchangeAndSwapMutator(), 2)
         };
 
         private readonly ISolver solver;
+        public UniversalHillClimbingSolverTelemetry Telemetry => (solver as UniversalHillClimbingSolver).Telemetry;
 
         public HillClimbingSolver()
         {
@@ -42,15 +44,32 @@ namespace AI_Research_1.Solvers.HillClimbing
         private readonly AggregateBy aggregate;
         private Solution bestSolution;
         private readonly List<IMutator> mutators;
+        private Dictionary<IMutator, (int, int)> roulete;
         public readonly UniversalHillClimbingSolverTelemetry Telemetry = new UniversalHillClimbingSolverTelemetry();
 
-        public UniversalHillClimbingSolver(ISolver baseSolver, List<IMutator> mutators, AggregateBy aggregate,
+
+        public UniversalHillClimbingSolver(ISolver baseSolver, List<(IMutator, int)> mutatorsQuotes,
+            AggregateBy aggregate,
             bool useBestSolution = true)
         {
             this.baseSolver = baseSolver;
-            this.mutators = mutators;
+            mutators = mutatorsQuotes.Select(x => x.Item1).ToList();
+            roulete = BuildRoulete(mutatorsQuotes);
             this.aggregate = aggregate;
             this.useBestSolution = useBestSolution;
+        }
+
+        private Dictionary<IMutator, (int, int)> BuildRoulete(List<(IMutator, int)> mutatorsQuotes)
+        {
+            var result = new Dictionary<IMutator, (int, int)>();
+            var left = 0;
+            foreach (var quote in mutatorsQuotes)
+            {
+                result[quote.Item1] = (left, left + quote.Item2 - 1);
+                left = left + quote.Item2;
+            }
+
+            return result;
         }
 
         public IEnumerable<Solution> GetSolutions(State state, Countdown time)
@@ -143,16 +162,18 @@ namespace AI_Research_1.Solvers.HillClimbing
         {
             var bestScore = long.MinValue;
             IMutation bestMutation = null;
-            foreach (var mutator in mutators)
+            var random = new Random();
+            var choice = random.Next(0, 99);
+            var mutator = roulete
+                .First(x => choice >= x.Value.Item1 && choice <= x.Value.Item2)
+                .Key;
+            var mutation = mutator.Mutate(state, improvingSolution);
+            var mutationSolution = mutation.GetResult();
+            var score = Emulate(state, mutationSolution);
+            if (score > bestScore)
             {
-                var mutation = mutator.Mutate(state, improvingSolution);
-                var mutationSolution = mutation.GetResult();
-                var score = Emulate(state, mutationSolution);
-                if (score > bestScore)
-                {
-                    bestMutation = mutation;
-                    bestScore = score;
-                }
+                bestMutation = mutation;
+                bestScore = score;
             }
 
             if (bestScore > Emulate(state, improvingSolution))
