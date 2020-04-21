@@ -156,5 +156,30 @@ namespace AI_Research_1.Tests
                     radius: 2
                 )
             );
+
+        public static State Cross =>
+            new State(
+                track: new Track(
+                    time: 100,
+                    flagsGoal: 40,
+                    flags: new[] {new V(0, 9), new V(0, -9), new V(9, 0), new V(-9, 0)},
+                    obstacles: new[]
+                    {
+                        new Disk(0, 0, 6), new Disk(18, 0, 6), new Disk(-18, 0, 6),
+                        new Disk(0, 18, 6), new Disk(0, -18, 6)
+                    },
+                    maxCooldown:20
+                ),
+                firstCar: new Car(
+                    pos: new V(0, 9),
+                    v: V.Zero,
+                    radius: 2
+                ),
+                secondCar: new Car(
+                    pos: new V(0, -9),
+                    v: V.Zero,
+                    radius: 2
+                )
+            );
     }
 }
