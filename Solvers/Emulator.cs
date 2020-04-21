@@ -86,18 +86,26 @@ namespace AI_Research_1.Solvers
                    - flags.First().Dist2To(state.FirstCar.Pos)
                    - flags.Last().Dist2To(state.SecondCar.Pos);
         }
-        private static long GetScore_4(State state, int flagsCount = 3)
+        private static long GetScore_4(State state)
         {
+            var flagsCount = 3;
             var cars = new List<Car> {state.FirstCar, state.SecondCar};
+            var nextFlags = state.GetNextNFlags(flagsCount).ToList();
             var distancesCost =
-                state.GetNextNFlags(flagsCount)
-                    .Select(flag => cars
-                        .Select(car => car.Pos.Dist2To(flag))
-                        .Min()
-                    )
+                nextFlags
+                    .Select(flag =>
+                    {
+                        return cars
+                            .Select(car => car.Pos.Dist2To(flag))
+                            .Min();
+                    })
                     .Sum();
-
-            return FlagsTaken(state) + IsAlive(state) - distancesCost;
+            var additionalDistanceCost = cars
+                .Select(car => nextFlags
+                    .Select(flag => car.Pos.Dist2To(flag))
+                    .Min())
+                .Sum();
+            return FlagsTaken(state) + IsAlive(state) - distancesCost - additionalDistanceCost;
         }
 
         private static long GetScore_5(State state, int flagsCount)
