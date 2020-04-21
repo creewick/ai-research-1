@@ -14,7 +14,7 @@ namespace AI_Research_1.Solvers
         private static long IsAlive(State state) => state.FirstCar.IsAlive && state.SecondCar.IsAlive ? FlagCost * 1000 : 0;
         private static long FlagsTaken(State state) => FlagCost * state.FlagsTaken;
 
-        private static readonly Func<State, long> GetScore = GetScore_3;
+        public static readonly Func<State, long> GetScore = GetScore_3;
 
         public static IEnumerable<Solution> SortByScore(IEnumerable<Solution> solutions, State state)
         {
