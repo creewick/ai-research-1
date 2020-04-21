@@ -37,8 +37,7 @@ namespace AI_Research_1.Solvers
 
         public IEnumerable<Solution> GetSolutions(State state, Countdown time)
         {
-            var solutions = new List<(Solution, double)>();
-            var bestScore = double.MinValue;
+            var solutions = new List<(Solution, long)>();
 
             foreach (var firstCarMove in Command.All)
             foreach (var secondCarMove in Command.All)

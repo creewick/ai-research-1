@@ -29,21 +29,16 @@ namespace AI_Research_1.Solvers.Evolution
             var population = baseSolver
                 .GetSolutions(state, time / 10)
                 .ToList();
-            // TODO размер популяции должен быть больше  ~ 200
 
             while (!time.IsFinished())
             {
                 var parents = filter
                     .GetParents(state, population)
                     .ToList();
-                // слабо влияет
 
                 var children = applier
                     .GetChildren(parents)
                     .ToList();
-                
-                // TODO elitism
-                // TODO добавить случайный поиск
 
                 population = selector
                     .GetPopulation(state, parents, children, population.Count)

@@ -26,7 +26,7 @@ namespace AI_Research_1.Tests
     {
         private const bool SaveReplay = true;
         private const bool SaveStats = true;
-        private const int RepeatCount = 10;
+        private const int RepeatCount = 1;
         
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
@@ -41,14 +41,14 @@ namespace AI_Research_1.Tests
         {
             PlayToEnd(solver, state, SaveReplay, SaveStats);
         }   
-        private long getScore(int flagsGoal, int trackTime, int flagsTaken, int time)
+        private static long GetFinalScore(int flagsGoal, int trackTime, int flagsTaken, int time)
         {
             const int flagCoef = 100;
             return (trackTime - time) + (flagsTaken - flagsGoal) * flagCoef;
         }
 
         [Test]
-        public void CollectStats()
+        public void CheckStats()
         {
             var stat = new Dictionary<string, StatValue>();
             var projectDirectory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "Statistics");
@@ -56,17 +56,16 @@ namespace AI_Research_1.Tests
             foreach (var file in files)
             {
                 stat[file] = new StatValue();
-                using (TextReader stream = File.OpenText(file))
-                {
-                    var lines = stream.ReadToEnd()
-                        .Split(new char[]{'\n', '\r'}, StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => x.Split(','));
-                    var scores = lines
-                        .Select(x =>
-                            getScore(int.Parse(x[0]), int.Parse(x[1]), int.Parse(x[2]), int.Parse(x[3])))
-                        .ToList();
-                    scores.ForEach(x => stat[file].Add(x));
-                }
+                using TextReader stream = File.OpenText(file);
+                stream
+                    .ReadToEnd()
+                    .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Split(','))
+                    .Select(x => GetFinalScore(int.Parse(x[0]), int.Parse(x[1]), int.Parse(x[2]), int.Parse(x[3])))
+                    .ToList()
+                    .ForEach(x => stat[file].Add(x));
+                
+                Console.Write($"{new FileInfo(file).Name}\n\n{stat[file]}\n\n");
             }
         }
         
