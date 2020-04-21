@@ -60,7 +60,7 @@ namespace AI_Research_1.Logic
                 car.IsAlive = false;
             
             // TODO Flags Count
-            while (GetNextFlag().SegmentCrossPoint(from, to, car.Radius))
+            while (GetNextFlag().SegmentCrossPoint(from, to, car.Radius) && FlagsTaken < Track.FlagsGoal)
                 FlagsTaken++;
         }
 

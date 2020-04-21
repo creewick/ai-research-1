@@ -102,24 +102,56 @@ namespace AI_Research_1.Tests
         public static State BottleNeck =>
             new State(
                 track: new Track(
-                    time: 400,
+                    time: 100,
                     flagsGoal: 2,
                     flags: new[]{new V(0,0), new V(0, 0)},
                     obstacles:new[]
                     {
-                        new Disk(0, 70, 60),
-                        new Disk(-70, -20, 60),
-                        new Disk(70, -20, 60)
+                        new Disk(0, 40, 30),
+                        new Disk(-35, 0, 30),
+                        new Disk(35, 0, 30)
                     },
                     maxCooldown:20
                 ),
                 firstCar: new Car(
-                    pos: new V(150, -20),
+                    pos: new V(90, 0),
                     v: V.Zero,
                     radius: 2
                 ),
                 secondCar: new Car(
-                    pos: new V(-150, -20),
+                    pos: new V(-90, 0),
+                    v: V.Zero,
+                    radius: 2
+                )
+            );
+
+
+        public static State Snake =>
+            new State(
+                track: new Track(
+                    time: 200,
+                    flagsGoal: 32,
+                    flags: new[]
+                    {
+                        new V(-40, -40), new V(40, 40), new V(0, -20), new V(0, 20),
+                        new V(40, -40), new V(-40, 40), new V(60, 0), new V(-60, 0),
+                    },
+                    obstacles: new[]
+                    {
+                        new Disk(-40, 20, 10), new Disk(-40, 0, 10), new Disk(-40, -20, 10),
+                        new Disk(-20, 0, 10), new Disk(0, 0, 10), new Disk(20, 0, 10),
+                        new Disk(40, 20, 10), new Disk(40, 0, 10), new Disk(40, -20, 10),
+                        new Disk(0, 40, 10), new Disk(0, -40, 10),
+                    },
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    pos: new V(-60, 0),
+                    v: V.Zero,
+                    radius: 2
+                ),
+                secondCar: new Car(
+                    pos: new V(60, 0),
                     v: V.Zero,
                     radius: 2
                 )

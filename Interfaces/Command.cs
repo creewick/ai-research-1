@@ -12,7 +12,7 @@ namespace AI_Research_1.Interfaces
         
         public abstract object[] GetValuesList();
 
-        public static List<Command> All => new List<Command>
+        public static List<Command> All = new List<Command>
         {
             new Move(-1, 1), new Move(0, 1), new Move(1, 1),
             new Move(-1, 0), new Move(0, 0), new Move(1, 0),
