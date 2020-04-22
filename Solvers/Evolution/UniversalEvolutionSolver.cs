@@ -29,7 +29,7 @@ namespace AI_Research_1.Solvers.Evolution
         public IEnumerable<Solution> GetSolutions(State state, Countdown time)
         {
             var population = baseSolver
-                .GetSolutions(state, time / 10)
+                .GetSolutions(state, time / 2)
                 .ToList();
 
             var generationsCount = 0;

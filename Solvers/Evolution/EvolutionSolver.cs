@@ -15,8 +15,7 @@ namespace AI_Research_1.Solvers.Evolution
             new CombinedSolver(
                 new Dictionary<ISolver, double>
                 {
-                    {new GreedySolver(20), 0.25},
-                    {new BaseSolvers.RandomSolver(20), 0.75}
+                    {new GreedySolver(20), 1},
                 }, 
                 200
             ),

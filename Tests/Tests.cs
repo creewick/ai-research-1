@@ -9,7 +9,6 @@ using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 using AI_Research_1.Solvers;
 using AI_Research_1.Solvers.Evolution;
-using AI_Research_1.Solvers.HillClimbing;
 using NUnit.Framework;
 
 namespace AI_Research_1.Tests
@@ -30,9 +29,8 @@ namespace AI_Research_1.Tests
         
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
-            new RandomSolver(),
-            new RandomSolver(),
-            new RandomSolver(),
+            new GreedySolver(20),
+            new EvolutionSolver()
         };
 
         [TestCaseSource(nameof(TestCases))]
@@ -46,7 +44,7 @@ namespace AI_Research_1.Tests
             return (trackTime - time) + (flagsTaken - flagsGoal) * flagCoef;
         }
 
-        [Test]
+        [Test, Explicit]
         public void CheckStats()
         {
             var stat = new Dictionary<string, StatValue>();
