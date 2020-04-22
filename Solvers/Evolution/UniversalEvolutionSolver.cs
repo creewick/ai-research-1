@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
@@ -30,25 +32,29 @@ namespace AI_Research_1.Solvers.Evolution
                 .GetSolutions(state, time / 10)
                 .ToList();
 
+            var generationsCount = 0;
+
             while (!time.IsFinished())
             {
                 var parents = filter
-                    .GetParents(state, population)
-                    .ToList();
+                    .GetParents(state, population);
 
                 var children = applier
-                    .GetChildren(parents)
-                    .ToList();
+                    .GetChildren(state, parents);
 
                 population = selector
                     .GetPopulation(state, parents, children, population.Count)
                     .ToList();
+
+                generationsCount++;
             }
 
+            Debug.WriteLine(generationsCount);
+            
             return population;
         }
 
         public string GetNameWithArgs() =>
-            $"Evolution.{baseSolver.GetNameWithArgs()};{filter.GetType().Name}.{applier.GetType().Name}.{selector.GetType().Name}";
+            $"Evolution.{baseSolver.GetType().Name}.{filter.GetType().Name}.{applier.GetType().Name}.{selector.GetType().Name}";
     }
 }

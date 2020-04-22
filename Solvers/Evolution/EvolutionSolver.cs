@@ -13,16 +13,16 @@ namespace AI_Research_1.Solvers.Evolution
     {
         private readonly ISolver solver = new UniversalEvolutionSolver(
             new CombinedSolver(
-                new ISolver[]
+                new Dictionary<ISolver, double>
                 {
-                    new GreedySolver(10),
-                    new BaseSolvers.RandomSolver(10)   
+                    {new GreedySolver(20), 0.25},
+                    {new BaseSolvers.RandomSolver(20), 0.75}
                 }, 
                 200
             ),
-            new NormalizeFilter(), 
-            new RandomNoiseSegment(), 
-            new SelectTopScore()
+            new FilterHalf(), 
+            new SegmentCrossingOver(), 
+            new Elitism()
         );
 
         public string GetNameWithArgs() => solver.GetNameWithArgs();

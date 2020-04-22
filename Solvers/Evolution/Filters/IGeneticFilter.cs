@@ -6,6 +6,6 @@ namespace AI_Research_1.Solvers.Evolution.Filters
 {
     public interface IGeneticFilter
     {
-        public IEnumerable<Solution> GetParents(State state, List<Solution> solutions);
+        public List<Solution> GetParents(State state, List<Solution> solutions);
     }
 }

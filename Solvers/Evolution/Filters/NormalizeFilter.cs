@@ -9,8 +9,8 @@ namespace AI_Research_1.Solvers.Evolution.Filters
     public class NormalizeFilter : IGeneticFilter
     {
         private readonly Random random = new Random();
-        
-        public IEnumerable<Solution> GetParents(State state, List<Solution> solutions)
+
+        public List<Solution> GetParents(State state, List<Solution> solutions)
         {
             var scores = new Dictionary<Solution, long>();
             var maxScore = long.MinValue;
@@ -24,7 +24,8 @@ namespace AI_Research_1.Solvers.Evolution.Filters
             }
 
             return solutions
-                .Where(s => scores[s] / maxScore <= (long)random.NextDouble());
+                .Where(s => scores[s] / maxScore <= (long) random.NextDouble())
+                .ToList();
         }
     }
 }

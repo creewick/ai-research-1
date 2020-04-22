@@ -108,7 +108,7 @@ namespace AI_Research_1.Solvers
             return FlagsTaken(state) + IsAlive(state) - distancesCost - additionalDistanceCost;
         }
 
-        private static long GetScore_5(State state, int flagsCount)
+        private static long GetScore_5(State state, int flagsCount = 2)
         {
             var coefficient = (int)Math.Pow(2, flagsCount + 1);
             var cars = new List<Car> {state.FirstCar, state.SecondCar};

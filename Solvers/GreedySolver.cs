@@ -54,6 +54,9 @@ namespace AI_Research_1.Solvers
                 
                 var score = Emulator.Emulate(state, solution, steps, aggregate);
                 solutions.Add((solution, score));
+                
+                if (time.IsFinished())
+                    return solutions.OrderBy(x => x.Item2).Select(x => x.Item1); 
             }
 
             return solutions.OrderBy(x => x.Item2).Select(x => x.Item1);
