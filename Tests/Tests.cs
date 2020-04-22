@@ -30,10 +30,9 @@ namespace AI_Research_1.Tests
         
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
-            new GreedySolver(20),
-            new RandomSolver(10, 8),
-            new HillClimbingSolver(),
-            new EvolutionSolver()
+            new RandomSolver(),
+            new RandomSolver(),
+            new RandomSolver(),
         };
 
         [TestCaseSource(nameof(TestCases))]
@@ -99,7 +98,7 @@ namespace AI_Research_1.Tests
             foreach (var stateObj in states)
             foreach (var solver in Solvers)
                 yield return new TestCaseData(stateObj.State, solver)
-                    .SetName($"{stateObj.Name}_{solver.GetType().Name}_{i}");
+                    .SetName($"{stateObj.Name}_{solver.GetNameWithArgs()}_{i}");
         }
     }
 }
