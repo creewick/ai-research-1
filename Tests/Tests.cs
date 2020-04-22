@@ -95,10 +95,10 @@ namespace AI_Research_1.Tests
                 .Select(x => new {State = (State) x.GetValue(null), Name = x.Name});
 
             for (var i = 0; i < RepeatCount; i++)
-            foreach (var stateObj in states)
-            foreach (var solver in Solvers)
-                yield return new TestCaseData(stateObj.State, solver)
-                    .SetName($"{stateObj.Name}_{solver.GetNameWithArgs()}_{i}");
+                foreach (var stateObj in states)
+                    for (var j = 0; j < Solvers.Count; j++)
+                        yield return new TestCaseData(stateObj.State, Solvers[j])
+                            .SetName($"{stateObj.Name}_{Solvers[j].GetType().Name}_{j}_Test_{i}");
         }
     }
 }
