@@ -10,7 +10,7 @@ namespace AI_Research_1.Tests
         public static State NoBlocksCircle =>
             new State(
                 track: new Track(
-                    time: 200,
+                    time: 350,
                     flagsGoal: 16,
                     flags: new[]
                     {
@@ -35,7 +35,7 @@ namespace AI_Research_1.Tests
         public static State NoBlocksZigZag =>
             new State(
                 track: new Track(
-                    time: 200,
+                    time: 350,
                     flagsGoal: 16,
                     new[]
                     {
@@ -62,7 +62,7 @@ namespace AI_Research_1.Tests
         public static State ExchangeMap =>
             new State(
                 track: new Track(
-                    time: 225,
+                    time: 350,
                     flagsGoal: 16,
                     flags: new[]
                     {
@@ -103,7 +103,7 @@ namespace AI_Research_1.Tests
         public static State BottleNeck =>
             new State(
                 track: new Track(
-                    time: 30,
+                    time: 350,
                     flagsGoal: 2,
                     flags: new[] {new V(0, 0), new V(0, 0)},
                     obstacles: new[]
@@ -130,7 +130,7 @@ namespace AI_Research_1.Tests
         public static State Snake =>
             new State(
                 track: new Track(
-                    time: 300,
+                    time: 350,
                     flagsGoal: 32,
                     flags: new[]
                     {
@@ -186,7 +186,7 @@ namespace AI_Research_1.Tests
         public static State With10Obstacles10Flags3Repeats =>
             new State(
                 track: new Track(
-                    time: 350,
+                    time: 400,
                     flagsGoal: 30,
                     flags: new[]
                     {
@@ -214,7 +214,7 @@ namespace AI_Research_1.Tests
         public static State With5Obstacles10Flags =>
             new State(
                 track: new Track(
-                    time: 150,
+                    time: 350,
                     flagsGoal: 10,
                     flags: new[]
                     {
@@ -241,7 +241,7 @@ namespace AI_Research_1.Tests
         public static State With5Obstacles5Flags2Repeats =>
             new State(
                 track: new Track(
-                    time: 150,
+                    time: 350,
                     flagsGoal: 10,
                     flags: new[]
                     {
@@ -290,7 +290,7 @@ namespace AI_Research_1.Tests
         public static State With3Obstacles3Flags =>
             new State(
                 track: new Track(
-                    time: 50,
+                    time: 350,
                     flagsGoal: 3,
                     flags: new[]
                     {
@@ -336,7 +336,7 @@ namespace AI_Research_1.Tests
         public static State With3Obstacles3Flags10Repeats =>
             new State(
                 track: new Track(
-                    time: 250,
+                    time: 350,
                     flagsGoal: 30,
                     flags: new[]
                     {
@@ -359,7 +359,7 @@ namespace AI_Research_1.Tests
         public static State NoObstacles2Flags =>
             new State(
                 track: new Track(
-                    time: 20,
+                    time: 200,
                     flagsGoal: 2,
                     flags: new[]
                     {
@@ -379,7 +379,7 @@ namespace AI_Research_1.Tests
         public static State NoObstacles2Flags5Repeats =>
             new State(
                 track: new Track(
-                    time: 50,
+                    time: 150,
                     flagsGoal: 10,
                     flags: new[]
                     {
