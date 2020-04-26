@@ -139,7 +139,7 @@ namespace AI_Research_1.Tests
                     .Select(x => int.Parse(x[4]))
                     .ToList()
                     .ForEach(x => currentAliveStatValue.Add(x));
-                
+
                 using TextReader ssstream = File.OpenText(file);
                 ssstream
                     .ReadToEnd()
@@ -150,7 +150,7 @@ namespace AI_Research_1.Tests
                     .ForEach(x => currentMaxTimeValue.Add(x));
             }
 
-            FormCsv(statScore, statCarsAlive,statMaxTime);
+            FormCsv(statScore, statCarsAlive, statMaxTime);
         }
 
         private void FormCsv(Dictionary<string, Stat> statScore, Dictionary<string, Stat> statCarsAlive,
@@ -161,12 +161,13 @@ namespace AI_Research_1.Tests
                 "Algorithm, Greedy, , Random, , Hill Climb, , Evolution, ,,Greedy, , Random, , Hill Climb, , Evolution, ,,Greedy, Random, Hill Climb, Evolution");
             csv.Append(Environment.NewLine);
 
-            csv.Append(", Mean,Sigma,Mean,Sigma,Mean,Sigma,Mean,Sigma, ,Mean,Sigma,Mean,Sigma,Mean,Sigma,Mean,Sigma, ,Max,Max,Max,Max");
+            csv.Append(
+                ", Mean,Sigma,Mean,Sigma,Mean,Sigma,Mean,Sigma, ,Mean,Sigma,Mean,Sigma,Mean,Sigma,Mean,Sigma, ,Max,Max,Max,Max");
             csv.Append(Environment.NewLine);
 
             var tests = statScore.Keys.ToList();
             var directory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..");
-            var file = Path.Combine(directory,  "table.csv");
+            var file = Path.Combine(directory, "table.csv");
             if (File.Exists(file))
                 File.Delete(file);
             var writer = File.AppendText(file);
@@ -176,8 +177,8 @@ namespace AI_Research_1.Tests
                 var score = statScore[test];
                 var alive = statCarsAlive[test];
                 var max = statMaxTime[test];
-                var scoreStr =  GetLineMeanSigma(score);
-                var carsAlive =  GetLineMeanSigma(alive);
+                var scoreStr = GetLineMeanSigma(score);
+                var carsAlive = GetLineMeanSigma(alive);
                 var maxStr = GetLineMax(max);
                 var resStr = $"{test} ,{scoreStr}, ,{carsAlive}, ,{maxStr}";
                 writer.WriteLine(resStr);
@@ -185,16 +186,14 @@ namespace AI_Research_1.Tests
                 csv.Append(resStr);
                 csv.Append(Environment.NewLine);
             }
-            
-            
-            
         }
 
         private static string GetLineMeanSigma(Stat stat)
         {
             return
-                $"{stat.Greedy.Mean},{stat.Greedy.StdDeviation},{stat.Random.Mean},{stat.Random.StdDeviation},{stat.HillClimbing.Mean},{stat.HillClimbing.StdDeviation},{stat.Evolution.Mean},{stat.Evolution.StdDeviation}";
+                $"{Math.Round(stat.Greedy.Mean, 2)},{Math.Round(stat.Greedy.StdDeviation, 2)},{Math.Round(stat.Random.Mean, 2)},{Math.Round(stat.Random.StdDeviation, 2)},{Math.Round(stat.HillClimbing.Mean, 2)},{Math.Round(stat.HillClimbing.StdDeviation, 2)},{Math.Round(stat.Evolution.Mean, 2)},{Math.Round(stat.Evolution.StdDeviation, 2)}";
         }
+
         private static string GetLineMax(Stat stat)
         {
             return
