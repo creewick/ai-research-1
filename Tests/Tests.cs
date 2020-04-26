@@ -24,7 +24,7 @@ namespace AI_Research_1.Tests
     [TestFixture]
     public class Tests
     {
-        private const bool SaveReplay = true;
+        private const bool SaveReplay = false;
         private const bool SaveStats = true;
         private const int RepeatCount = 20;
 
@@ -73,10 +73,11 @@ namespace AI_Research_1.Tests
         
         private static State PlayToEnd(ISolver solver, State state, bool saveReplay, bool saveStats)
         {
+            var testName = TestContext.CurrentContext.Test.Name.Split("_")[0];
             var replayFile = !saveReplay ? null
                 : $"{solver.GetNameWithArgs()}.{Emulator.GetScore.Method.Name}_{DateTime.Now:dd.HH.mm.ss}.js";
             var statsFile = !saveStats ? null
-                : $"{solver.GetNameWithArgs()}.{Emulator.GetScore.Method.Name}.txt";
+                : $"{solver.GetType().Name}.{testName}.txt";
             
             var result = Controller.PlayToEnd(state, solver, replayFile, statsFile);
             
