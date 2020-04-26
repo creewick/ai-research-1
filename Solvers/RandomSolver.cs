@@ -12,7 +12,7 @@ namespace AI_Research_1.Solvers
     public class RandomSolver : ISolver
     {
         private readonly ISolver solver;
-        public RandomSolver(int steps = 10, int segmentMaxLength = 8, bool withHeuristic = false) =>
+        public RandomSolver(int steps = 16, int segmentMaxLength = 6, bool withHeuristic = false) =>
             solver = new UniversalRandomSolver(steps, segmentMaxLength, AggregateBy.Max, withHeuristic);
         public IEnumerable<Solution> GetSolutions(State state, Countdown time) => solver.GetSolutions(state, time);
         public string GetNameWithArgs() => solver.GetNameWithArgs();
@@ -24,7 +24,7 @@ namespace AI_Research_1.Solvers
         private readonly int rndSegMaxLen;
         private readonly AggregateBy aggregate;
 
-        private static Solution LastBestSolution;
+        private static Solution lastBestSolution;
         private readonly bool useLastBastSolution;
 
         public UniversalRandomSolver(int steps, int rndSegMaxLen, AggregateBy aggregate, bool useLastBastSolution)
@@ -39,10 +39,10 @@ namespace AI_Research_1.Solvers
         {
             var random = new Random();
             var solutions = new List<(Solution, double)>();
-            if (useLastBastSolution && LastBestSolution != null)
+            if (useLastBastSolution && lastBestSolution != null)
             {
-                foreach (var first in UpdateLastSolution(LastBestSolution.FirstCarCommandsList))
-                foreach (var second in UpdateLastSolution(LastBestSolution.SecondCarCommandsList))
+                foreach (var first in UpdateLastSolution(lastBestSolution.FirstCarCommandsList))
+                foreach (var second in UpdateLastSolution(lastBestSolution.SecondCarCommandsList))
                 {
                     var s = new Solution(first, second);
                     solutions.Add((s, Emulator.Emulate(state, s, steps, aggregate)));
@@ -57,7 +57,7 @@ namespace AI_Research_1.Solvers
             }
 
             var orderingSolutions = solutions.OrderBy(x => x.Item2).ToList();
-            if (useLastBastSolution) LastBestSolution = orderingSolutions.Last().Item1;
+            if (useLastBastSolution) lastBestSolution = orderingSolutions.Last().Item1;
 
             return orderingSolutions.Select(x => x.Item1);
         }
