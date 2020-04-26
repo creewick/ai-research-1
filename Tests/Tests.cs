@@ -9,6 +9,7 @@ using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 using AI_Research_1.Solvers;
 using AI_Research_1.Solvers.Evolution;
+using AI_Research_1.Solvers.HillClimbing;
 using NUnit.Framework;
 
 namespace AI_Research_1.Tests
@@ -25,12 +26,13 @@ namespace AI_Research_1.Tests
     {
         private const bool SaveReplay = true;
         private const bool SaveStats = true;
-        private const int RepeatCount = 1;
+        private const int RepeatCount = 20;
 
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
             new GreedySolver(20),
-            new EvolutionSolver()
+            new RandomSolver(16, 6),
+            new HillClimbingSolver()
         };
 
         [Timeout(60000)]
@@ -61,7 +63,7 @@ namespace AI_Research_1.Tests
                     .ReadToEnd()
                     .Split('\n', StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => x.Split(','))
-                    .Select(x => GetFinalScore(int.Parse(x[0]), int.Parse(x[1]), int.Parse(x[2]), int.Parse(x[3])))
+                    .Select(x => int.Parse(x[4]))
                     .ToList()
                     .ForEach(x => stat[file].Add(x));
                 

@@ -59,7 +59,8 @@ namespace AI_Research_1.Logic
         {
             var file = Path.Combine(ProjectDirectory, "Statistics", statsFile);
             var track = result.Track;
-            var text = $"{track.FlagsGoal},{track.Time},{result.FlagsTaken},{result.Time}\n";
+            var text = 
+                $"{track.FlagsGoal},{track.Time},{result.FlagsTaken},{result.Time},{(result.FirstCar.IsAlive && result.SecondCar.IsAlive ? 1 : 0)}\n";
             
             File.AppendAllText(file, text);
         }
