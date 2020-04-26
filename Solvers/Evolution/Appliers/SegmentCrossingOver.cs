@@ -12,18 +12,19 @@ namespace AI_Research_1.Solvers.Evolution.Appliers
         {
             while (true)
             {
-                var firstParent = solutions[Random.Next(solutions.Count)];
-                var secondParent = solutions[Random.Next(solutions.Count)];
+                var firstParent = solutions[random.Next(solutions.Count)];
+                var secondParent = solutions[random.Next(solutions.Count)];
                 if (firstParent == secondParent) continue;
-                var splitFirst = Random.Next(firstParent.FirstCarCommandsList.Count());
-                var splitSecond = Random.Next(firstParent.SecondCarCommandsList.Count());
+                var splitFirst = random.Next(firstParent.FirstCarCommandsList.Count());
+                var splitSecond = random.Next(firstParent.SecondCarCommandsList.Count());
                 
                 yield return GetChild(firstParent, secondParent, splitFirst, splitSecond);
             }
         }
-        private static readonly Random Random = new Random();
         
-        private static Solution GetChild(Solution firstParent, Solution secondParent, int splitFirst, int splitSecond)
+        private readonly Random random = new Random();
+        
+        private Solution GetChild(Solution firstParent, Solution secondParent, int splitFirst, int splitSecond)
         {
             return new Solution(
                 CrossOver(firstParent.FirstCarCommandsList, secondParent.FirstCarCommandsList, splitFirst),
@@ -31,13 +32,12 @@ namespace AI_Research_1.Solvers.Evolution.Appliers
             );
         }
 
-        private static IEnumerable<Command> CrossOver(IEnumerable<Command> first, IEnumerable<Command> second, int split)
+        private IEnumerable<Command> CrossOver(IEnumerable<Command> first, IEnumerable<Command> second, int split)
         {
             var firstPart = first.Take(split);
             var secondPart = second.Skip(split);
 
             return firstPart.Concat(secondPart);
         }
-
     }
 }

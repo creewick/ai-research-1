@@ -26,21 +26,24 @@ namespace AI_Research_1.Tests
         private const bool SaveReplay = true;
         private const bool SaveStats = true;
         private const int RepeatCount = 1;
-        
+
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
             new GreedySolver(20),
             new EvolutionSolver()
         };
 
+        [Timeout(60000)]
+        [Parallelizable(ParallelScope.All)]
         [TestCaseSource(nameof(TestCases))]
         public void Play(State state, ISolver solver)
         {
             PlayToEnd(solver, state, SaveReplay, SaveStats);
         }   
+        
         private static long GetFinalScore(int flagsGoal, int trackTime, int flagsTaken, int time)
         {
-            const int flagCoef = 100;
+            int flagCoef = trackTime / flagsGoal;
             return (trackTime - time) + (flagsTaken - flagsGoal) * flagCoef;
         }
 
@@ -62,8 +65,8 @@ namespace AI_Research_1.Tests
                     .ToList()
                     .ForEach(x => stat[file].Add(x));
                 
-                Console.Write($"{new FileInfo(file).Name}\n\n{stat[file]}\n\n");
             }
+            stat.Select(x=>(x.Key,x.Value)).OrderByDescending(x=>x.Value.Mean).ToList().ForEach(x=>Console.Write($"{new FileInfo(x.Key).Name}\n\n{stat[x.Key]}\n\n"));
         }
         
         private static State PlayToEnd(ISolver solver, State state, bool saveReplay, bool saveStats)
@@ -90,7 +93,8 @@ namespace AI_Research_1.Tests
             var states = typeof(TestStates)
                 .GetProperties(BindingFlags.Static | BindingFlags.Public)
                 .Where(x => x.PropertyType == typeof(State))
-                .Select(x => new {State = (State) x.GetValue(null), Name = x.Name});
+                .Select(x => new {State = (State) x.GetValue(null), Name = x.Name})
+                .ToList();
 
             for (var i = 0; i < RepeatCount; i++)
                 foreach (var stateObj in states)

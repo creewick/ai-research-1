@@ -13,7 +13,18 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Statistics" />
+      <Compile Remove="Statistics\**" />
+      <Compile Remove="Visualization\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Statistics\**" />
+      <EmbeddedResource Remove="Visualization\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Statistics\**" />
+      <None Remove="Visualization\**" />
     </ItemGroup>
 
 </Project>
