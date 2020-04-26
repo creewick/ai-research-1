@@ -2,7 +2,9 @@
 {
     public class Stat
     {
-        public StatValue FlagsStat = new StatValue();
-        public StatValue TimeStat = new StatValue();
+        public StatValue Greedy = new StatValue();
+        public StatValue Random = new StatValue();
+        public StatValue HillClimbing = new StatValue();
+        public StatValue Evolution = new StatValue();
     }
 }

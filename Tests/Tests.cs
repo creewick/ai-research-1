@@ -1,14 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading;
 using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 using AI_Research_1.Solvers;
-using AI_Research_1.Solvers.Evolution;
 using AI_Research_1.Solvers.HillClimbing;
 using NUnit.Framework;
 
@@ -30,9 +33,6 @@ namespace AI_Research_1.Tests
 
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
-            new GreedySolver(20),
-            new RandomSolver(16, 6),
-            new HillClimbingSolver()
         };
 
         [Timeout(60000)]
@@ -41,8 +41,8 @@ namespace AI_Research_1.Tests
         public void Play(State state, ISolver solver)
         {
             PlayToEnd(solver, state, SaveReplay, SaveStats);
-        }   
-        
+        }
+
         private static long GetFinalScore(int flagsGoal, int trackTime, int flagsTaken, int time)
         {
             int flagCoef = trackTime / flagsGoal;
@@ -66,21 +66,154 @@ namespace AI_Research_1.Tests
                     .Select(x => int.Parse(x[4]))
                     .ToList()
                     .ForEach(x => stat[file].Add(x));
-                
             }
-            stat.Select(x=>(x.Key,x.Value)).OrderByDescending(x=>x.Value.Mean).ToList().ForEach(x=>Console.Write($"{new FileInfo(x.Key).Name}\n\n{stat[x.Key]}\n\n"));
+
+            stat.Select(x => (x.Key, x.Value)).OrderByDescending(x => x.Value.Mean).ToList()
+                .ForEach(x => Console.Write($"{new FileInfo(x.Key).Name}\n\n{stat[x.Key]}\n\n"));
         }
-        
+
+        [Test, Explicit]
+        public void CollectStatToCsv()
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            var statScore = new Dictionary<string, Stat>();
+            var statCarsAlive = new Dictionary<string, Stat>();
+            var statMaxTime = new Dictionary<string, Stat>();
+            var projectDirectory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "Statistics");
+            var files = Directory.GetFiles(projectDirectory);
+            foreach (var file in files)
+            {
+                var args = new FileInfo(file).Name.Split('.');
+                var testName = args[1];
+                var solverName = args[0];
+                if (!statScore.ContainsKey(testName))
+                    statScore[testName] = new Stat();
+                if (!statCarsAlive.ContainsKey(testName))
+                    statCarsAlive[testName] = new Stat();
+                if (!statMaxTime.ContainsKey(testName))
+                    statMaxTime[testName] = new Stat();
+                var currentStatScore = statScore[testName];
+                var currentAliveStatScore = statCarsAlive[testName];
+                var currentMax = statMaxTime[testName];
+                StatValue currentScoreStatValue = new StatValue();
+                StatValue currentAliveStatValue = new StatValue();
+                StatValue currentMaxTimeValue = new StatValue();
+                switch (solverName)
+                {
+                    case nameof(HillClimbingSolver):
+                        currentScoreStatValue = currentStatScore.HillClimbing;
+                        currentAliveStatValue = currentAliveStatScore.HillClimbing;
+                        currentMaxTimeValue = currentMax.HillClimbing;
+                        break;
+                    case nameof(RandomSolver):
+                        currentScoreStatValue = currentStatScore.Random;
+                        currentAliveStatValue = currentAliveStatScore.Random;
+                        currentMaxTimeValue = currentMax.Random;
+                        break;
+                    case nameof(GreedySolver):
+                        currentScoreStatValue = currentStatScore.Greedy;
+                        currentAliveStatValue = currentAliveStatScore.Greedy;
+                        currentMaxTimeValue = currentMax.Greedy;
+                        break;
+                    case "EvolutionSolver":
+                        currentScoreStatValue = currentStatScore.Evolution;
+                        currentAliveStatValue = currentAliveStatScore.Evolution;
+                        currentMaxTimeValue = currentMax.Evolution;
+                        break;
+                }
+
+                using TextReader stream = File.OpenText(file);
+                stream
+                    .ReadToEnd()
+                    .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Split(','))
+                    .Select(x => GetFinalScore(int.Parse(x[0]), int.Parse(x[1]), int.Parse(x[2]), int.Parse(x[3])))
+                    .ToList()
+                    .ForEach(x => currentScoreStatValue.Add(x));
+
+                using TextReader sstream = File.OpenText(file);
+                sstream
+                    .ReadToEnd()
+                    .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Split(','))
+                    .Select(x => int.Parse(x[4]))
+                    .ToList()
+                    .ForEach(x => currentAliveStatValue.Add(x));
+                
+                using TextReader ssstream = File.OpenText(file);
+                ssstream
+                    .ReadToEnd()
+                    .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => x.Split(','))
+                    .Select(x => int.Parse(x[3]))
+                    .ToList()
+                    .ForEach(x => currentMaxTimeValue.Add(x));
+            }
+
+            FormCsv(statScore, statCarsAlive,statMaxTime);
+        }
+
+        private void FormCsv(Dictionary<string, Stat> statScore, Dictionary<string, Stat> statCarsAlive,
+            Dictionary<string, Stat> statMaxTime)
+        {
+            var csv = new StringBuilder();
+            csv.Append(
+                "Algorithm, Greedy, , Random, , Hill Climb, , Evolution, ,,Greedy, , Random, , Hill Climb, , Evolution, ,,Greedy, Random, Hill Climb, Evolution");
+            csv.Append(Environment.NewLine);
+
+            csv.Append(", Mean,Sigma,Mean,Sigma,Mean,Sigma,Mean,Sigma, ,Mean,Sigma,Mean,Sigma,Mean,Sigma,Mean,Sigma, ,Max,Max,Max,Max");
+            csv.Append(Environment.NewLine);
+
+            var tests = statScore.Keys.ToList();
+            var directory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..");
+            var file = Path.Combine(directory,  "table.csv");
+            if (File.Exists(file))
+                File.Delete(file);
+            var writer = File.AppendText(file);
+            writer.Write(csv.ToString());
+            foreach (var test in tests)
+            {
+                var score = statScore[test];
+                var alive = statCarsAlive[test];
+                var max = statMaxTime[test];
+                var scoreStr =  GetLineMeanSigma(score);
+                var carsAlive =  GetLineMeanSigma(alive);
+                var maxStr = GetLineMax(max);
+                var resStr = $"{test} ,{scoreStr}, ,{carsAlive}, ,{maxStr}";
+                writer.WriteLine(resStr);
+                writer.Flush();
+                csv.Append(resStr);
+                csv.Append(Environment.NewLine);
+            }
+            
+            
+            
+        }
+
+        private static string GetLineMeanSigma(Stat stat)
+        {
+            return
+                $"{stat.Greedy.Mean},{stat.Greedy.StdDeviation},{stat.Random.Mean},{stat.Random.StdDeviation},{stat.HillClimbing.Mean},{stat.HillClimbing.StdDeviation},{stat.Evolution.Mean},{stat.Evolution.StdDeviation}";
+        }
+        private static string GetLineMax(Stat stat)
+        {
+            return
+                $"{stat.Greedy.Max},{stat.Random.Max},{stat.HillClimbing.Max},{stat.Evolution.Max}";
+        }
+
+
         private static State PlayToEnd(ISolver solver, State state, bool saveReplay, bool saveStats)
         {
             var testName = TestContext.CurrentContext.Test.Name.Split("_")[0];
-            var replayFile = !saveReplay ? null
+            var replayFile = !saveReplay
+                ? null
                 : $"{solver.GetNameWithArgs()}.{Emulator.GetScore.Method.Name}_{DateTime.Now:dd.HH.mm.ss}.js";
-            var statsFile = !saveStats ? null
+            var statsFile = !saveStats
+                ? null
                 : $"{solver.GetType().Name}.{testName}.txt";
-            
+
             var result = Controller.PlayToEnd(state, solver, replayFile, statsFile);
-            
+
             Console.WriteLine($"Time: {result.Time} Flags: {result.FlagsTaken}\n");
 
             if (saveReplay)
