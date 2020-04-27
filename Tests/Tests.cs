@@ -31,14 +31,17 @@ namespace AI_Research_1.Tests
         private static readonly string ProjectDirectory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..");
         private const bool SaveReplay = false;
         private const bool SaveStats = true;
-        private const int RepeatCount = 2;
+        private const int RepeatCount = 10;
 
         private static string GetSolverName(ISolver solver) => solver.GetNameWithArgs();
 
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
-            new RandomSolver(10),
-            new RandomSolver(20, 1),
+            new GreedySolver(10, Emulator.GetScore_1),
+            new GreedySolver(10, Emulator.GetScore_2),
+            new GreedySolver(10, Emulator.GetScore_3),
+            new GreedySolver(10, Emulator.GetScore_4),
+            new GreedySolver(10, Emulator.GetScore_5)
         };
 
         [Timeout(60000)]
@@ -238,7 +241,7 @@ namespace AI_Research_1.Tests
         private static string GetLineMeanSigma(Stat stat)
         {
             return
-                $"{Math.Round(stat.Greedy.Mean, 2)},{Math.Round(stat.Greedy.StdDeviation, 2)},{Math.Round(stat.Random.Mean, 2)},{Math.Round(stat.Random.StdDeviation, 2)},{Math.Round(stat.HillClimbing.Mean, 2)},{Math.Round(stat.HillClimbing.StdDeviation, 2)},{Math.Round(stat.Evolution.Mean, 2)},{Math.Round(stat.Evolution.StdDeviation, 2)}";
+                $"{Math.Round(stat.Greedy.Mean, 2)},{Math.Round(stat.Greedy.ConfIntervalSize/2, 2)},{Math.Round(stat.Random.Mean, 2)},{Math.Round(stat.Random.ConfIntervalSize/2, 2)},{Math.Round(stat.HillClimbing.Mean, 2)},{Math.Round(stat.HillClimbing.ConfIntervalSize/2, 2)},{Math.Round(stat.Evolution.Mean, 2)},{Math.Round(stat.Evolution.ConfIntervalSize/2, 2)}";
         }
 
         private static string GetLineMax(Stat stat)
