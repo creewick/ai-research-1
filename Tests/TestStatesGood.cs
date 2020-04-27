@@ -5,7 +5,7 @@ using AI_Research_1.Logic;
 namespace AI_Research_1.Tests
 {
     // Только public static поля через лямбду или { get; }, возвращающие State
-    public class TestStates
+    public class TestStatesGood
     {
         public static State NoBlocksCircle =>
             new State(
@@ -100,6 +100,169 @@ namespace AI_Research_1.Tests
                 )
             );
 
+
+        public static State With5Obstacles5Flags2Repeats =>
+            new State(
+                track: new Track(
+                    time: 150,
+                    flagsGoal: 10,
+                    flags: new[]
+                    {
+                        new V(-49, -0), new V(-26, -88), new V(-53, 39), new V(-95, 49), new V(63, 64)
+                    },
+                    obstacles: new[]
+                    {
+                        new Disk(-49, 76, 8), new Disk(-5, -31, 7), new Disk(-72, 97, 7),
+                        new Disk(24, 78, 6), new Disk(-8, -42, 5)
+                    },
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    V.Zero, V.Zero, 2
+                ),
+                secondCar: new Car(
+                    new V(100, 100),
+                    V.Zero, 2)
+            );
+
+
+        public static State With3Obstacles3Flags =>
+            new State(
+                track: new Track(
+                    time: 50,
+                    flagsGoal: 3,
+                    flags: new[]
+                    {
+                        new V(-36, -32), new V(-21, 3), new V(-49, 14)
+                    },
+                    obstacles: new[]
+                    {
+                        new Disk(29, 29, 5), new Disk(-15, -15, 5), new Disk(17, 17, 5)
+                    },
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    V.Zero, V.Zero, 2
+                ),
+                secondCar: new Car(
+                    new V(100, 100),
+                    V.Zero, 2)
+            );
+
+        public static State With3Obstacles3Flags3Repeats =>
+            new State(
+                track: new Track(
+                    time: 125,
+                    flagsGoal: 9,
+                    flags: new[]
+                    {
+                        new V(-36, -32), new V(-21, 3), new V(-49, 14)
+                    },
+                    obstacles: new[]
+                    {
+                        new Disk(29, 29, 5), new Disk(-15, -15, 5), new Disk(17, 17, 5)
+                    },
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    V.Zero, V.Zero, 2
+                ),
+                secondCar: new Car(
+                    new V(100, 100),
+                    V.Zero, 2)
+            );
+
+        public static State With3Obstacles3Flags10Repeats =>
+            new State(
+                track: new Track(
+                    time: 250,
+                    flagsGoal: 30,
+                    flags: new[]
+                    {
+                        new V(-36, -32), new V(-21, 3), new V(-49, 14)
+                    },
+                    obstacles: new[]
+                    {
+                        new Disk(29, 29, 5), new Disk(-15, -15, 5), new Disk(17, 17, 5)
+                    },
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    V.Zero, V.Zero, 2
+                ),
+                secondCar: new Car(
+                    new V(100, 100),
+                    V.Zero, 2)
+            );
+
+        public static State NoObstacles2Flags =>
+            new State(
+                track: new Track(
+                    time: 20,
+                    flagsGoal: 2,
+                    flags: new[]
+                    {
+                        new V(46, 37), new V(-67, -62)
+                    },
+                    obstacles: new List<Disk>(),
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    V.Zero, V.Zero, 2
+                ),
+                secondCar: new Car(
+                    new V(100, 100),
+                    V.Zero, 2)
+            );
+
+        public static State NoObstacles2Flags5Repeats =>
+            new State(
+                track: new Track(
+                    time: 50,
+                    flagsGoal: 10,
+                    flags: new[]
+                    {
+                        new V(46, 37), new V(-67, -62)
+                    },
+                    obstacles: new List<Disk>(),
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    V.Zero, V.Zero, 2
+                ),
+                secondCar: new Car(
+                    new V(100, 100),
+                    V.Zero, 2)
+            );
+
+        public static State NoObstacles28Flags =>
+            new State(
+                track: new Track(
+                    time: 350,
+                    flagsGoal: 28,
+                    flags: new[]
+                    {
+                        new V(46, 37), new V(-67, -62), new V(-36, -32), new V(-21, 3), new V(-49, 14), new V(-24, -35),
+                        new V(2, -88), new V(35, -74), new V(99, 13), new V(31, -65), new V(69, -23),
+                        new V(-75, -80), new V(-15, 94), new V(38, -27), new V(-49, 78), new V(16, 69), new V(71, 27),
+                        new V(74, 83), new V(38, 22), new V(79, -99), new V(0, 100), new V(50, 50), new V(100, 0),
+                        new V(50, -50),
+                        new V(0, -100), new V(-50, -50), new V(-100, 0), new V(-50, 50)
+                    },
+                    obstacles: new List<Disk>(),
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    V.Zero, V.Zero, 2
+                ),
+                secondCar: new Car(
+                    new V(100, 100),
+                    V.Zero, 2)
+            );
+    }
+
+    public class TestStatesOther
+    {
         public static State BottleNeck =>
             new State(
                 track: new Track(
@@ -238,30 +401,6 @@ namespace AI_Research_1.Tests
                     V.Zero, 2)
             );
 
-        public static State With5Obstacles5Flags2Repeats =>
-            new State(
-                track: new Track(
-                    time: 150,
-                    flagsGoal: 10,
-                    flags: new[]
-                    {
-                        new V(-49, -0), new V(-26, -88), new V(-53, 39), new V(-95, 49), new V(63, 64)
-                    },
-                    obstacles: new[]
-                    {
-                        new Disk(-49, 76, 8), new Disk(-5, -31, 7), new Disk(-72, 97, 7),
-                        new Disk(24, 78, 6), new Disk(-8, -42, 5)
-                    },
-                    maxCooldown: 20
-                ),
-                firstCar: new Car(
-                    V.Zero, V.Zero, 2
-                ),
-                secondCar: new Car(
-                    new V(100, 100),
-                    V.Zero, 2)
-            );
-
         public static State With7Obstacles10Flags =>
             new State(
                 track: new Track(
@@ -277,140 +416,6 @@ namespace AI_Research_1.Tests
                         new Disk(-44, 31, 8), new Disk(84, -39, 7), new Disk(-71, -2, 7),
                         new Disk(54, -88, 6), new Disk(22, -12, 5), new Disk(71, 47, 4), new Disk(20, 54, 8)
                     },
-                    maxCooldown: 20
-                ),
-                firstCar: new Car(
-                    V.Zero, V.Zero, 2
-                ),
-                secondCar: new Car(
-                    new V(100, 100),
-                    V.Zero, 2)
-            );
-
-        public static State With3Obstacles3Flags =>
-            new State(
-                track: new Track(
-                    time: 50,
-                    flagsGoal: 3,
-                    flags: new[]
-                    {
-                        new V(-36, -32), new V(-21, 3), new V(-49, 14)
-                    },
-                    obstacles: new[]
-                    {
-                        new Disk(29, 29, 5), new Disk(-15, -15, 5), new Disk(17, 17, 5)
-                    },
-                    maxCooldown: 20
-                ),
-                firstCar: new Car(
-                    V.Zero, V.Zero, 2
-                ),
-                secondCar: new Car(
-                    new V(100, 100),
-                    V.Zero, 2)
-            );
-
-        public static State With3Obstacles3Flags3Repeats =>
-            new State(
-                track: new Track(
-                    time: 125,
-                    flagsGoal: 9,
-                    flags: new[]
-                    {
-                        new V(-36, -32), new V(-21, 3), new V(-49, 14)
-                    },
-                    obstacles: new[]
-                    {
-                        new Disk(29, 29, 5), new Disk(-15, -15, 5), new Disk(17, 17, 5)
-                    },
-                    maxCooldown: 20
-                ),
-                firstCar: new Car(
-                    V.Zero, V.Zero, 2
-                ),
-                secondCar: new Car(
-                    new V(100, 100),
-                    V.Zero, 2)
-            );
-
-        public static State With3Obstacles3Flags10Repeats =>
-            new State(
-                track: new Track(
-                    time: 250,
-                    flagsGoal: 30,
-                    flags: new[]
-                    {
-                        new V(-36, -32), new V(-21, 3), new V(-49, 14)
-                    },
-                    obstacles: new[]
-                    {
-                        new Disk(29, 29, 5), new Disk(-15, -15, 5), new Disk(17, 17, 5)
-                    },
-                    maxCooldown: 20
-                ),
-                firstCar: new Car(
-                    V.Zero, V.Zero, 2
-                ),
-                secondCar: new Car(
-                    new V(100, 100),
-                    V.Zero, 2)
-            );
-
-        public static State NoObstacles2Flags =>
-            new State(
-                track: new Track(
-                    time: 20,
-                    flagsGoal: 2,
-                    flags: new[]
-                    {
-                        new V(46, 37), new V(-67, -62)
-                    },
-                    obstacles: new List<Disk>(),
-                    maxCooldown: 20
-                ),
-                firstCar: new Car(
-                    V.Zero, V.Zero, 2
-                ),
-                secondCar: new Car(
-                    new V(100, 100),
-                    V.Zero, 2)
-            );
-
-        public static State NoObstacles2Flags5Repeats =>
-            new State(
-                track: new Track(
-                    time: 50,
-                    flagsGoal: 10,
-                    flags: new[]
-                    {
-                        new V(46, 37), new V(-67, -62)
-                    },
-                    obstacles: new List<Disk>(),
-                    maxCooldown: 20
-                ),
-                firstCar: new Car(
-                    V.Zero, V.Zero, 2
-                ),
-                secondCar: new Car(
-                    new V(100, 100),
-                    V.Zero, 2)
-            );
-
-        public static State NoObstacles28Flags =>
-            new State(
-                track: new Track(
-                    time: 350,
-                    flagsGoal: 28,
-                    flags: new[]
-                    {
-                        new V(46, 37), new V(-67, -62), new V(-36, -32), new V(-21, 3), new V(-49, 14), new V(-24, -35),
-                        new V(2, -88), new V(35, -74), new V(99, 13), new V(31, -65), new V(69, -23),
-                        new V(-75, -80), new V(-15, 94), new V(38, -27), new V(-49, 78), new V(16, 69), new V(71, 27),
-                        new V(74, 83), new V(38, 22), new V(79, -99), new V(0, 100), new V(50, 50), new V(100, 0),
-                        new V(50, -50),
-                        new V(0, -100), new V(-50, -50), new V(-100, 0), new V(-50, 50)
-                    },
-                    obstacles: new List<Disk>(),
                     maxCooldown: 20
                 ),
                 firstCar: new Car(
