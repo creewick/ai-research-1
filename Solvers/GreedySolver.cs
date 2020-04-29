@@ -12,9 +12,10 @@ namespace AI_Research_1.Solvers
     {
         private readonly ISolver solver;
 
-        public GreedySolver(int solutionDepth)
+        public GreedySolver(int solutionDepth, Func<State, long> getScore=null)
         {
-            solver = new UniversalGreedySolver(solutionDepth, SimulateBy.Repeat, AggregateBy.Max);
+            getScore ??= Emulator.GetScore;
+            solver = new UniversalGreedySolver(solutionDepth, SimulateBy.Repeat, AggregateBy.Max, getScore);
         }
 
         public string GetNameWithArgs() => solver.GetNameWithArgs();
@@ -27,12 +28,14 @@ namespace AI_Research_1.Solvers
         private readonly int steps;
         private readonly SimulateBy simulate;
         private readonly AggregateBy aggregate;
+        private readonly Func<State, long> getScore;
 
-        public UniversalGreedySolver(int steps, SimulateBy simulate, AggregateBy aggregate)
+        public UniversalGreedySolver(int steps, SimulateBy simulate, AggregateBy aggregate, Func<State, long> getScore)
         {
             this.steps = steps;
             this.simulate = simulate;
             this.aggregate = aggregate;
+            this.getScore = getScore;
         }
 
         public IEnumerable<Solution> GetSolutions(State state, Countdown time)

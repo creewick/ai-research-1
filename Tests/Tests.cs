@@ -98,7 +98,11 @@ namespace AI_Research_1.Tests
         {
             var stat = new Dictionary<string, StatValue>();
             var projectDirectory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "Statistics");
-            var files = Directory.GetFiles(projectDirectory);
+            var files = Directory
+                    // sorry, это чтобы на mac os всё работало
+                    .GetFiles(projectDirectory)
+                    .Where(fileName => !fileName.Contains("DS_Store"))
+                    .ToList();
             foreach (var file in files)
             {
                 stat[file] = new StatValue();
@@ -118,7 +122,9 @@ namespace AI_Research_1.Tests
                 }
             }
 
-            stat.Select(x => (x.Key, x.Value)).OrderByDescending(x => x.Value.Mean).ToList()
+            stat.Select(x => (x.Key, x.Value))
+                .OrderByDescending(x => x.Value.Mean)
+                .ToList()
                 .ForEach(x => Console.Write($"{new FileInfo(x.Key).Name}\n\n{stat[x.Key]}\n\n"));
         }
 

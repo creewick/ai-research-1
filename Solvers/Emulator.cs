@@ -23,8 +23,9 @@ namespace AI_Research_1.Solvers
                     Emulate(state, s, s.FirstCarCommandsList.Count()));
         }
 
-        public static long Emulate(State state, Solution solution, int steps, AggregateBy aggregate = AggregateBy.Max)
+        public static long Emulate(State state, Solution solution, int steps, AggregateBy aggregate = AggregateBy.Max, Func<State, long> getScore=null)
         {
+            getScore ??= GetScore;
             var copy = state.Copy();
             var score = long.MinValue;
             var currentSolution = solution;
@@ -34,7 +35,7 @@ namespace AI_Research_1.Solvers
                 copy.Tick(currentSolution);
                 currentSolution = solution.GetNextTick();
                 
-                var newScore = GetScore(copy);
+                var newScore = getScore(copy);
 
                 switch (aggregate)
                 {
@@ -53,13 +54,13 @@ namespace AI_Research_1.Solvers
             return score;
         }
 
-        private static long GetScore_1(State state) => 
+        public static long GetScore_1(State state) => 
             + IsAlive(state)
             + FlagsTaken(state)
             - state.GetNextFlag().Dist2To(state.FirstCar.Pos)
             - state.GetNextFlag().Dist2To(state.SecondCar.Pos);
 
-        private static long GetScore_2(State state)
+        public static long GetScore_2(State state)
         {
             var taken = state.FlagsTaken;
             var all = state.Track.Flags.Count;
@@ -72,7 +73,7 @@ namespace AI_Research_1.Solvers
                    - secondCarFlag.Dist2To(state.SecondCar.Pos);
         }
 
-        private static long GetScore_3(State state)
+        public static long GetScore_3(State state)
         {
             var flags = new[]
                 {
@@ -86,7 +87,7 @@ namespace AI_Research_1.Solvers
                    - flags.First().Dist2To(state.FirstCar.Pos)
                    - flags.Last().Dist2To(state.SecondCar.Pos);
         }
-        private static long GetScore_4(State state)
+        public static long GetScore_4(State state)
         {
             var flagsCount = 3;
             var cars = new List<Car> {state.FirstCar, state.SecondCar};
@@ -108,8 +109,9 @@ namespace AI_Research_1.Solvers
             return FlagsTaken(state) + IsAlive(state) - distancesCost - additionalDistanceCost;
         }
 
-        private static long GetScore_5(State state, int flagsCount = 2)
+        public static long GetScore_5(State state)
         {
+            var flagsCount = 2;
             var coefficient = (int)Math.Pow(2, flagsCount + 1);
             var cars = new List<Car> {state.FirstCar, state.SecondCar};
             var distancesCost =
