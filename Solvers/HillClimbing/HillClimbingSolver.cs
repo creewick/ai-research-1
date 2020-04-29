@@ -12,7 +12,7 @@ namespace AI_Research_1.Solvers.HillClimbing
 {
     public class HillClimbingSolver : ISolver
     {
-        private readonly ISolver baseSolver = new RandomSolver();
+        private readonly ISolver baseSolver = new GreedySolver(15);
 
         private readonly List<(IMutator, int)> mutators = new List<(IMutator, int)>()
         {
@@ -27,9 +27,11 @@ namespace AI_Research_1.Solvers.HillClimbing
         private readonly ISolver solver;
         public UniversalHillClimbingSolverTelemetry Telemetry => (solver as UniversalHillClimbingSolver).Telemetry;
 
-        public HillClimbingSolver()
+        public HillClimbingSolver(ISolver baseSolver = null, int baseSolverTime = 10)
         {
-            solver = new UniversalHillClimbingSolver(baseSolver, mutators, AggregateBy.Max);
+            baseSolver ??= this.baseSolver;
+            solver = new UniversalHillClimbingSolver(baseSolver, mutators, AggregateBy.Max,
+                baseSolverTime: baseSolverTime);
         }
 
         public string GetNameWithArgs() => solver.GetNameWithArgs();
@@ -46,17 +48,19 @@ namespace AI_Research_1.Solvers.HillClimbing
         private readonly List<IMutator> mutators;
         private Dictionary<IMutator, (int, int)> roulete;
         public readonly UniversalHillClimbingSolverTelemetry Telemetry = new UniversalHillClimbingSolverTelemetry();
+        private int baseSolverTime;
 
 
         public UniversalHillClimbingSolver(ISolver baseSolver, List<(IMutator, int)> mutatorsQuotes,
             AggregateBy aggregate,
-            bool useBestSolution = true)
+            bool useBestSolution = true, int baseSolverTime = 10)
         {
             this.baseSolver = baseSolver;
             mutators = mutatorsQuotes.Select(x => x.Item1).ToList();
             roulete = BuildRoulete(mutatorsQuotes);
             this.aggregate = aggregate;
             this.useBestSolution = useBestSolution;
+            this.baseSolverTime = baseSolverTime;
         }
 
         private Dictionary<IMutator, (int, int)> BuildRoulete(List<(IMutator, int)> mutatorsQuotes)
@@ -79,7 +83,8 @@ namespace AI_Research_1.Solvers.HillClimbing
             Telemetry.BestSolutionsWinsCount = 0;
             var steps = new List<Solution>();
 
-            var baseSolverSolution = baseSolver.GetSolutions(state, time / 10).Last();
+
+            var baseSolverSolution = baseSolver.GetSolutions(state, time / baseSolverTime).Last();
             steps.Add(baseSolverSolution);
 
             if (bestSolution != null && useBestSolution)
@@ -127,7 +132,7 @@ namespace AI_Research_1.Solvers.HillClimbing
         }
 
         public string GetNameWithArgs() =>
-            $"HillClimbing.{baseSolver.GetNameWithArgs()};{mutators.Select(m => m.GetType().Name).StrJoin(".")};{aggregate}.H={useBestSolution}";
+            $"HillClimbing.{baseSolver.GetNameWithArgs()};{aggregate}.H={useBestSolution}.BST={baseSolverTime}";
 
         private void UpdateBestSolution(State state)
         {

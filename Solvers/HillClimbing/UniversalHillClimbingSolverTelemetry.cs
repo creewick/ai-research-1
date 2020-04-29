@@ -13,6 +13,7 @@ namespace AI_Research_1.Solvers.HillClimbing
         public int ImprovementsCount;
 
         public readonly Dictionary<Type, int> MutationsWinsCounts = new Dictionary<Type, int>();
+        public int TicksCount { get; set; }
 
         public void AddMutationWin(IMutation mutation)
         {
