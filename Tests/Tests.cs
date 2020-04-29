@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,7 +13,6 @@ using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 using AI_Research_1.Solvers;
-using AI_Research_1.Solvers.Evolution;
 using AI_Research_1.Solvers.HillClimbing;
 using NUnit.Framework;
 
@@ -28,26 +28,65 @@ namespace AI_Research_1.Tests
     [TestFixture]
     public class Tests
     {
+        private static readonly string ProjectDirectory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..");
         private const bool SaveReplay = false;
         private const bool SaveStats = true;
-        private const int RepeatCount = 20;
+        private const int RepeatCount = 10;
+
+        private static string GetSolverName(ISolver solver) => solver.GetNameWithArgs();
 
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
-            new GreedySolver(20),
-            new RandomSolver(),
-            new HillClimbingSolver()
-            // new EvolutionSolver()
+            new GreedySolver(10, Emulator.GetScore_1),
+            new GreedySolver(10, Emulator.GetScore_2),
+            new GreedySolver(10, Emulator.GetScore_3),
+            new GreedySolver(10, Emulator.GetScore_4),
+            new GreedySolver(10, Emulator.GetScore_5)
         };
 
         [Timeout(60000)]
-        [Parallelizable(ParallelScope.All)]
-        [TestCaseSource(nameof(TestCases))]
-        public void Play(State state, ISolver solver)
+        //[Parallelizable(ParallelScope.All)] do not use it!
+        [TestCaseSource(nameof(TestCasesGood))]
+        public void Play(State state, ISolver solver, int repeat, string groupName)
         {
-            PlayToEnd(solver, state, SaveReplay, SaveStats);
-        }   
-        
+            PlayToEnd(solver, state, SaveReplay, SaveStats, repeat, groupName);
+        }
+
+        private static State PlayToEnd(ISolver solver, State state, bool saveReplay, bool saveStats, int repeat,
+            string groupName)
+        {
+            var testName = TestContext.CurrentContext.Test.Name.Split("_")[0];
+            var replayFile = !saveReplay
+                ? null
+                : $"{solver.GetNameWithArgs()}.{Emulator.GetScore.Method.Name}_{DateTime.Now:dd.HH.mm.ss}.js";
+            var statsFile = !saveStats
+                ? null
+                : $"{GetSolverName(solver)}.{groupName}.txt";
+            if (statsFile != null)
+            {
+                if (!lastRepeats.ContainsKey(statsFile))
+                    lastRepeats[statsFile] = -1;
+                if (lastRepeats[statsFile] != repeat)
+                {
+                    var file = Path.Combine(ProjectDirectory, "Statistics", statsFile);
+                    File.AppendAllText(file, "@\n");
+                }
+
+                lastRepeats[statsFile] = repeat;
+            }
+
+            var result = Controller.PlayToEnd(state, solver, replayFile, statsFile);
+
+            Console.WriteLine($"Time: {result.Time} Flags: {result.FlagsTaken}\n");
+
+            if (saveReplay)
+                Console.WriteLine($"Replay saved to: {replayFile}");
+            if (saveStats)
+                Console.WriteLine($"Stats saved to: {statsFile}");
+
+            return result;
+        }
+
         private static long GetFinalScore(int flagsGoal, int trackTime, int flagsTaken, int time)
         {
             int flagCoef = trackTime / flagsGoal;
@@ -59,29 +98,28 @@ namespace AI_Research_1.Tests
         {
             var stat = new Dictionary<string, StatValue>();
             var projectDirectory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "Statistics");
-            var files = Directory.GetFiles(projectDirectory)
-                // sorry, но на mac os иначе не работает
-                .Where(fileName => !fileName.Contains(".DS_Store"))
-                .ToList();
+            var files = Directory.GetFiles(projectDirectory);
             foreach (var file in files)
             {
                 stat[file] = new StatValue();
                 using TextReader stream = File.OpenText(file);
-                stream
+                var repeats = stream
                     .ReadToEnd()
-                    .Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Split(','))
-                    /* одна строчка для score, другая для выживаемости */
-                    .Select(x => GetFinalScore(int.Parse(x[0]), int.Parse(x[1]), int.Parse(x[2]), int.Parse(x[3])))
-                    // .Select(x => int.Parse(x[4]))
-                    .ToList()
-                    .ForEach(x => stat[file].Add(x));
+                    .Split('@');
+
+                foreach (var repeat in repeats)
+                {
+                    var scores = repeat.Split('\n', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(line => line.Split(','))
+                        .Select(line =>
+                            GetFinalScore(int.Parse(line[0]), int.Parse(line[1]), int.Parse(line[2]),
+                                int.Parse(line[3])));
+                    stat[file].Add(scores.Sum());
+                }
             }
-            stat
-                .Select(x=>(x.Key,x.Value))
-                .OrderByDescending(x=>x.Value.Mean)
-                .ToList()
-                .ForEach(x=>Console.Write($"{new FileInfo(x.Key).Name}\n\n{stat[x.Key]}\n\n"));
+
+            stat.Select(x => (x.Key, x.Value)).OrderByDescending(x => x.Value.Mean).ToList()
+                .ForEach(x => Console.Write($"{new FileInfo(x.Key).Name}\n\n{stat[x.Key]}\n\n"));
         }
 
         [Test, Explicit]
@@ -203,7 +241,7 @@ namespace AI_Research_1.Tests
         private static string GetLineMeanSigma(Stat stat)
         {
             return
-                $"{Math.Round(stat.Greedy.Mean, 2)},{Math.Round(stat.Greedy.StdDeviation, 2)},{Math.Round(stat.Random.Mean, 2)},{Math.Round(stat.Random.StdDeviation, 2)},{Math.Round(stat.HillClimbing.Mean, 2)},{Math.Round(stat.HillClimbing.StdDeviation, 2)},{Math.Round(stat.Evolution.Mean, 2)},{Math.Round(stat.Evolution.StdDeviation, 2)}";
+                $"{Math.Round(stat.Greedy.Mean, 2)},{Math.Round(stat.Greedy.ConfIntervalSize/2, 2)},{Math.Round(stat.Random.Mean, 2)},{Math.Round(stat.Random.ConfIntervalSize/2, 2)},{Math.Round(stat.HillClimbing.Mean, 2)},{Math.Round(stat.HillClimbing.ConfIntervalSize/2, 2)},{Math.Round(stat.Evolution.Mean, 2)},{Math.Round(stat.Evolution.ConfIntervalSize/2, 2)}";
         }
 
         private static string GetLineMax(Stat stat)
@@ -212,30 +250,12 @@ namespace AI_Research_1.Tests
                 $"{stat.Greedy.Max},{stat.Random.Max},{stat.HillClimbing.Max},{stat.Evolution.Max}";
         }
 
+        private static ConcurrentDictionary<string, int> lastRepeats = new ConcurrentDictionary<string, int>();
 
-        private static State PlayToEnd(ISolver solver, State state, bool saveReplay, bool saveStats)
+
+        private static IEnumerable TestCasesGood()
         {
-            var testName = TestContext.CurrentContext.Test.Name.Split("_")[0];
-            var replayFile = !saveReplay ? null
-                : $"{solver.GetNameWithArgs()}.{Emulator.GetScore.Method.Name}_{DateTime.Now:dd.HH.mm.ss}.js";
-            var statsFile = !saveStats ? null
-                : $"{solver.GetType().Name}.{testName}.txt";
-
-            var result = Controller.PlayToEnd(state, solver, replayFile, statsFile);
-            
-            Console.WriteLine($"Time: {result.Time} Flags: {result.FlagsTaken}\n");
-
-            if (saveReplay)
-                Console.WriteLine($"Replay saved to: {replayFile}");
-            if (saveStats)
-                Console.WriteLine($"Stats saved to: {statsFile}");
-
-            return result;
-        }
-
-        private static IEnumerable TestCases()
-        {
-            var states = typeof(TestStates)
+            var states = typeof(TestStatesGood)
                 .GetProperties(BindingFlags.Static | BindingFlags.Public)
                 .Where(x => x.PropertyType == typeof(State))
                 .Select(x => new {State = (State) x.GetValue(null), Name = x.Name})
@@ -244,8 +264,8 @@ namespace AI_Research_1.Tests
             for (var i = 0; i < RepeatCount; i++)
                 foreach (var stateObj in states)
                     for (var j = 0; j < Solvers.Count; j++)
-                        yield return new TestCaseData(stateObj.State, Solvers[j])
-                            .SetName($"{stateObj.Name}_{Solvers[j].GetType().Name}_{j}_Test_{i}");
+                        yield return new TestCaseData(stateObj.State, Solvers[j], i, nameof(TestCasesGood))
+                            .SetName($"{stateObj.Name}_{GetSolverName(Solvers[j])}_{j}_Test_{i}");
         }
     }
 }
