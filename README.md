@@ -82,4 +82,4 @@
 Результаты            | Greedy      | Random      | Hill Climb   | Evolution
 ----------------------|-------------|-------------|--------------|---------------
 **Параметры**         | Глубина: 20<br>Стратегия: Повтор<br>Оценка: Max | ? | ? | BaseSolver: `Greedy`<br>Filter: `FilterHalf`<br>Applier: `SegmentCrossingOver`<br>Selector: `Elitism`
-**Score ± ConfInt/2** | 1662 ± 32.9 |   ?         | ?            | 1546 ± 52.5
+**Score ± ConfInt/2** | 1666 ± 24.2 |   ?         | ?            | 1553 ± 39.3
