@@ -71,6 +71,8 @@
 
 ## Результаты (beta)
 
+[Промежуточные вычисления](https://docs.google.com/spreadsheets/d/1jnzvyOMs1Fs-sn62Y32mR_D2tlMVwEJQ1C1jdlvhAr8/edit?usp=sharing)
+
 Результаты            | Greedy      | Random      | Hill Climb   | Evolution
 ----------------------|-------------|-------------|--------------|---------------
 **Параметры**         | Глубина: 20<br>Стратегия: Повтор<br>Оценка: Max | ? | BaseSolver: `Greedy(15)`<br>Эвристика: `true`<br>BaseSolverTime: 1/10 | BaseSolver: `Greedy(20)`<br>Filter: `FilterHalf`<br>Applier: `SegmentCrossingOver`<br>Selector: `Elitism`
