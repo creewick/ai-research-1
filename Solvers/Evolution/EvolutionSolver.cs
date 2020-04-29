@@ -21,7 +21,8 @@ namespace AI_Research_1.Solvers.Evolution
             ),
             new FilterHalf(), 
             new SegmentCrossingOver(), 
-            new Elitism()
+            new Elitism(),
+            "Greedy"
         );
 
         public string GetNameWithArgs() => solver.GetNameWithArgs();

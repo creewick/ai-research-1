@@ -7,7 +7,7 @@ using AI_Research_1.Logic;
 
 namespace AI_Research_1.Solvers.Evolution.BaseSolvers
 {
-    public class RandomSolver : ISolver
+    public class RandomSolver
     {
         private readonly int solutionDepth;
         private readonly Random random;
@@ -19,10 +19,10 @@ namespace AI_Research_1.Solvers.Evolution.BaseSolvers
         }
 
         public string GetNameWithArgs() => $"Random.{solutionDepth}";
-
-        public IEnumerable<Solution> GetSolutions(State state, Countdown time)
+        
+        public IEnumerable<Solution> GetSolutions(State state, int size)
         {
-            while (!time.IsFinished())
+            for (var i = 0; i < size; i++)
             {
                 var firstCarMoves = new List<Command>();
                 var secondCarMoves = new List<Command>();

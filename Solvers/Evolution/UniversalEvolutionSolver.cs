@@ -17,13 +17,15 @@ namespace AI_Research_1.Solvers.Evolution
         private readonly IGeneticFilter filter;
         private readonly IGeneticApplier applier;
         private readonly IGeneticSelector selector;
+        private readonly string name;
 
-        public UniversalEvolutionSolver(ISolver baseSolver, IGeneticFilter filter, IGeneticApplier applier, IGeneticSelector selector)
+        public UniversalEvolutionSolver(ISolver baseSolver, IGeneticFilter filter, IGeneticApplier applier, IGeneticSelector selector, string name)
         {
             this.baseSolver = baseSolver;
             this.filter = filter;
             this.applier = applier;
             this.selector = selector;
+            this.name = name;
         }
         
         public IEnumerable<Solution> GetSolutions(State state, Countdown time)
@@ -55,6 +57,6 @@ namespace AI_Research_1.Solvers.Evolution
         }
 
         public string GetNameWithArgs() =>
-            $"Evolution.{baseSolver.GetType().Name}.{filter.GetType().Name}.{applier.GetType().Name}.{selector.GetType().Name}";
+            $"Evolution.{name}";
     }
 }
