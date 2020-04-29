@@ -228,7 +228,7 @@ namespace AI_Research_1.Tests
 
         private static IEnumerable TestCasesGood()
         {
-            var states = typeof(TestStatesGood)
+            var states = typeof(TestStatesGood) //Вот тут
                 .GetProperties(BindingFlags.Static | BindingFlags.Public)
                 .Where(x => x.PropertyType == typeof(State))
                 .Select(x => new {State = (State) x.GetValue(null), Name = x.Name})
@@ -237,7 +237,7 @@ namespace AI_Research_1.Tests
             for (var i = 0; i < RepeatCount; i++)
                 foreach (var stateObj in states)
                     for (var j = 0; j < Solvers.Count; j++)
-                        yield return new TestCaseData(stateObj.State, Solvers[j], i, nameof(TestCasesGood)) //тут надо менять
+                        yield return new TestCaseData(stateObj.State, Solvers[j], i, nameof(TestStatesGood)) //и тут
                             .SetName($"{stateObj.Name}_{GetSolverName(Solvers[j])}_{j}_Test_{i}");
         }
     }
