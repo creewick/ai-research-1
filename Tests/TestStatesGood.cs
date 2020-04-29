@@ -5,8 +5,10 @@ using AI_Research_1.Logic;
 namespace AI_Research_1.Tests
 {
     // Только public static поля через лямбду или { get; }, возвращающие State
-    public class TestStatesGood
+    public class TestStatesGoodNoBlocks
     {
+        private const int Zoom = 10;
+
         public static State NoBlocksCircle =>
             new State(
                 track: new Track(
@@ -57,6 +59,74 @@ namespace AI_Research_1.Tests
                 )
             );
 
+        public static State NoObstacles2Flags =>
+            new State(
+                track: new Track(
+                    time: 200,
+                    flagsGoal: 2,
+                    flags: new[]
+                    {
+                        new V(46, 37), new V(-67, -62)
+                    },
+                    obstacles: new List<Disk>(),
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    V.Zero, V.Zero, 2
+                ),
+                secondCar: new Car(
+                    new V(100, 100),
+                    V.Zero, 2)
+            );
+
+        public static State NoObstacles2Flags5Repeats =>
+            new State(
+                track: new Track(
+                    time: 150,
+                    flagsGoal: 10,
+                    flags: new[]
+                    {
+                        new V(46, 37), new V(-67, -62)
+                    },
+                    obstacles: new List<Disk>(),
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    V.Zero, V.Zero, 2
+                ),
+                secondCar: new Car(
+                    new V(100, 100),
+                    V.Zero, 2)
+            );
+
+        public static State NoObstacles28Flags =>
+            new State(
+                track: new Track(
+                    time: 350,
+                    flagsGoal: 28,
+                    flags: new[]
+                    {
+                        new V(46, 37), new V(-67, -62), new V(-36, -32), new V(-21, 3), new V(-49, 14), new V(-24, -35),
+                        new V(2, -88), new V(35, -74), new V(99, 13), new V(31, -65), new V(69, -23),
+                        new V(-75, -80), new V(-15, 94), new V(38, -27), new V(-49, 78), new V(16, 69), new V(71, 27),
+                        new V(74, 83), new V(38, 22), new V(79, -99), new V(0, 100), new V(50, 50), new V(100, 0),
+                        new V(50, -50),
+                        new V(0, -100), new V(-50, -50), new V(-100, 0), new V(-50, 50)
+                    },
+                    obstacles: new List<Disk>(),
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    V.Zero, V.Zero, 2
+                ),
+                secondCar: new Car(
+                    new V(100, 100),
+                    V.Zero, 2)
+            );
+    }
+
+    public class TestStatesGoodWithBlocks
+    {
         private const int Zoom = 10;
 
         public static State ExchangeMap =>
@@ -194,75 +264,12 @@ namespace AI_Research_1.Tests
                     new V(100, 100),
                     V.Zero, 2)
             );
-
-        public static State NoObstacles2Flags =>
-            new State(
-                track: new Track(
-                    time: 200,
-                    flagsGoal: 2,
-                    flags: new[]
-                    {
-                        new V(46, 37), new V(-67, -62)
-                    },
-                    obstacles: new List<Disk>(),
-                    maxCooldown: 20
-                ),
-                firstCar: new Car(
-                    V.Zero, V.Zero, 2
-                ),
-                secondCar: new Car(
-                    new V(100, 100),
-                    V.Zero, 2)
-            );
-
-        public static State NoObstacles2Flags5Repeats =>
-            new State(
-                track: new Track(
-                    time: 150,
-                    flagsGoal: 10,
-                    flags: new[]
-                    {
-                        new V(46, 37), new V(-67, -62)
-                    },
-                    obstacles: new List<Disk>(),
-                    maxCooldown: 20
-                ),
-                firstCar: new Car(
-                    V.Zero, V.Zero, 2
-                ),
-                secondCar: new Car(
-                    new V(100, 100),
-                    V.Zero, 2)
-            );
-
-        public static State NoObstacles28Flags =>
-            new State(
-                track: new Track(
-                    time: 350,
-                    flagsGoal: 28,
-                    flags: new[]
-                    {
-                        new V(46, 37), new V(-67, -62), new V(-36, -32), new V(-21, 3), new V(-49, 14), new V(-24, -35),
-                        new V(2, -88), new V(35, -74), new V(99, 13), new V(31, -65), new V(69, -23),
-                        new V(-75, -80), new V(-15, 94), new V(38, -27), new V(-49, 78), new V(16, 69), new V(71, 27),
-                        new V(74, 83), new V(38, 22), new V(79, -99), new V(0, 100), new V(50, 50), new V(100, 0),
-                        new V(50, -50),
-                        new V(0, -100), new V(-50, -50), new V(-100, 0), new V(-50, 50)
-                    },
-                    obstacles: new List<Disk>(),
-                    maxCooldown: 20
-                ),
-                firstCar: new Car(
-                    V.Zero, V.Zero, 2
-                ),
-                secondCar: new Car(
-                    new V(100, 100),
-                    V.Zero, 2)
-            );
     }
 
     public class SnakeGroup
     {
+        private const int Zoom = 10;
+
         public static State Snake =>
             new State(
                 track: new Track(
@@ -297,6 +304,8 @@ namespace AI_Research_1.Tests
 
     public class BottleNeckGroup
     {
+        private const int Zoom = 10;
+
         public static State BottleNeck =>
             new State(
                 track: new Track(
@@ -326,6 +335,8 @@ namespace AI_Research_1.Tests
 
     public class CrossGroup
     {
+        private const int Zoom = 10;
+
         public static State Cross =>
             new State(
                 track: new Track(
@@ -354,6 +365,8 @@ namespace AI_Research_1.Tests
 
     public class Group10_10_3
     {
+        private const int Zoom = 10;
+
         public static State With10Obstacles10Flags3Repeats =>
             new State(
                 track: new Track(
@@ -385,6 +398,8 @@ namespace AI_Research_1.Tests
 
     public class Group_5_10_0
     {
+        private const int Zoom = 10;
+
         public static State With5Obstacles10Flags =>
             new State(
                 track: new Track(
@@ -416,6 +431,8 @@ namespace AI_Research_1.Tests
 
     public class Group_7_10_0
     {
+        private const int Zoom = 10;
+
         public static State With7Obstacles10Flags =>
             new State(
                 track: new Track(

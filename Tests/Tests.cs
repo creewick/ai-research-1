@@ -27,29 +27,34 @@ namespace AI_Research_1.Tests
      */
     [TestFixture]
     public class Tests
-   { 
+    {
         private static readonly string ProjectDirectory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..");
         private const bool SaveReplay = false;
         private const bool SaveStats = true;
-        private const int RepeatCount = 4;
+        private const int RepeatCount = 1;
 
         private static string GetSolverName(ISolver solver) => solver.GetType().Name;
 
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
-           
+            new HillClimbingSolver()
         };
-        
-        
+
 
         [Timeout(60000)]
-        //[Parallelizable(ParallelScope.All)]
-        [TestCaseSource(nameof(TestCasesGood))]
+        [TestCaseSource(nameof(TestCasesGoodNoBlocks))]
+        [TestCaseSource(nameof(TestCasesGoodWithBlocks))]
+        [TestCaseSource(nameof(TestCasesSnake))]
+        [TestCaseSource(nameof(TestCasesCross))]
+        [TestCaseSource(nameof(TestCasesBottle))]
+        [TestCaseSource(nameof(TestCases10_10_3))]
+        [TestCaseSource(nameof(TestCases5_10_0))]
+        [TestCaseSource(nameof(TestCases7_10_0))]
         public void Play(State state, ISolver solver, int repeat, string groupName)
         {
             PlayToEnd(solver, state, SaveReplay, SaveStats, repeat, groupName);
         }
-       
+
 
         private static State PlayToEnd(ISolver solver, State state, bool saveReplay, bool saveStats, int repeat,
             string groupName)
@@ -98,10 +103,10 @@ namespace AI_Research_1.Tests
             var stat = new Dictionary<string, StatValue>();
             var projectDirectory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "Statistics");
             var files = Directory
-                    // sorry, это чтобы на mac os всё работало
-                    .GetFiles(projectDirectory)
-                    .Where(fileName => !fileName.Contains("DS_Store"))
-                    .ToList();
+                // sorry, это чтобы на mac os всё работало
+                .GetFiles(projectDirectory)
+                .Where(fileName => !fileName.Contains("DS_Store"))
+                .ToList();
             foreach (var file in files)
             {
                 stat[file] = new StatValue();
@@ -141,7 +146,7 @@ namespace AI_Research_1.Tests
                 var solverName = args[0];
                 if (!statScore.ContainsKey(testName))
                     statScore[testName] = new Stat();
-                
+
                 var currentStatScore = statScore[testName];
                 StatValue currentScoreStatValue = new StatValue();
                 switch (solverName)
@@ -174,8 +179,6 @@ namespace AI_Research_1.Tests
                                 int.Parse(line[3])));
                     currentScoreStatValue.Add(scores.Sum());
                 }
-
-                
             }
 
             FormCsv(statScore);
@@ -214,7 +217,7 @@ namespace AI_Research_1.Tests
         private static string GetLineMeanSigma(Stat stat)
         {
             return
-                $"{Math.Round(stat.Greedy.Mean, 2)},{Math.Round(stat.Greedy.ConfIntervalSize/2, 2)},{Math.Round(stat.Random.Mean, 2)},{Math.Round(stat.Random.ConfIntervalSize/2, 2)},{Math.Round(stat.HillClimbing.Mean, 2)},{Math.Round(stat.HillClimbing.ConfIntervalSize/2, 2)},{Math.Round(stat.Evolution.Mean, 2)},{Math.Round(stat.Evolution.ConfIntervalSize/2, 2)}";
+                $"{Math.Round(stat.Greedy.Mean, 2)},{Math.Round(stat.Greedy.ConfIntervalSize / 2, 2)},{Math.Round(stat.Random.Mean, 2)},{Math.Round(stat.Random.ConfIntervalSize / 2, 2)},{Math.Round(stat.HillClimbing.Mean, 2)},{Math.Round(stat.HillClimbing.ConfIntervalSize / 2, 2)},{Math.Round(stat.Evolution.Mean, 2)},{Math.Round(stat.Evolution.ConfIntervalSize / 2, 2)}";
         }
 
         private static string GetLineMax(Stat stat)
@@ -225,10 +228,9 @@ namespace AI_Research_1.Tests
 
         private static ConcurrentDictionary<string, int> lastRepeats = new ConcurrentDictionary<string, int>();
 
-
-        private static IEnumerable TestCasesGood()
+        private static IEnumerable GetStates(Type groupType)
         {
-            var states = typeof(TestStatesGood) //Вот тут
+            var states = groupType
                 .GetProperties(BindingFlags.Static | BindingFlags.Public)
                 .Where(x => x.PropertyType == typeof(State))
                 .Select(x => new {State = (State) x.GetValue(null), Name = x.Name})
@@ -237,8 +239,49 @@ namespace AI_Research_1.Tests
             for (var i = 0; i < RepeatCount; i++)
                 foreach (var stateObj in states)
                     for (var j = 0; j < Solvers.Count; j++)
-                        yield return new TestCaseData(stateObj.State, Solvers[j], i, nameof(TestStatesGood)) //и тут
+                        yield return new TestCaseData(stateObj.State, Solvers[j], i, groupType.Name)
                             .SetName($"{stateObj.Name}_{GetSolverName(Solvers[j])}_{j}_Test_{i}");
+        }
+
+
+        private static IEnumerable TestCasesGoodNoBlocks()
+        {
+            return GetStates(typeof(TestStatesGoodNoBlocks));
+        }
+
+        private static IEnumerable TestCasesGoodWithBlocks()
+        {
+            return GetStates(typeof(TestStatesGoodWithBlocks));
+        }
+
+        private static IEnumerable TestCasesSnake()
+        {
+            return GetStates(typeof(SnakeGroup));
+        }
+
+        private static IEnumerable TestCasesBottle()
+        {
+            return GetStates(typeof(BottleNeckGroup));
+        }
+
+        private static IEnumerable TestCasesCross()
+        {
+            return GetStates(typeof(CrossGroup));
+        }
+
+        private static IEnumerable TestCases10_10_3()
+        {
+            return GetStates(typeof(Group10_10_3));
+        }
+
+        private static IEnumerable TestCases5_10_0()
+        {
+            return GetStates(typeof(Group_5_10_0));
+        }
+
+        private static IEnumerable TestCases7_10_0()
+        {
+            return GetStates(typeof(Group_7_10_0));
         }
     }
 }
