@@ -12,8 +12,9 @@ namespace AI_Research_1.Solvers
     {
         private readonly ISolver solver;
 
-        public GreedySolver(int solutionDepth, Func<State, long> getScore)
+        public GreedySolver(int solutionDepth, Func<State, long> getScore=null)
         {
+            getScore ??= Emulator.GetScore;
             solver = new UniversalGreedySolver(solutionDepth, SimulateBy.Repeat, AggregateBy.Max, getScore);
         }
 
