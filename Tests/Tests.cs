@@ -27,30 +27,29 @@ namespace AI_Research_1.Tests
      */
     [TestFixture]
     public class Tests
-    {
+   { 
         private static readonly string ProjectDirectory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..");
         private const bool SaveReplay = false;
         private const bool SaveStats = true;
-        private const int RepeatCount = 10;
+        private const int RepeatCount = 4;
 
         private static string GetSolverName(ISolver solver) => solver.GetNameWithArgs();
 
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
-            new GreedySolver(10, Emulator.GetScore_1),
-            new GreedySolver(10, Emulator.GetScore_2),
-            new GreedySolver(10, Emulator.GetScore_3),
-            new GreedySolver(10, Emulator.GetScore_4),
-            new GreedySolver(10, Emulator.GetScore_5)
+           
         };
+        
+        
 
         [Timeout(60000)]
-        //[Parallelizable(ParallelScope.All)] do not use it!
+        //[Parallelizable(ParallelScope.All)]
         [TestCaseSource(nameof(TestCasesGood))]
         public void Play(State state, ISolver solver, int repeat, string groupName)
         {
             PlayToEnd(solver, state, SaveReplay, SaveStats, repeat, groupName);
         }
+       
 
         private static State PlayToEnd(ISolver solver, State state, bool saveReplay, bool saveStats, int repeat,
             string groupName)
@@ -133,8 +132,6 @@ namespace AI_Research_1.Tests
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             var statScore = new Dictionary<string, Stat>();
-            var statCarsAlive = new Dictionary<string, Stat>();
-            var statMaxTime = new Dictionary<string, Stat>();
             var projectDirectory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..", "Statistics");
             var files = Directory.GetFiles(projectDirectory);
             foreach (var file in files)
@@ -144,73 +141,47 @@ namespace AI_Research_1.Tests
                 var solverName = args[0];
                 if (!statScore.ContainsKey(testName))
                     statScore[testName] = new Stat();
-                if (!statCarsAlive.ContainsKey(testName))
-                    statCarsAlive[testName] = new Stat();
-                if (!statMaxTime.ContainsKey(testName))
-                    statMaxTime[testName] = new Stat();
+                
                 var currentStatScore = statScore[testName];
-                var currentAliveStatScore = statCarsAlive[testName];
-                var currentMax = statMaxTime[testName];
                 StatValue currentScoreStatValue = new StatValue();
-                StatValue currentAliveStatValue = new StatValue();
-                StatValue currentMaxTimeValue = new StatValue();
                 switch (solverName)
                 {
                     case nameof(HillClimbingSolver):
                         currentScoreStatValue = currentStatScore.HillClimbing;
-                        currentAliveStatValue = currentAliveStatScore.HillClimbing;
-                        currentMaxTimeValue = currentMax.HillClimbing;
                         break;
                     case nameof(RandomSolver):
                         currentScoreStatValue = currentStatScore.Random;
-                        currentAliveStatValue = currentAliveStatScore.Random;
-                        currentMaxTimeValue = currentMax.Random;
                         break;
                     case nameof(GreedySolver):
                         currentScoreStatValue = currentStatScore.Greedy;
-                        currentAliveStatValue = currentAliveStatScore.Greedy;
-                        currentMaxTimeValue = currentMax.Greedy;
                         break;
                     case "EvolutionSolver":
                         currentScoreStatValue = currentStatScore.Evolution;
-                        currentAliveStatValue = currentAliveStatScore.Evolution;
-                        currentMaxTimeValue = currentMax.Evolution;
                         break;
                 }
 
                 using TextReader stream = File.OpenText(file);
-                stream
+                var repeats = stream
                     .ReadToEnd()
-                    .Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Split(','))
-                    .Select(x => GetFinalScore(int.Parse(x[0]), int.Parse(x[1]), int.Parse(x[2]), int.Parse(x[3])))
-                    .ToList()
-                    .ForEach(x => currentScoreStatValue.Add(x));
+                    .Split('@');
 
-                using TextReader sstream = File.OpenText(file);
-                sstream
-                    .ReadToEnd()
-                    .Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Split(','))
-                    .Select(x => int.Parse(x[4]))
-                    .ToList()
-                    .ForEach(x => currentAliveStatValue.Add(x));
+                foreach (var repeat in repeats)
+                {
+                    var scores = repeat.Split('\n', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(line => line.Split(','))
+                        .Select(line =>
+                            GetFinalScore(int.Parse(line[0]), int.Parse(line[1]), int.Parse(line[2]),
+                                int.Parse(line[3])));
+                    currentScoreStatValue.Add(scores.Sum());
+                }
 
-                using TextReader ssstream = File.OpenText(file);
-                ssstream
-                    .ReadToEnd()
-                    .Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => x.Split(','))
-                    .Select(x => int.Parse(x[3]))
-                    .ToList()
-                    .ForEach(x => currentMaxTimeValue.Add(x));
+                
             }
 
-            FormCsv(statScore, statCarsAlive, statMaxTime);
+            FormCsv(statScore);
         }
 
-        private void FormCsv(Dictionary<string, Stat> statScore, Dictionary<string, Stat> statCarsAlive,
-            Dictionary<string, Stat> statMaxTime)
+        private void FormCsv(Dictionary<string, Stat> statScore)
         {
             var csv = new StringBuilder();
             csv.Append(
@@ -231,12 +202,8 @@ namespace AI_Research_1.Tests
             foreach (var test in tests)
             {
                 var score = statScore[test];
-                var alive = statCarsAlive[test];
-                var max = statMaxTime[test];
                 var scoreStr = GetLineMeanSigma(score);
-                var carsAlive = GetLineMeanSigma(alive);
-                var maxStr = GetLineMax(max);
-                var resStr = $"{test} ,{scoreStr}, ,{carsAlive}, ,{maxStr}";
+                var resStr = $"{test} ,{scoreStr}";
                 writer.WriteLine(resStr);
                 writer.Flush();
                 csv.Append(resStr);
