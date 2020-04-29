@@ -33,7 +33,7 @@ namespace AI_Research_1.Tests
         private const bool SaveStats = true;
         private const int RepeatCount = 4;
 
-        private static string GetSolverName(ISolver solver) => solver.GetNameWithArgs();
+        private static string GetSolverName(ISolver solver) => solver.GetType().Name;
 
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
@@ -237,7 +237,7 @@ namespace AI_Research_1.Tests
             for (var i = 0; i < RepeatCount; i++)
                 foreach (var stateObj in states)
                     for (var j = 0; j < Solvers.Count; j++)
-                        yield return new TestCaseData(stateObj.State, Solvers[j], i, nameof(TestCasesGood))
+                        yield return new TestCaseData(stateObj.State, Solvers[j], i, nameof(TestCasesGood)) //тут надо менять
                             .SetName($"{stateObj.Name}_{GetSolverName(Solvers[j])}_{j}_Test_{i}");
         }
     }

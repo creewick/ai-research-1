@@ -261,35 +261,8 @@ namespace AI_Research_1.Tests
             );
     }
 
-    public class TestStatesOther
+    public class SnakeGroup
     {
-        public static State BottleNeck =>
-            new State(
-                track: new Track(
-                    time: 350,
-                    flagsGoal: 2,
-                    flags: new[] {new V(0, 0), new V(0, 0)},
-                    obstacles: new[]
-                    {
-                        new Disk(0, 40, 30),
-                        new Disk(-35, 0, 30),
-                        new Disk(35, 0, 30)
-                    },
-                    maxCooldown: 20
-                ),
-                firstCar: new Car(
-                    pos: new V(90, 0),
-                    v: V.Zero,
-                    radius: 2
-                ),
-                secondCar: new Car(
-                    pos: new V(-90, 0),
-                    v: V.Zero,
-                    radius: 2
-                )
-            );
-
-
         public static State Snake =>
             new State(
                 track: new Track(
@@ -320,7 +293,39 @@ namespace AI_Research_1.Tests
                     radius: 2
                 )
             );
+    }
 
+    public class BottleNeckGroup
+    {
+        public static State BottleNeck =>
+            new State(
+                track: new Track(
+                    time: 350,
+                    flagsGoal: 2,
+                    flags: new[] {new V(0, 0), new V(0, 0)},
+                    obstacles: new[]
+                    {
+                        new Disk(0, 40, 30),
+                        new Disk(-35, 0, 30),
+                        new Disk(35, 0, 30)
+                    },
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    pos: new V(90, 0),
+                    v: V.Zero,
+                    radius: 2
+                ),
+                secondCar: new Car(
+                    pos: new V(-90, 0),
+                    v: V.Zero,
+                    radius: 2
+                )
+            );
+    }
+
+    public class CrossGroup
+    {
         public static State Cross =>
             new State(
                 track: new Track(
@@ -345,7 +350,10 @@ namespace AI_Research_1.Tests
                     radius: 2
                 )
             );
+    }
 
+    public class Group10_10_3
+    {
         public static State With10Obstacles10Flags3Repeats =>
             new State(
                 track: new Track(
@@ -373,7 +381,10 @@ namespace AI_Research_1.Tests
                     new V(100, 100),
                     V.Zero, 2)
             );
+    }
 
+    public class Group_5_10_0
+    {
         public static State With5Obstacles10Flags =>
             new State(
                 track: new Track(
@@ -400,7 +411,11 @@ namespace AI_Research_1.Tests
                     new V(100, 100),
                     V.Zero, 2)
             );
+    }
 
+
+    public class Group_7_10_0
+    {
         public static State With7Obstacles10Flags =>
             new State(
                 track: new Track(
