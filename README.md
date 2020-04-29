@@ -75,5 +75,5 @@
 
 Результаты            | Greedy      | Random      | Hill Climb   | Evolution
 ----------------------|-------------|-------------|--------------|---------------
-**Параметры**         | Глубина: 20<br>Стратегия: Повтор<br>Оценка: Max | ? | BaseSolver: `Greedy(15)`<br>Эвристика: `true`<br>BaseSolverTime: 1/10 | BaseSolver: `Greedy(20)`<br>Filter: `FilterHalf`<br>Applier: `SegmentCrossingOver`<br>Selector: `Elitism`
-**Score ± ConfInt/2** | 1666 ± 24.2 |   ?         | 1474 ± 18.2  | 1553 ± 39.3
+**Параметры**         | Глубина: 20<br>Стратегия: Повтор<br>Оценка: Max | Глубина: 11<br>Максимальный размер сегмента: 9 | BaseSolver: `Greedy(15)`<br>Эвристика: `true`<br>BaseSolverTime: 1/10 | BaseSolver: `Greedy(20)`<br>Filter: `FilterHalf`<br>Applier: `SegmentCrossingOver`<br>Selector: `Elitism`
+**Score ± ConfInt/2** | 1666 ± 24.2 |   1627 ± 48,7     | 1474 ± 18.2  | 1553 ± 39.3
