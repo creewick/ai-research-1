@@ -1,17 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 
 namespace AI_Research_1.Solvers
 {
-    public enum AggregateBy { Max, Last, Sum }
+    public enum AggregateBy
+    {
+        Max,
+        Last,
+        Sum
+    }
 
     public static class Emulator
     {
         private const long FlagCost = 100000;
-        private static long IsAlive(State state) => state.FirstCar.IsAlive && state.SecondCar.IsAlive ? FlagCost * 1000 : 0;
+
+        private static long IsAlive(State state) =>
+            state.FirstCar.IsAlive && state.SecondCar.IsAlive ? FlagCost * 1000 : 0;
+
         private static long FlagsTaken(State state) => FlagCost * state.FlagsTaken;
 
         public static readonly Func<State, long> GetScore = GetScore_3;
@@ -19,22 +28,29 @@ namespace AI_Research_1.Solvers
         public static IEnumerable<Solution> SortByScore(IEnumerable<Solution> solutions, State state)
         {
             return solutions
-                .OrderByDescending(s => 
+                .OrderByDescending(s =>
                     Emulate(state, s, s.FirstCarCommandsList.Count()));
         }
 
-        public static long Emulate(State state, Solution solution, int steps, AggregateBy aggregate = AggregateBy.Max, Func<State, long> getScore=null)
+        public static long Emulate(State state, Solution solution, int steps, AggregateBy aggregate = AggregateBy.Max,
+            Func<State, long> getScore = null)
         {
             getScore ??= GetScore;
             var copy = state.Copy();
             var score = long.MinValue;
             var currentSolution = solution;
-
+            var startFirstCoords = state.FirstCar.Pos;
+            var startSecondCoords = state.SecondCar.Pos;
+            bool death = false;
             for (var i = 0; i < steps; i++)
             {
                 copy.Tick(currentSolution);
                 currentSolution = solution.GetNextTick();
-                
+                if (!copy.FirstCar.IsAlive || !copy.SecondCar.IsAlive)
+                {
+                    death = true;
+                }
+
                 var newScore = getScore(copy);
 
                 switch (aggregate)
@@ -51,11 +67,24 @@ namespace AI_Research_1.Solvers
                 }
             }
 
-            return score;
+            var apathyCost1 = HasMoved(startFirstCoords, copy.FirstCar.Pos)
+                ? 0
+                : FlagCost * 100;
+            var apathyCost2 = HasMoved(startSecondCoords, copy.SecondCar.Pos)
+                ? 0
+                : FlagCost * 100;
+
+            var deathCost = death ? FlagCost * 1000 : 0;
+            return score - deathCost - apathyCost1 - apathyCost2;
         }
 
-        public static long GetScore_1(State state) => 
-            + IsAlive(state)
+        private static bool HasMoved(V startFirstCoords, V firstCarV)
+        {
+            return startFirstCoords != firstCarV;
+        }
+
+        public static long GetScore_1(State state) =>
+            +IsAlive(state)
             + FlagsTaken(state)
             - state.GetNextFlag().Dist2To(state.FirstCar.Pos)
             - state.GetNextFlag().Dist2To(state.SecondCar.Pos);
@@ -87,6 +116,7 @@ namespace AI_Research_1.Solvers
                    - flags.First().Dist2To(state.FirstCar.Pos)
                    - flags.Last().Dist2To(state.SecondCar.Pos);
         }
+
         public static long GetScore_4(State state)
         {
             var flagsCount = 3;
@@ -112,7 +142,7 @@ namespace AI_Research_1.Solvers
         public static long GetScore_5(State state)
         {
             var flagsCount = 2;
-            var coefficient = (int)Math.Pow(2, flagsCount + 1);
+            var coefficient = (int) Math.Pow(2, flagsCount + 1);
             var cars = new List<Car> {state.FirstCar, state.SecondCar};
             var distancesCost =
                 state.GetNextNFlags(flagsCount)
@@ -125,10 +155,10 @@ namespace AI_Research_1.Solvers
                         .Sum()
                     )
                     .Sum();
-            
+
             return FlagsTaken(state) + IsAlive(state) - distancesCost;
         }
-        
+
         /* Предсказывать игру на несколько флагов вперед (эвристика, ослабленные правила)
          * Каждый тик - передвижение с единичной скоростью, без ускорения
          *

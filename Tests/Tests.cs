@@ -13,6 +13,7 @@ using AI_Research_1.Helpers;
 using AI_Research_1.Interfaces;
 using AI_Research_1.Logic;
 using AI_Research_1.Solvers;
+using AI_Research_1.Solvers.Evolution;
 using AI_Research_1.Solvers.HillClimbing;
 using NUnit.Framework;
 
@@ -29,15 +30,18 @@ namespace AI_Research_1.Tests
     public class Tests
     {
         private static readonly string ProjectDirectory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..");
-        private const bool SaveReplay = false;
+        private const bool SaveReplay = true;
         private const bool SaveStats = true;
-        private const int RepeatCount = 1;
+        private const int RepeatCount = 5;
 
         private static string GetSolverName(ISolver solver) => solver.GetType().Name;
 
         private static readonly List<ISolver> Solvers = new List<ISolver>
         {
-            new HillClimbingSolver()
+            new HillClimbingSolver(),
+            new EvolutionSolver(),
+             new GreedySolver(15),
+            new RandomSolver(11,9)
         };
 
 
@@ -48,6 +52,7 @@ namespace AI_Research_1.Tests
         [TestCaseSource(nameof(TestCasesCross))]
         [TestCaseSource(nameof(TestCasesBottle))]
         [TestCaseSource(nameof(TestCases10_10_3))]
+        [TestCaseSource(nameof(TestCaseBottleNeck2))]
         [TestCaseSource(nameof(TestCases5_10_0))]
         [TestCaseSource(nameof(TestCases7_10_0))]
         public void Play(State state, ISolver solver, int repeat, string groupName)
@@ -62,7 +67,7 @@ namespace AI_Research_1.Tests
             var testName = TestContext.CurrentContext.Test.Name.Split("_")[0];
             var replayFile = !saveReplay
                 ? null
-                : $"{solver.GetNameWithArgs()}.{Emulator.GetScore.Method.Name}_{DateTime.Now:dd.HH.mm.ss}.js";
+                : $"{solver.GetNameWithArgs()}.{Emulator.GetScore.Method.Name}_{testName}_{DateTime.Now:dd.HH.mm.ss}.js";
             var statsFile = !saveStats
                 ? null
                 : $"{GetSolverName(solver)}.{groupName}.txt";
@@ -282,6 +287,9 @@ namespace AI_Research_1.Tests
         private static IEnumerable TestCases7_10_0()
         {
             return GetStates(typeof(Group_7_10_0));
+        }private static IEnumerable TestCaseBottleNeck2()
+        {
+            return GetStates(typeof(BottleNeck2Group));
         }
     }
 }

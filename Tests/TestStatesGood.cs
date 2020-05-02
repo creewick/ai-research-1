@@ -457,5 +457,34 @@ namespace AI_Research_1.Tests
                     new V(100, 100),
                     V.Zero, 2)
             );
+    }public class BottleNeck2Group
+    {
+        private const int Zoom = 10;public static State BottleNeck2 =>
+            new State(
+                track: new Track(
+                    time: 200,
+                    flagsGoal: 2,
+                    flags: new[]{new V(0,0), new V(0, 0)},
+                    obstacles:new[]
+                    {
+                        new Disk(0, 40, 30),
+                        new Disk(-35, 0, 30),
+                        new Disk(35, 0, 30)
+                    },
+                    maxCooldown:20
+                ),
+                firstCar: new Car(
+                    pos: new V(90, 100),
+                    v: V.Zero,
+                    radius: 2
+                ),
+                secondCar: new Car(
+                    pos: new V(-90, 100),
+                    v: V.Zero,
+                    radius: 2
+                )
+            );
+
+       
     }
 }
