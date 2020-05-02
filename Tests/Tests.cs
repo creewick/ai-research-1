@@ -53,9 +53,10 @@ namespace AI_Research_1.Tests
         [TestCaseSource(nameof(TestCases10_10_3))]
         [TestCaseSource(nameof(TestCasesBottle))]
         [TestCaseSource(nameof(TestCaseBottleNeck2))]
-        [TestCaseSource(nameof(TestCaseBottleNeck3))]
+       [TestCaseSource(nameof(TestCaseBottleNeck3))]
         [TestCaseSource(nameof(TestCases5_10_0))]
         [TestCaseSource(nameof(TestCases7_10_0))]
+       [TestCaseSource(nameof(TestCaseSprintGroup))]
         public void Play(State state, ISolver solver, int repeat, string groupName)
         {
             PlayToEnd(solver, state, SaveReplay, SaveStats, repeat, groupName);
@@ -298,6 +299,11 @@ namespace AI_Research_1.Tests
         private static IEnumerable TestCaseBottleNeck3()
         {
             return GetStates(typeof(BottleNeck3Group));
+        }
+
+        private static IEnumerable TestCaseSprintGroup()
+        {
+            return GetStates(typeof(SprintGroup));
         }
     }
 }
