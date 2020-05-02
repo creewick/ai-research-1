@@ -553,4 +553,36 @@ namespace AI_Research_1.Tests
                 )
             );
     }
+    public class Sprint2Group
+    {
+        private const int Zoom = 10;
+
+        public static State Sprint2 =>
+            new State(
+                track: new Track(
+                    time: 450,
+                    flagsGoal: 16,
+                    flags: new[]
+                    {
+                        new V(-100, 0), new V(100, 0), new V(-50, 0), new V(50, 0)
+                    },
+                    obstacles: new[]
+                    {
+                        new Disk(-125, 0, 20), new Disk(-75, 0, 20), new Disk(-25, 0, 20), new Disk(25, 0, 20), new Disk(75, 0, 20), new Disk(125, 0, 20),
+                     
+                    },
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    pos: new V(0, 50),
+                    v: V.Zero,
+                    radius: 2
+                ),
+                secondCar: new Car(
+                    pos: new V(0, -50),
+                    v: V.Zero,
+                    radius: 2
+                )
+            );
+    }
 }
