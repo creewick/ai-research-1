@@ -32,7 +32,7 @@ namespace AI_Research_1.Tests
         private static readonly string ProjectDirectory = Path.Combine(Environment.CurrentDirectory, "..", "..", "..");
         private const bool SaveReplay = true;
         private const bool SaveStats = true;
-        private const int RepeatCount = 5;
+        private const int RepeatCount = 1;
 
         private static string GetSolverName(ISolver solver) => solver.GetType().Name;
 
@@ -40,8 +40,8 @@ namespace AI_Research_1.Tests
         {
             new HillClimbingSolver(),
             new EvolutionSolver(),
-             new GreedySolver(15),
-            new RandomSolver(11,9)
+            new GreedySolver(15),
+            new RandomSolver(11, 9)
         };
 
 
@@ -50,9 +50,10 @@ namespace AI_Research_1.Tests
         [TestCaseSource(nameof(TestCasesGoodWithBlocks))]
         [TestCaseSource(nameof(TestCasesSnake))]
         [TestCaseSource(nameof(TestCasesCross))]
-        [TestCaseSource(nameof(TestCasesBottle))]
         [TestCaseSource(nameof(TestCases10_10_3))]
+        [TestCaseSource(nameof(TestCasesBottle))]
         [TestCaseSource(nameof(TestCaseBottleNeck2))]
+        [TestCaseSource(nameof(TestCaseBottleNeck3))]
         [TestCaseSource(nameof(TestCases5_10_0))]
         [TestCaseSource(nameof(TestCases7_10_0))]
         public void Play(State state, ISolver solver, int repeat, string groupName)
@@ -287,9 +288,16 @@ namespace AI_Research_1.Tests
         private static IEnumerable TestCases7_10_0()
         {
             return GetStates(typeof(Group_7_10_0));
-        }private static IEnumerable TestCaseBottleNeck2()
+        }
+
+        private static IEnumerable TestCaseBottleNeck2()
         {
             return GetStates(typeof(BottleNeck2Group));
+        }
+
+        private static IEnumerable TestCaseBottleNeck3()
+        {
+            return GetStates(typeof(BottleNeck3Group));
         }
     }
 }

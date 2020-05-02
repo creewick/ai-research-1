@@ -457,21 +457,25 @@ namespace AI_Research_1.Tests
                     new V(100, 100),
                     V.Zero, 2)
             );
-    }public class BottleNeck2Group
+    }
+
+    public class BottleNeck2Group
     {
-        private const int Zoom = 10;public static State BottleNeck2 =>
+        private const int Zoom = 10;
+
+        public static State BottleNeck2 =>
             new State(
                 track: new Track(
                     time: 200,
                     flagsGoal: 2,
-                    flags: new[]{new V(0,0), new V(0, 0)},
-                    obstacles:new[]
+                    flags: new[] {new V(0, 0), new V(0, 0)},
+                    obstacles: new[]
                     {
                         new Disk(0, 40, 30),
                         new Disk(-35, 0, 30),
                         new Disk(35, 0, 30)
                     },
-                    maxCooldown:20
+                    maxCooldown: 20
                 ),
                 firstCar: new Car(
                     pos: new V(90, 100),
@@ -484,7 +488,36 @@ namespace AI_Research_1.Tests
                     radius: 2
                 )
             );
+    }
 
-       
+    public class BottleNeck3Group
+    {
+        private const int Zoom = 10;
+
+        public static State BottleNeck3=>
+            new State(
+                track: new Track(
+                    time: 400,
+                    flagsGoal: 3,
+                    flags: new[] {new V(0, 0), new V(0, 0), new V(0, -200)},
+                    obstacles: new[]
+                    {
+                        new Disk(0, 40, 30),
+                        new Disk(-35, 0, 30),
+                        new Disk(35, 0, 30)
+                    },
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    pos: new V(30, 100),
+                    v: V.Zero,
+                    radius: 2
+                ),
+                secondCar: new Car(
+                    pos: new V(-30, 100),
+                    v: V.Zero,
+                    radius: 2
+                )
+            );
     }
 }
