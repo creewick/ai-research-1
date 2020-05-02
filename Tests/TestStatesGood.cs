@@ -494,7 +494,7 @@ namespace AI_Research_1.Tests
     {
         private const int Zoom = 10;
 
-        public static State BottleNeck3=>
+        public static State BottleNeck3 =>
             new State(
                 track: new Track(
                     time: 400,
@@ -515,6 +515,39 @@ namespace AI_Research_1.Tests
                 ),
                 secondCar: new Car(
                     pos: new V(-30, 100),
+                    v: V.Zero,
+                    radius: 2
+                )
+            );
+    }
+
+    public class SprintGroup
+    {
+        private const int Zoom = 10;
+
+        public static State Sprint =>
+            new State(
+                track: new Track(
+                    time: 450,
+                    flagsGoal: 16,
+                    flags: new[]
+                    {
+                        new V(-100, 0), new V(100, 0), new V(-50, 0), new V(50, 0)
+                    },
+                    obstacles: new[]
+                    {
+                        new Disk(-125, 0, 20), new Disk(-75, 0, 20), new Disk(-25, 0, 20), new Disk(25, 0, 20), new Disk(75, 0, 20), new Disk(125, 0, 20),
+                     
+                    },
+                    maxCooldown: 20
+                ),
+                firstCar: new Car(
+                    pos: new V(0, 0),
+                    v: V.Zero,
+                    radius: 2
+                ),
+                secondCar: new Car(
+                    pos: new V(0, 0),
                     v: V.Zero,
                     radius: 2
                 )
