@@ -82,19 +82,26 @@
 
 Спустя пару недель мы сошлись на решении, в котором у нас есть несколько групп карт, и несколько отдельных обособленных случаев.
 
+<details>
+  <summary><b>Группы карт</b></summary>
+
 Группа Без препятствий | Группа Мало препятствий
 -----------------------|------------------------
 ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/NoBlocks.png)|![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Blocks.png)
+</details>
+<details>
+  <summary><b>Отдельные карты</b></summary>
 
 Bottle Neck 1 | Bottle Neck 2 | Bottle Neck 3 | Sprint 1 | Sprint 2
 :------------:|:-------------:|:-------------:|:--------:|:-------:
 ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck2.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck3.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png)
 **Cross** | **10_10_3** | **5_10** | **7_10** | **Snake**
 ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Cross.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/10_10_3.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/5_10.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/7_10.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Snake.png)
+</details>
 
 ## Оптимальные параметры
 
-Запуская алгоритмы на собранных картах, мы искали оптимальные параметры для них. Остановились на следующих:
+Запуская алгоритмы на выбранных картах, мы искали оптимальные параметры для них. Остановились на следующих:
 
 Алгоритмы             | Greedy      | Random      | Hill Climb   | Evolution
 ----------------------|-------------|-------------|--------------|---------------
@@ -105,10 +112,9 @@ Bottle Neck 1 | Bottle Neck 2 | Bottle Neck 3 | Sprint 1 | Sprint 2
 [Промежуточные вычисления](https://docs.google.com/spreadsheets/d/1jnzvyOMs1Fs-sn62Y32mR_D2tlMVwEJQ1C1jdlvhAr8/edit?usp=sharing)
 
 🥇🥈🥉
-
 Алгоритмы                    | Greedy         | Random         | Hill Climbing  | Evolution
------------------------------|----------------|----------------|----------------|--------------
-**Группа Без препятствий**   | 767 ± 41.5     | 715 ± 39.2     | 637 ± 34.9     | 
+-----------------------------|----------------|----------------|----------------|----------------
+**Группа Без препятствий**   | 🥇 792 ± 18.2  | 🥈 745 ± 17.6 | 🥉 647 ± 15.2  | 🥈 725 ± 21.5  
 **Группа Мало препятствий**  | | | | 
 **Exchange**                 | | | |
 **Bottle Neck 1**            | 312.4 ± 15.2   | 195.1 ± 35.7   | 288.5 ± 21     |
