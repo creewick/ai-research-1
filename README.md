@@ -86,18 +86,15 @@
   <summary><b>Группа Без препятствий</b></summary>
   
   ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/NoBlocks.png)
-</details>
-<details>
+</details><details>
   <summary><b>Группа Мало препятствий</b></summary>
   
   ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Blocks.png)
-</details>
-<details>
+</details><details>
   <summary><b>Bottle Neck 1</b></summary>
   
   ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck.png)
-</details>
-<details>
+</details><details>
   <summary><b>Bottle Neck 2</b></summary>
   
   ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck2.png)
@@ -105,8 +102,35 @@
   <summary><b>Bottle Neck 3</b></summary>
   
   ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck3.png)
+</details><details>
+  <summary><b>Sprint 1</b></summary>
+  
+  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png)
+</details><details>
+  <summary><b>Sprint 2</b></summary>
+  
+  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png)
+</details><details>
+  <summary><b>Cross</b></summary>
+  
+  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Cross.png)
+</details><details>
+  <summary><b>10_10_3</b></summary>
+  
+  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/10_10_3.png)
+</details><details>
+  <summary><b>5_10</b></summary>
+  
+  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/5_10.png)
+</details><details>
+  <summary><b>7_10</b></summary>
+  
+  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/7_10.png)
+</details><details>
+  <summary><b>Snake</b></summary>
+  
+  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Snake.png)
 </details>
-...
 
 ## Оптимальные параметры
 
@@ -134,6 +158,6 @@
 **Sprint 2**                 | -240 ± 11.7    | 152.8 ± 19.7   | 160.4 ± 21     |
 **Cross**                    | 95.2 ± 4.7     | 51 ± 5.9       | 43.6 ± 4.6     |
 **10_10_3**                  | 87.6 ± 4.3     | 105.5 ± 7.5    | 54.8 ± 6.8     |
-**5_10_0**                   | 236.2 ± 11.5   | 214.1 ± 11.7   | 213.4 ± 11.9   |
-**7_10_0**                   | 41 ± 2         | 40.1 ± 3       | 27.4 ± 2.5     |
+**5_10**                     | 236.2 ± 11.5   | 214.1 ± 11.7   | 213.4 ± 11.9   |
+**7_10**                     | 41 ± 2         | 40.1 ± 3       | 27.4 ± 2.5     |
 **Snake**                    | 171.4 ± 8.3    | 121.5 ± 8.9    | 78.6 ± 17.6    |
