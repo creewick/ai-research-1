@@ -92,6 +92,20 @@
   
   ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Blocks.png)
 </details>
+<details>
+  <summary><b>Bottle Neck 1</b></summary>
+  
+  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck.png)
+</details>
+<details>
+  <summary><b>Bottle Neck 2</b></summary>
+  
+  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck2.png)
+</details><details>
+  <summary><b>Bottle Neck 3</b></summary>
+  
+  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck3.png)
+</details>
 ...
 
 ## Оптимальные параметры
@@ -123,4 +137,3 @@
 **5_10_0**                   | 236.2 ± 11.5   | 214.1 ± 11.7   | 213.4 ± 11.9   |
 **7_10_0**                   | 41 ± 2         | 40.1 ± 3       | 27.4 ± 2.5     |
 **Snake**                    | 171.4 ± 8.3    | 121.5 ± 8.9    | 78.6 ± 17.6    |
-...
