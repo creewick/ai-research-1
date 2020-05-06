@@ -141,6 +141,10 @@ Bottle Neck 1 | Bottle Neck 2 | Bottle Neck 3 | Exchange
   <summary><b>Greedy – 10_10_3</b></summary>
 
 ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Greedy_10_10_3.gif)
+</details><details>
+  <summary><b>Hill Climbing – 7_10</b></summary>
+
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Hill_7_10.gif)
 </details>
 
 ### Ломающие тесты
@@ -157,5 +161,9 @@ Bottle Neck 1 | Bottle Neck 2 | Bottle Neck 3 | Exchange
   <summary><b>Random – Bottle Neck 2</b></summary>
 
 ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Random_BottleNeck2.gif)
+</details><details>
+  <summary><b>Evolution – Cross</b></summary>
+
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Evolution_Cross.gif)
 </details>
 
