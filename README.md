@@ -42,6 +42,7 @@
     1) [Заполнение с повторением](https://github.com/creewick/ai-research-1/blob/master/Solvers/HillClimbing/Mutators/RandomRepeatSegmentMutator.cs)
     2) [Заполнение шумом](https://github.com/creewick/ai-research-1/blob/master/Solvers/HillClimbing/Mutators/RandomNoiseSegmentMutator.cs)
     3) [Заполнение бездействием](https://github.com/creewick/ai-research-1/blob/master/Solvers/HillClimbing/Mutators/RandomAndDoNothingSegmentMutator.cs)
+    
   Статистика показала, что каждая из приведенных выше мутаций дает улучшение в 1/3 случаев.
   - Мутация переворачивания случайного сегмента. Принимает количество сегментов, на которые нужно разбить решение и количество мутируемых сегментов. Выбранные случайно сегменты переворачиваются.
   - Мутация замены двух соседних сегментов. Два случайно выбранных соседних сегмента меняются местами.
