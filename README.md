@@ -83,9 +83,14 @@
 Спустя пару недель мы сошлись на решении, в котором у нас есть несколько групп карт, и несколько отдельных обособленных случаев.
 
 <details>
-  <summary><b>Группа без препятствий</b></summary>
+  <summary><b>Группа Без препятствий</b></summary>
   
   ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/NoBlocks.png)
+</details>
+<details>
+  <summary><b>Группа Мало препятствий</b></summary>
+  
+  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Blocks.png)
 </details>
 
 ## Результаты (beta)
