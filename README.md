@@ -19,52 +19,62 @@
 ## Выбранные алгоритмы
 Все подходы используют эмуляцию на несколько шагов вперед и оценивают решение одной из функций оценок, представленных в классе [`Emulator`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Emulator.cs). В частности, по результатам тестрирования была выбрана функция [`GetScore_3`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Emulator.cs#L105).
 
-### Жадный поиск 
-[`GreedySolver`](https://github.com/creewick/ai-research-1/blob/master/Solvers/GreedySolver.cs)
+<details>
+  <summary><b>Жадный поиск</b></summary>
+  
+  [`GreedySolver`](https://github.com/creewick/ai-research-1/blob/master/Solvers/GreedySolver.cs)
 
-Классический жадный поиск, перебирающий все возможные ходы, и повторяющий один и тот же ход N раз.
+  Классический жадный поиск, перебирающий все возможные ходы, и повторяющий один и тот же ход N раз.
+</details>
+<details>
+  <summary><b>Случайный поиск</b></summary>
+  
+  [`RandomSolver`](https://github.com/creewick/ai-research-1/blob/master/Solvers/RandomSolver.cs)
 
-### Случайный поиск 
-[`RandomSolver`](https://github.com/creewick/ai-research-1/blob/master/Solvers/RandomSolver.cs)
+  Алгоритм в течении всего допустимого времени на ход генерирует пары `(command, repeat)`, из которых составляются решения. При помощи функции оценки выбирается лучшее.
+  
+  Имеет возможность запускаться с эвристикой _сохранения последнего лучшего решения_, изменяет его для поиска новых решений.
+</details>
+<details>
+  <summary><b>Поиск восхождением</b></summary>
+  
+  [`HillClimbingSolver`](https://github.com/creewick/ai-research-1/blob/master/Solvers/HillClimbing/HillClimbingSolver.cs)
 
-Алгоритм в течении всего допустимого времени на ход генерирует пары `(command, repeat)`, из которых составляются решения. При помощи функции оценки выбирается лучшее. 
+  Поиск восхождением с использованием запоминанием последнего лучшего решения. Для получения первого решения использует `GreedySolver` или `RandomSolver`. Применяет несколько типов мутаций по принципу квот. Для распределения квот все мутаторы использовались одновременно и считалось, в какой доле случаев тот или иной мутатор выигрывал.
 
-Имеет возможность запускаться с эвристикой _сохранения последнего лучшего решения_, изменяет его для поиска новых решений.
+  #### Мутации:
+  - Мутация случайного сегмента. Случайно выбирает количество сегментов, на которые нужно разбить решение и количество мутируемых сегментов. Случайно выбирает несколько мутируемых сегментов и случайно меняет в них команды одним из следующих способов:
+    1) [Заполнение с повторением](https://github.com/creewick/ai-research-1/blob/master/Solvers/HillClimbing/Mutators/RandomRepeatSegmentMutator.cs)
+    2) [Заполнение шумом](https://github.com/creewick/ai-research-1/blob/master/Solvers/HillClimbing/Mutators/RandomNoiseSegmentMutator.cs)
+    3) [Заполнение бездействием](https://github.com/creewick/ai-research-1/blob/master/Solvers/HillClimbing/Mutators/RandomAndDoNothingSegmentMutator.cs)
+  Статистика показала, что каждая из приведенных выше мутаций дает улучшение в 1/3 случаев.
+  - Мутация переворачивания случайного сегмента. Принимает количество сегментов, на которые нужно разбить решение и количество мутируемых сегментов. Выбранные случайно сегменты переворачиваются.
+  - Мутация замены двух соседних сегментов. Два случайно выбранных соседних сегмента меняются местами.
+  Реализована техника использования последнего лучшего решения. Включается, если передать соответствующий флаг.
+</details>
+<details>
+  <summary><b>Генетический алгоритм</b></summary>
+  
+  [`EvolutionSolver`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/EvolutionSolver.cs)
+  
+  Для получения первого решения (популяции) использует предыдущие алгоритмы или их комбинацию в различных пропорциях — [`CombinedSolver`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/BaseSolvers/CombinedSolver.cs).
+  Для получения следующих решений, популяция проходит через несколько шагов:
 
-### Поиск восхождением
-[`HillClimbingSolver`](https://github.com/creewick/ai-research-1/blob/master/Solvers/HillClimbing/HillClimbingSolver.cs)
+  1. **Выбираются предки, которые будут изменяться**
+     За выбор предков ответственен [`IGeneticFilter`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Filters/IGeneticFilter.cs). На текущий момент есть две реализации:
+     * [`HalfFilter`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Filters/FilterHalf.cs) сортирует решения по очкам и выбирает половину лучших решений
+     * В [`NormalizeFilter`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Filters/NormalizeFilter.cs) шанс выбора определенного решения равен нормализованному значению очков
 
-Поиск восхождением с использованием запоминанием последнего лучшего решения. Для получения первого решения использует `GreedySolver` или `RandomSolver`. Применяет несколько типов мутаций по принципу квот. Для распределения квот все мутаторы использовались одновременно и считалось, в какой доле случаев тот или иной мутатор выигрывал.
+  2. **Выбранные предки преобразовываются в потомков**
+     За это отвечает [`IGeneticApplier`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Appliers/IGeneticApplier.cs). Есть две реализации:
+     * [`MutationApplier`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Appliers/MutationApplier.cs) позволяет использовать любую мутацию, совместимую с `HillClimbingSolver`
+     * [`SegmentCrossingOver`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Appliers/SegmentCrossingOver.cs) рассматривает пары предков, разделяет их решения по случайному числу K (на первые K шагов и остальные), берет первую часть от первого предка, вторую - от второго
 
-#### Мутации:
-- Мутация случайного сегмента. Случайно выбирает количество сегментов, на которые нужно разбить решение и количество мутируемых сегментов. Случайно выбирает несколько мутируемых сегментов и случайно меняет в них команды одним из следующих способов:
-  1) [Заполнение с повторением](https://github.com/creewick/ai-research-1/blob/master/Solvers/HillClimbing/Mutators/RandomRepeatSegmentMutator.cs)
-  2) [Заполнение шумом](https://github.com/creewick/ai-research-1/blob/master/Solvers/HillClimbing/Mutators/RandomNoiseSegmentMutator.cs)
-  3) [Заполнение бездействием](https://github.com/creewick/ai-research-1/blob/master/Solvers/HillClimbing/Mutators/RandomAndDoNothingSegmentMutator.cs)
-Статистика показала, что каждая из приведенных выше мутаций дает улучшение в 1/3 случаев.
-- Мутация переворачивания случайного сегмента. Принимает количество сегментов, на которые нужно разбить решение и количество мутируемых сегментов. Выбранные случайно сегменты переворачиваются.
-- Мутация замены двух соседних сегментов. Два случайно выбранных соседних сегмента меняются местами.
-Реализована техника использования последнего лучшего решения. Включается, если передать соответствующий флаг.
-
-### Генетический алгоритм 
-[`EvolutionSolver`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/EvolutionSolver.cs)
-Для получения первого решения (популяции) использует предыдущие алгоритмы или их комбинацию в различных пропорциях — [`CombinedSolver`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/BaseSolvers/CombinedSolver.cs).
-Для получения следующих решений, популяция проходит через несколько шагов:
-
-1. **Выбираются предки, которые будут изменяться**
-   За выбор предков ответственен [`IGeneticFilter`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Filters/IGeneticFilter.cs). На текущий момент есть две реализации:
-   * [`HalfFilter`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Filters/FilterHalf.cs) сортирует решения по очкам и выбирает половину лучших решений
-   * В [`NormalizeFilter`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Filters/NormalizeFilter.cs) шанс выбора определенного решения равен нормализованному значению очков
-
-2. **Выбранные предки преобразовываются в потомков**
-   За это отвечает [`IGeneticApplier`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Appliers/IGeneticApplier.cs). Есть две реализации:
-   * [`MutationApplier`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Appliers/MutationApplier.cs) позволяет использовать любую мутацию, совместимую с `HillClimbingSolver`
-   * [`SegmentCrossingOver`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Appliers/SegmentCrossingOver.cs) рассматривает пары предков, разделяет их решения по случайному числу K (на первые K шагов и остальные), берет первую часть от первого предка, вторую - от второго
-
-3. **Из предков и потомков выбирается новая популяция**
-   За это отвечает [`IGeneticSelector`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Selectors/IGeneticSelector.cs). Есть две реализации:
-   * [`Elitism`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Selectors/Elitism.cs) оставляет одного лучшего предка и выбирает лучших потомков
-   * [`ElitismRandom`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Selectors/ElitismRandom.cs) помимо этого добавляет еще одно случайное решение
+  3. **Из предков и потомков выбирается новая популяция**
+     За это отвечает [`IGeneticSelector`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Selectors/IGeneticSelector.cs). Есть две реализации:
+     * [`Elitism`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Selectors/Elitism.cs) оставляет одного лучшего предка и выбирает лучших потомков
+     * [`ElitismRandom`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Evolution/Selectors/ElitismRandom.cs) помимо этого добавляет еще одно случайное решение
+</details>
 
 ## Система тестов
 
