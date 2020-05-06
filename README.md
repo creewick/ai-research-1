@@ -98,7 +98,7 @@
 
 Запуская алгоритмы на собранных картах, мы искали оптимальные параметры для них. Остановились на следующих:
 
-                      | Greedy      | Random      | Hill Climb   | Evolution
+Табличка              | Greedy      | Random      | Hill Climb   | Evolution
 ----------------------|-------------|-------------|--------------|---------------
 **Параметры**         | Глубина: 15<br>Стратегия: `Repeat`<br>Оценка: `Max` | Глубина: 11<br>Макс.сегмент: 9 | BaseSolver: `Greedy(15)`<br>Эвристика: `true`<br>BaseSolverTime: 1/10 | BaseSolver: `Greedy(15)`<br>Filter: `FilterHalf`<br>Applier: `SegmentCrossingOver`<br>Selector: `Elitism`
 
