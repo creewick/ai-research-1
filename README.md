@@ -92,12 +92,21 @@
   
   ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Blocks.png)
 </details>
+...
 
-## Результаты (beta)
+## Оптимальные параметры
+
+Запуская алгоритмы на собранных картах, мы искали оптимальные параметры для них. Остановились на следующих:
+
+                      | Greedy      | Random      | Hill Climb   | Evolution
+----------------------|-------------|-------------|--------------|---------------
+**Параметры**         | Глубина: 15<br>Стратегия: `Repeat`<br>Оценка: `Max` | Глубина: 11<br>Макс.сегмент: 9 | BaseSolver: `Greedy(15)`<br>Эвристика: `true`<br>BaseSolverTime: 1/10 | BaseSolver: `Greedy(15)`<br>Filter: `FilterHalf`<br>Applier: `SegmentCrossingOver`<br>Selector: `Elitism`
+
+## Результаты
 
 [Промежуточные вычисления](https://docs.google.com/spreadsheets/d/1jnzvyOMs1Fs-sn62Y32mR_D2tlMVwEJQ1C1jdlvhAr8/edit?usp=sharing)
 
-Результаты            | Greedy      | Random      | Hill Climb   | Evolution
-----------------------|-------------|-------------|--------------|---------------
-**Параметры**         | Глубина: 20<br>Стратегия: `Repeat`<br>Оценка: `Max` | Глубина: 11<br>Макс.сегмент: 9 | BaseSolver: `Greedy(15)`<br>Эвристика: `true`<br>BaseSolverTime: 1/10 | BaseSolver: `Greedy(20)`<br>Filter: `FilterHalf`<br>Applier: `SegmentCrossingOver`<br>Selector: `Elitism`
-**Score ± ConfInt/2** | 1666 ± 24.2 |   1630 ± 47,5     | 1474 ± 18.2  | 1553 ± 39.3
+Результаты                   | Greedy      | Random      | Hill Climb   | Evolution
+-----------------------------|-------------|-------------|--------------|---------------
+**Группа без препятствий**   | | | |
+...
