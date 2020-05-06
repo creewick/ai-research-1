@@ -153,4 +153,9 @@ Bottle Neck 1 | Bottle Neck 2 | Bottle Neck 3 | Exchange
   <summary><b>Greedy – 10_10_3</b></summary>
 
 ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Greedy_Sprint.gif)
+</details><details>
+  <summary><b>Random – Bottle Neck 2</b></summary>
+
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Random_BottleNeck2.gif)
 </details>
+
