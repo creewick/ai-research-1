@@ -87,11 +87,13 @@
 <details>
   <summary><b>Отдельные карты</b></summary>
 
-Bottle Neck 1 | Bottle Neck 2 | Bottle Neck 3 | Sprint 1 | Sprint 2
-:------------:|:-------------:|:-------------:|:--------:|:-------:
-![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck2.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck3.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png)
-**Cross** | **10_10_3** | **5_10** | **7_10** | **Snake**
-![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Cross.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/10_10_3.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/5_10.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/7_10.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Snake.png)
+Bottle Neck 1 | Bottle Neck 2 | Bottle Neck 3 | Exchange
+:------------:|:-------------:|:-------------:|:--------:
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck2.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck3.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Exchange.png)
+**Cross** | **10_10_3** | **5_10** | **7_10**
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Cross.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/10_10_3.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/5_10.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/7_10.png)
+**Sprint 1** | **Sprint 22** | **Snake**
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint2.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Snake.png)
 </details>
 
 ## Оптимальные параметры
@@ -147,4 +149,8 @@ Bottle Neck 1 | Bottle Neck 2 | Bottle Neck 3 | Sprint 1 | Sprint 2
 
 Вот некоторые реплеи с этими тестами:
 
-...
+<details>
+  <summary><b>Greedy – 10_10_3</b></summary>
+
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Greedy_Sprint.gif)
+</details>
