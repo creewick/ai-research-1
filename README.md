@@ -82,55 +82,15 @@
 
 Спустя пару недель мы сошлись на решении, в котором у нас есть несколько групп карт, и несколько отдельных обособленных случаев.
 
-<details>
-  <summary><b>Группа Без препятствий</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/NoBlocks.png)
-</details><details>
-  <summary><b>Группа Мало препятствий</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Blocks.png)
-</details><details>
-  <summary><b>Bottle Neck 1</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck.png)
-</details><details>
-  <summary><b>Bottle Neck 2</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck2.png)
-</details><details>
-  <summary><b>Bottle Neck 3</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck3.png)
-</details><details>
-  <summary><b>Sprint 1</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png)
-</details><details>
-  <summary><b>Sprint 2</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png)
-</details><details>
-  <summary><b>Cross</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Cross.png)
-</details><details>
-  <summary><b>10_10_3</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/10_10_3.png)
-</details><details>
-  <summary><b>5_10</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/5_10.png)
-</details><details>
-  <summary><b>7_10</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/7_10.png)
-</details><details>
-  <summary><b>Snake</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Snake.png)
-</details>
+Группа Без препятствий | Группа Мало препятствий
+-----------------------|------------------------
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/NoBlocks.png)|![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Blocks.png)
+
+Bottle Neck 1 | Bottle Neck 2 | Bottle Neck 3 | Sprint 1 | Sprint 2
+:------------:|:-------------:|:-------------:|:--------:|:-------:
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck2.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck3.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png)
+**Cross** | **10_10_3** | **5_10** | **7_10** | **Snake**
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Cross.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/10_10_3.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/5_10.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/7_10.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Snake.png)
 
 ## Оптимальные параметры
 
