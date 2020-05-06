@@ -7,14 +7,9 @@
 
 ## Задача
 
-Есть трасса с двумя машинками, наборами флагов и препятствий. 
-Есть строгий порядок сбора флагов, но не имеет значения, какая из машинок возьмет флаг.
-
-Каждый ход машинка может изменить своё ускорение на (x,y) -1 ≤ x,y ≤ 1 или вызвать команду Exchange. 
-Если обе машинки на текущем ходу вызвали команду Exchange, они обмениваются своими векторами скоростей.
-
-На каждый ход машинкам даётся 100ms.
-У команды Exchange есть cooldown – 20 ходов.
+Пример трассы | Описание
+--------------|-------
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/example.png) | Есть трасса с двумя машинками, наборами флагов и препятствий. <br> Есть строгий порядок сбора флагов, но не имеет значения, какая из машинок возьмет флаг.  <br><br> Каждый ход машинка может изменить своё ускорение на (x,y) -1 ≤ x,y ≤ 1 или вызвать команду Exchange. <br> Если обе машинки на текущем ходу вызвали команду Exchange, они обмениваются своими векторами скоростей. <br><br> На каждый ход машинкам даётся 100ms. <br> У команды Exchange есть cooldown – 20 ходов.
 
 ## Выбранные алгоритмы
 Все подходы используют эмуляцию на несколько шагов вперед и оценивают решение одной из функций оценок, представленных в классе [`Emulator`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Emulator.cs). В частности, по результатам тестрирования была выбрана функция [`GetScore_3`](https://github.com/creewick/ai-research-1/blob/master/Solvers/Emulator.cs#L105).
@@ -83,58 +78,25 @@
 Спустя пару недель мы сошлись на решении, в котором у нас есть несколько групп карт, и несколько отдельных обособленных случаев.
 
 <details>
-  <summary><b>Группа Без препятствий</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/NoBlocks.png)
-</details><details>
-  <summary><b>Группа Мало препятствий</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Blocks.png)
-</details><details>
-  <summary><b>Bottle Neck 1</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck.png)
-</details><details>
-  <summary><b>Bottle Neck 2</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck2.png)
-</details><details>
-  <summary><b>Bottle Neck 3</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck3.png)
-</details><details>
-  <summary><b>Sprint 1</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png)
-</details><details>
-  <summary><b>Sprint 2</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png)
-</details><details>
-  <summary><b>Cross</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Cross.png)
-</details><details>
-  <summary><b>10_10_3</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/10_10_3.png)
-</details><details>
-  <summary><b>5_10</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/5_10.png)
-</details><details>
-  <summary><b>7_10</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/7_10.png)
-</details><details>
-  <summary><b>Snake</b></summary>
-  
-  ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Snake.png)
+  <summary><b>Группы карт</b></summary>
+
+Группа Без препятствий | Группа Мало препятствий
+-----------------------|------------------------
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/NoBlocks.png)|![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Blocks.png)
+</details>
+<details>
+  <summary><b>Отдельные карты</b></summary>
+
+Bottle Neck 1 | Bottle Neck 2 | Bottle Neck 3 | Sprint 1 | Sprint 2
+:------------:|:-------------:|:-------------:|:--------:|:-------:
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck2.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/BottleNeck3.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Sprint.png)
+**Cross** | **10_10_3** | **5_10** | **7_10** | **Snake**
+![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Cross.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/10_10_3.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/5_10.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/7_10.png) | ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Snake.png)
 </details>
 
 ## Оптимальные параметры
 
-Запуская алгоритмы на собранных картах, мы искали оптимальные параметры для них. Остановились на следующих:
+Запуская алгоритмы на выбранных картах, мы искали оптимальные параметры для них. Остановились на следующих:
 
 Алгоритмы             | Greedy      | Random      | Hill Climb   | Evolution
 ----------------------|-------------|-------------|--------------|---------------
@@ -145,10 +107,9 @@
 [Промежуточные вычисления](https://docs.google.com/spreadsheets/d/1jnzvyOMs1Fs-sn62Y32mR_D2tlMVwEJQ1C1jdlvhAr8/edit?usp=sharing)
 
 🥇🥈🥉
-
 Алгоритмы                    | Greedy         | Random         | Hill Climbing  | Evolution
------------------------------|----------------|----------------|----------------|--------------
-**Группа Без препятствий**   | 767 ± 41.5     | 715 ± 39.2     | 637 ± 34.9     | 
+-----------------------------|----------------|----------------|----------------|----------------
+**Группа Без препятствий**   | 🥇 792 ± 18.2  | 🥈 745 ± 17.6 | 🥉 647 ± 15.2  | 🥈 725 ± 21.5  
 **Группа Мало препятствий**  | | | | 
 **Exchange**                 | | | |
 **Bottle Neck 1**            | 312.4 ± 15.2   | 195.1 ± 35.7   | 288.5 ± 21     |
@@ -161,3 +122,17 @@
 **5_10**                     | 236.2 ± 11.5   | 214.1 ± 11.7   | 213.4 ± 11.9   |
 **7_10**                     | 41 ± 2         | 40.1 ± 3       | 27.4 ± 2.5     |
 **Snake**                    | 171.4 ± 8.3    | 121.5 ± 8.9    | 78.6 ± 17.6    |
+
+### Выводы
+...
+
+## Реплеи
+...
+
+### Ломающие тесты
+
+Некоторые тесты мы внедрили после подбора параметров, и подобрали их так, чтобы они ломали некоторые алгоритмы.
+
+Вот некоторые реплеи с этими тестами:
+
+...
