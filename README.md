@@ -155,7 +155,7 @@ Bottle Neck 1 | Bottle Neck 2 | Bottle Neck 3 | Exchange
 Вот некоторые реплеи с этими тестами:
 
 <details>
-  <summary><b>Greedy – 10_10_3</b></summary>
+  <summary><b>Greedy – Sprint</b></summary>
 
 ![Картинка](https://github.com/creewick/ai-research-1/blob/master/Images/Greedy_Sprint.gif)
 </details><details>
